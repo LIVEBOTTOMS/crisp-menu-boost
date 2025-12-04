@@ -9,7 +9,7 @@ import { MenuProvider, useMenu } from "@/contexts/MenuContext";
 const MenuContent = () => {
   const [activeSection, setActiveSection] = useState("snacks");
   const [showToolbar, setShowToolbar] = useState(false);
-  const { menuData } = useMenu();
+  const { menuData, isLoading } = useMenu();
 
   // Keyboard shortcut: Ctrl+Shift+A to toggle toolbar
   useEffect(() => {
@@ -52,7 +52,14 @@ const MenuContent = () => {
         />
         
         <main className="max-w-6xl mx-auto px-4 pb-16">
-          {renderActiveSection()}
+          {isLoading ? (
+            <div className="flex items-center justify-center py-20">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-neon-cyan"></div>
+              <span className="ml-3 text-muted-foreground">Loading menu...</span>
+            </div>
+          ) : (
+            renderActiveSection()
+          )}
         </main>
 
         <footer className="border-t border-border/30 py-8 mt-12">

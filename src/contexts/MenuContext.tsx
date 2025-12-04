@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { MenuItem, MenuSection, snacksAndStarters, foodMenu, beveragesMenu, sideItems } from "@/data/menuData";
+import { useMenuDatabase, sectionKeyToType } from "@/hooks/useMenuDatabase";
 
 interface MenuData {
   snacksAndStarters: MenuSection;
@@ -11,47 +12,22 @@ interface MenuData {
 interface MenuContextType {
   menuData: MenuData;
   isEditMode: boolean;
+  isLoading: boolean;
   setIsEditMode: (value: boolean) => void;
   updateMenuItem: (sectionKey: string, categoryIndex: number, itemIndex: number, updatedItem: MenuItem) => void;
   addMenuItem: (sectionKey: string, categoryIndex: number, newItem: MenuItem) => void;
   deleteMenuItem: (sectionKey: string, categoryIndex: number, itemIndex: number) => void;
   adjustPrices: (percentage: number, sectionKey?: string, categoryIndex?: number) => void;
   resetToOriginal: () => void;
+  refreshMenu: () => Promise<void>;
 }
 
 const MenuContext = createContext<MenuContextType | undefined>(undefined);
-
-const STORAGE_KEY = "livebar-menu-data";
 
 const deepClone = <T,>(obj: T): T => JSON.parse(JSON.stringify(obj));
 
 const parsePrice = (price: string): number => {
   return parseFloat(price.replace(/[₹,]/g, "")) || 0;
-};
-
-const getInitialMenuData = (): MenuData => {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      return JSON.parse(stored) as MenuData;
-    }
-  } catch (e) {
-    console.error("Failed to load menu from localStorage", e);
-  }
-  return {
-    snacksAndStarters: deepClone(snacksAndStarters),
-    foodMenu: deepClone(foodMenu),
-    beveragesMenu: deepClone(beveragesMenu),
-    sideItems: deepClone(sideItems),
-  };
-};
-
-const saveMenuData = (data: MenuData) => {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  } catch (e) {
-    console.error("Failed to save menu to localStorage", e);
-  }
 };
 
 const formatPrice = (value: number): string => {
@@ -75,21 +51,40 @@ const adjustItemPrices = (item: MenuItem, multiplier: number): MenuItem => {
   return newItem;
 };
 
-export const MenuProvider = ({ children }: { children: ReactNode }) => {
-  const [menuData, setMenuData] = useState(getInitialMenuData);
-  const [isEditMode, setIsEditMode] = useState(false);
+const getDefaultMenuData = (): MenuData => ({
+  snacksAndStarters: deepClone(snacksAndStarters),
+  foodMenu: deepClone(foodMenu),
+  beveragesMenu: deepClone(beveragesMenu),
+  sideItems: deepClone(sideItems),
+});
 
-  // Persist menu data to localStorage whenever it changes
-  const updateMenuData = (updater: (prev: typeof menuData) => typeof menuData) => {
-    setMenuData(prev => {
-      const newData = updater(prev);
-      saveMenuData(newData);
-      return newData;
-    });
+export const MenuProvider = ({ children }: { children: ReactNode }) => {
+  const [menuData, setMenuData] = useState<MenuData>(getDefaultMenuData);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  const { fetchMenuData, updateMenuItem: dbUpdateMenuItem, checkAndSeed } = useMenuDatabase();
+
+  const refreshMenu = async () => {
+    setIsLoading(true);
+    const data = await fetchMenuData();
+    if (data) {
+      setMenuData(data);
+    }
+    setIsLoading(false);
   };
 
-  const updateMenuItem = (sectionKey: string, categoryIndex: number, itemIndex: number, updatedItem: MenuItem) => {
-    updateMenuData(prev => {
+  useEffect(() => {
+    const init = async () => {
+      await checkAndSeed();
+      await refreshMenu();
+    };
+    init();
+  }, []);
+
+  const updateMenuItem = async (sectionKey: string, categoryIndex: number, itemIndex: number, updatedItem: MenuItem) => {
+    // Update local state immediately
+    setMenuData(prev => {
       const newData = deepClone(prev);
       const section = newData[sectionKey as keyof MenuData];
       if (section && section.categories[categoryIndex]) {
@@ -97,10 +92,13 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
       }
       return newData;
     });
+
+    // Update in database
+    await dbUpdateMenuItem(sectionKeyToType(sectionKey), categoryIndex, itemIndex, updatedItem);
   };
 
   const addMenuItem = (sectionKey: string, categoryIndex: number, newItem: MenuItem) => {
-    updateMenuData(prev => {
+    setMenuData(prev => {
       const newData = deepClone(prev);
       const section = newData[sectionKey as keyof MenuData];
       if (section && section.categories[categoryIndex]) {
@@ -108,10 +106,11 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
       }
       return newData;
     });
+    // TODO: Add to database
   };
 
   const deleteMenuItem = (sectionKey: string, categoryIndex: number, itemIndex: number) => {
-    updateMenuData(prev => {
+    setMenuData(prev => {
       const newData = deepClone(prev);
       const section = newData[sectionKey as keyof MenuData];
       if (section && section.categories[categoryIndex]) {
@@ -119,12 +118,13 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
       }
       return newData;
     });
+    // TODO: Delete from database
   };
 
   const adjustPrices = (percentage: number, sectionKey?: string, categoryIndex?: number) => {
     const multiplier = 1 + percentage / 100;
     
-    updateMenuData(prev => {
+    setMenuData(prev => {
       const newData = deepClone(prev);
       
       const adjustSection = (section: MenuSection, catIndex?: number) => {
@@ -146,21 +146,28 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
       
       return newData;
     });
+    // TODO: Batch update prices in database
   };
 
-  const resetToOriginal = () => {
-    const originalData: MenuData = {
-      snacksAndStarters: deepClone(snacksAndStarters),
-      foodMenu: deepClone(foodMenu),
-      beveragesMenu: deepClone(beveragesMenu),
-      sideItems: deepClone(sideItems),
-    };
-    setMenuData(originalData);
-    saveMenuData(originalData);
+  const resetToOriginal = async () => {
+    setMenuData(getDefaultMenuData());
+    // Refresh from database
+    await refreshMenu();
   };
 
   return (
-    <MenuContext.Provider value={{ menuData, isEditMode, setIsEditMode, updateMenuItem, addMenuItem, deleteMenuItem, adjustPrices, resetToOriginal }}>
+    <MenuContext.Provider value={{ 
+      menuData, 
+      isEditMode, 
+      isLoading,
+      setIsEditMode, 
+      updateMenuItem, 
+      addMenuItem, 
+      deleteMenuItem, 
+      adjustPrices, 
+      resetToOriginal,
+      refreshMenu 
+    }}>
       {children}
     </MenuContext.Provider>
   );
