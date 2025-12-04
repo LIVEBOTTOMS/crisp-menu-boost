@@ -1,0 +1,162 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Cinzel:wght@400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    --background: 220 20% 4%;
+    --foreground: 180 100% 95%;
+
+    --card: 220 25% 8%;
+    --card-foreground: 180 100% 95%;
+
+    --popover: 220 25% 8%;
+    --popover-foreground: 180 100% 95%;
+
+    --primary: 180 100% 50%;
+    --primary-foreground: 220 20% 4%;
+
+    --secondary: 300 100% 60%;
+    --secondary-foreground: 220 20% 4%;
+
+    --muted: 220 20% 15%;
+    --muted-foreground: 180 30% 60%;
+
+    --accent: 42 100% 50%;
+    --accent-foreground: 220 20% 4%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 180 50% 20%;
+    --input: 220 20% 15%;
+    --ring: 180 100% 50%;
+
+    --radius: 0.5rem;
+
+    /* Custom colors for the menu */
+    --neon-cyan: 180 100% 50%;
+    --neon-magenta: 300 100% 60%;
+    --neon-gold: 42 100% 50%;
+    --neon-purple: 270 100% 60%;
+    --dark-surface: 220 30% 6%;
+    --darker-surface: 220 30% 3%;
+
+    /* Gradients */
+    --gradient-neon: linear-gradient(135deg, hsl(var(--neon-cyan)), hsl(var(--neon-magenta)));
+    --gradient-gold: linear-gradient(135deg, hsl(42 100% 45%), hsl(42 100% 60%));
+    --gradient-dark: linear-gradient(180deg, hsl(var(--dark-surface)), hsl(var(--darker-surface)));
+
+    /* Shadows */
+    --glow-cyan: 0 0 20px hsl(var(--neon-cyan) / 0.5), 0 0 40px hsl(var(--neon-cyan) / 0.3);
+    --glow-magenta: 0 0 20px hsl(var(--neon-magenta) / 0.5), 0 0 40px hsl(var(--neon-magenta) / 0.3);
+    --glow-gold: 0 0 20px hsl(var(--neon-gold) / 0.5), 0 0 40px hsl(var(--neon-gold) / 0.3);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 220 20% 4%;
+    --foreground: 180 100% 95%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Rajdhani', sans-serif;
+  }
+
+  h1, h2, h3, .heading {
+    font-family: 'Orbitron', sans-serif;
+  }
+
+  .menu-title {
+    font-family: 'Cinzel', serif;
+  }
+}
+
+@layer utilities {
+  .text-glow-cyan {
+    text-shadow: 0 0 10px hsl(var(--neon-cyan) / 0.8), 0 0 20px hsl(var(--neon-cyan) / 0.5), 0 0 30px hsl(var(--neon-cyan) / 0.3);
+  }
+
+  .text-glow-magenta {
+    text-shadow: 0 0 10px hsl(var(--neon-magenta) / 0.8), 0 0 20px hsl(var(--neon-magenta) / 0.5), 0 0 30px hsl(var(--neon-magenta) / 0.3);
+  }
+
+  .text-glow-gold {
+    text-shadow: 0 0 10px hsl(var(--neon-gold) / 0.8), 0 0 20px hsl(var(--neon-gold) / 0.5), 0 0 30px hsl(var(--neon-gold) / 0.3);
+  }
+
+  .border-glow-cyan {
+    box-shadow: 0 0 10px hsl(var(--neon-cyan) / 0.5), inset 0 0 10px hsl(var(--neon-cyan) / 0.1);
+  }
+
+  .gradient-text {
+    background: var(--gradient-neon);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-text-gold {
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .circuit-pattern {
+    background-image: 
+      linear-gradient(90deg, hsl(var(--neon-cyan) / 0.1) 1px, transparent 1px),
+      linear-gradient(hsl(var(--neon-cyan) / 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.6s ease-out forwards;
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out forwards;
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+}
