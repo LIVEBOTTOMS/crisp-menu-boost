@@ -8,6 +8,17 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { toast } from "sonner";
 
+// HTML entity escaping to prevent XSS in PDF export
+const escapeHtml = (text: string | undefined | null): string => {
+  if (!text) return "";
+  return String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+};
+
 interface PrintPreviewProps {
   isOpen: boolean;
   onClose: () => void;
@@ -215,7 +226,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
         <div style="text-align: center; margin-bottom: 24px; padding: 0 48px;">
           <div style="display: inline-block;">
             <h2 style="font-size: 20px; font-weight: bold; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; color: ${page.variant === "cyan" ? "#00f0ff" : page.variant === "magenta" ? "#ff00ff" : "#ffd700"}; font-family: 'Orbitron', sans-serif;">
-              ${page.section.title}
+              ${escapeHtml(page.section.title)}
             </h2>
             <div style="height: 2px; width: 100%; background: linear-gradient(90deg, transparent, ${page.variant === "cyan" ? "#00f0ff" : page.variant === "magenta" ? "#ff00ff" : "#ffd700"}, transparent);"></div>
           </div>
@@ -226,8 +237,8 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
             ${page.section.categories.map((category, catIdx) => `
               <div style="margin-bottom: 24px;">
                 <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(55,65,81,0.5);">
-                  ${category.icon ? `<span style="font-size: 18px;">${category.icon}</span>` : ""}
-                  <h3 style="font-size: 13px; font-weight: bold; letter-spacing: 0.2em; text-transform: uppercase; color: #00f0ff;">${category.title}</h3>
+                  ${category.icon ? `<span style="font-size: 18px;">${escapeHtml(category.icon)}</span>` : ""}
+                  <h3 style="font-size: 13px; font-weight: bold; letter-spacing: 0.2em; text-transform: uppercase; color: #00f0ff;">${escapeHtml(category.title)}</h3>
                 </div>
                 ${category.items[0]?.sizes ? `
                   <div style="display: flex; justify-content: flex-end; gap: 16px; padding: 0 16px 8px; border-bottom: 1px solid rgba(31,41,55,1);">
@@ -242,27 +253,27 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                     <div style="padding: 12px 16px; ${idx % 2 === 0 ? "background: rgba(255,255,255,0.02);" : ""}">
                       <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
                         <div style="flex: 1;">
-                          <h4 style="font-size: 15px; font-weight: 600; color: white; letter-spacing: 0.05em; text-transform: uppercase;">${item.name}</h4>
-                          ${item.description ? `<p style="font-size: 11px; color: #9ca3af; margin-top: 4px; font-style: italic; line-height: 1.5;">${item.description}</p>` : ""}
+                          <h4 style="font-size: 15px; font-weight: 600; color: white; letter-spacing: 0.05em; text-transform: uppercase;">${escapeHtml(item.name)}</h4>
+                          ${item.description ? `<p style="font-size: 11px; color: #9ca3af; margin-top: 4px; font-style: italic; line-height: 1.5;">${escapeHtml(item.description)}</p>` : ""}
                         </div>
                         <div style="flex-shrink: 0; text-align: right;">
                           ${item.sizes ? `
                             <div style="display: flex; gap: 16px;">
-                              ${item.sizes.map(size => `<span style="font-size: 13px; font-weight: 500; color: #fbbf24; min-width: 50px; text-align: center;">${size}</span>`).join("")}
+                              ${item.sizes.map(size => `<span style="font-size: 13px; font-weight: 500; color: #fbbf24; min-width: 50px; text-align: center;">${escapeHtml(size)}</span>`).join("")}
                             </div>
                           ` : item.halfPrice && item.fullPrice ? `
                             <div style="display: flex; gap: 16px; align-items: center;">
                               <div style="text-align: center;">
                                 <span style="font-size: 9px; color: #6b7280; display: block; text-transform: uppercase; letter-spacing: 0.1em;">Half</span>
-                                <span style="font-size: 13px; font-weight: 500; color: #fbbf24;">${item.halfPrice}</span>
+                                <span style="font-size: 13px; font-weight: 500; color: #fbbf24;">${escapeHtml(item.halfPrice)}</span>
                               </div>
                               <div style="text-align: center;">
                                 <span style="font-size: 9px; color: #6b7280; display: block; text-transform: uppercase; letter-spacing: 0.1em;">Full</span>
-                                <span style="font-size: 13px; font-weight: 500; color: #fbbf24;">${item.fullPrice}</span>
+                                <span style="font-size: 13px; font-weight: 500; color: #fbbf24;">${escapeHtml(item.fullPrice)}</span>
                               </div>
                             </div>
                           ` : `
-                            <span style="font-size: 14px; font-weight: 600; color: #fbbf24;">${item.price}</span>
+                            <span style="font-size: 14px; font-weight: 600; color: #fbbf24;">${escapeHtml(item.price)}</span>
                           `}
                         </div>
                       </div>
