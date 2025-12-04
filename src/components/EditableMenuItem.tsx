@@ -112,7 +112,7 @@ export const EditableMenuItem = ({
   return (
     <div 
       className={cn(
-        "group relative flex items-start justify-between py-4 px-4 rounded-lg transition-all duration-300",
+        "group relative py-3 px-3 rounded-lg transition-all duration-300",
         "hover:bg-card/40 hover:shadow-lg hover:shadow-primary/5",
         index % 2 === 0 ? "bg-transparent" : "bg-card/20",
         isEditMode && "cursor-pointer hover:ring-1 hover:ring-primary/40"
@@ -123,56 +123,59 @@ export const EditableMenuItem = ({
       {isEditMode && (
         <button 
           onClick={handleDelete}
-          className="absolute right-2 top-2 p-1.5 rounded-lg bg-destructive/10 hover:bg-destructive/30 opacity-0 group-hover:opacity-100 transition-all"
+          className="absolute right-2 top-2 p-1.5 rounded-lg bg-destructive/10 hover:bg-destructive/30 opacity-0 group-hover:opacity-100 transition-all z-10"
         >
           <Trash2 className="w-3.5 h-3.5 text-destructive" />
         </button>
       )}
 
-      {/* Item name and description */}
-      <div className="flex-1 min-w-0 pr-4">
-        <div className="flex items-start gap-3">
-          <span className={cn(
-            "w-1 h-1 rounded-full transition-all duration-300 group-hover:scale-150 group-hover:shadow-lg mt-2 flex-shrink-0",
-            accentColor === "cyan" 
-              ? "bg-primary group-hover:shadow-primary/50" 
-              : "bg-secondary group-hover:shadow-secondary/50"
-          )} />
-          <span className="font-cinzel text-sm tracking-wide text-foreground font-medium group-hover:text-foreground/90 break-words">
-            {item.name}
-          </span>
+      {/* Row layout - name/description on left, prices on right */}
+      <div className="flex items-start justify-between gap-2">
+        {/* Item name and description */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start gap-2">
+            <span className={cn(
+              "w-1 h-1 rounded-full transition-all duration-300 group-hover:scale-150 group-hover:shadow-lg mt-2 flex-shrink-0",
+              accentColor === "cyan" 
+                ? "bg-primary group-hover:shadow-primary/50" 
+                : "bg-secondary group-hover:shadow-secondary/50"
+            )} />
+            <span className="font-cinzel text-sm tracking-wide text-foreground font-medium group-hover:text-foreground/90">
+              {item.name}
+            </span>
+          </div>
+          {item.description && (
+            <p className="text-xs text-muted-foreground ml-3 mt-1 italic leading-relaxed font-light">
+              {item.description}
+            </p>
+          )}
         </div>
-        {item.description && (
-          <p className="text-xs text-muted-foreground ml-4 mt-1.5 italic leading-relaxed font-light break-words">
-            {item.description}
-          </p>
-        )}
-      </div>
 
-      {/* Elegant dotted connector */}
-      <div className="flex-shrink-0 mx-3 border-b border-dotted border-muted-foreground/20 flex-grow max-w-[80px] self-center hidden sm:block" />
-
-      {/* Price(s) with premium styling */}
-      <div className="flex-shrink-0 text-right">
-        {hasSizes ? (
-          <div className="flex gap-3 text-sm font-rajdhani font-semibold text-accent">
-            {item.sizes!.map((size, i) => (
-              <span key={i} className="min-w-[48px] text-right tracking-wide">{size}</span>
-            ))}
-          </div>
-        ) : hasMultiplePrices ? (
-          <div className="text-sm font-rajdhani space-x-2">
-            <span className="text-muted-foreground/70 text-xs uppercase tracking-wider">Half</span>
-            <span className="text-accent font-semibold tracking-wide">{item.halfPrice}</span>
-            <span className="text-muted-foreground/40 mx-1">·</span>
-            <span className="text-muted-foreground/70 text-xs uppercase tracking-wider">Full</span>
-            <span className="text-accent font-semibold tracking-wide">{item.fullPrice}</span>
-          </div>
-        ) : (
-          <span className="font-rajdhani text-base font-bold text-accent tracking-wide">
-            {item.price}
-          </span>
-        )}
+        {/* Price(s) */}
+        <div className="flex-shrink-0 text-right">
+          {hasSizes ? (
+            <div className="flex flex-wrap gap-x-3 gap-y-1 justify-end text-sm font-rajdhani font-semibold text-accent">
+              {item.sizes!.map((size, i) => (
+                <span key={i} className="tracking-wide whitespace-nowrap">{size}</span>
+              ))}
+            </div>
+          ) : hasMultiplePrices ? (
+            <div className="text-sm font-rajdhani flex flex-wrap gap-x-2 justify-end">
+              <span className="whitespace-nowrap">
+                <span className="text-muted-foreground/70 text-xs uppercase tracking-wider">H </span>
+                <span className="text-accent font-semibold tracking-wide">{item.halfPrice}</span>
+              </span>
+              <span className="whitespace-nowrap">
+                <span className="text-muted-foreground/70 text-xs uppercase tracking-wider">F </span>
+                <span className="text-accent font-semibold tracking-wide">{item.fullPrice}</span>
+              </span>
+            </div>
+          ) : (
+            <span className="font-rajdhani text-base font-bold text-accent tracking-wide whitespace-nowrap">
+              {item.price}
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );
