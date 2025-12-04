@@ -130,20 +130,20 @@ export const EditableMenuItem = ({
       )}
 
       {/* Item name and description */}
-      <div className="flex-1 min-w-0 pr-6">
-        <div className="flex items-center gap-3">
+      <div className="flex-1 min-w-0 pr-4">
+        <div className="flex items-start gap-3">
           <span className={cn(
-            "w-1 h-1 rounded-full transition-all duration-300 group-hover:scale-150 group-hover:shadow-lg",
+            "w-1 h-1 rounded-full transition-all duration-300 group-hover:scale-150 group-hover:shadow-lg mt-2 flex-shrink-0",
             accentColor === "cyan" 
               ? "bg-primary group-hover:shadow-primary/50" 
               : "bg-secondary group-hover:shadow-secondary/50"
           )} />
-          <span className="font-cinzel text-sm tracking-wide text-foreground font-medium group-hover:text-foreground/90">
+          <span className="font-cinzel text-sm tracking-wide text-foreground font-medium group-hover:text-foreground/90 break-words">
             {item.name}
           </span>
         </div>
         {item.description && (
-          <p className="text-xs text-muted-foreground ml-4 mt-1.5 italic leading-relaxed font-light">
+          <p className="text-xs text-muted-foreground ml-4 mt-1.5 italic leading-relaxed font-light break-words">
             {item.description}
           </p>
         )}

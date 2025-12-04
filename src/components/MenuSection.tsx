@@ -32,23 +32,27 @@ export const MenuSection = ({ section, variant = "cyan", sectionKey }: MenuSecti
         </div>
       </div>
 
-      {/* Categories Grid */}
-      <div className={`grid gap-8 ${
-        section.categories.length === 2 
-          ? "md:grid-cols-2" 
+      {/* Categories Grid - max 2 columns for items with sizes to prevent cramped names */}
+      {(() => {
+        const hasSizedItems = section.categories.some(cat => cat.items.some(item => item.sizes && item.sizes.length > 0));
+        const gridClass = hasSizedItems || section.categories.length <= 2
+          ? section.categories.length >= 2 ? "md:grid-cols-2" : "max-w-2xl mx-auto"
           : section.categories.length >= 3 
             ? "md:grid-cols-2 lg:grid-cols-3" 
-            : "max-w-2xl mx-auto"
-      }`}>
-        {section.categories.map((category, index) => (
-          <MenuCategory 
-            key={category.title} 
-            category={category} 
-            index={index}
-            sectionKey={sectionKey}
-          />
-        ))}
-      </div>
+            : "max-w-2xl mx-auto";
+        return (
+          <div className={`grid gap-8 ${gridClass}`}>
+            {section.categories.map((category, index) => (
+              <MenuCategory 
+                key={category.title} 
+                category={category} 
+                index={index}
+                sectionKey={sectionKey}
+              />
+            ))}
+          </div>
+        );
+      })()}
     </section>
   );
 };
