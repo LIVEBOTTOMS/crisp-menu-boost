@@ -1,28 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Settings } from "lucide-react";
 import { MenuHeader } from "@/components/MenuHeader";
 import { MenuNavigation } from "@/components/MenuNavigation";
 import { MenuSection } from "@/components/MenuSection";
 import { BackgroundEffects } from "@/components/BackgroundEffects";
-import { MenuToolbar } from "@/components/MenuToolbar";
 import { useMenu } from "@/contexts/MenuContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState("snacks");
-  const [showToolbar, setShowToolbar] = useState(false);
   const { menuData, isLoading } = useMenu();
-
-  // Keyboard shortcut: Ctrl+Shift+A to toggle toolbar
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "a") {
-        e.preventDefault();
-        setShowToolbar(prev => !prev);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  const { user } = useAuth();
 
   const renderActiveSection = () => {
     switch (activeSection) {
@@ -42,8 +31,15 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background relative">
       <BackgroundEffects />
-      {showToolbar && <MenuToolbar />}
       
+      {/* Admin Button */}
+      <Link 
+        to={user ? "/admin" : "/auth"} 
+        className="fixed top-4 right-4 z-50 p-2 rounded-lg bg-background/80 backdrop-blur-sm border border-neon-cyan/30 hover:border-neon-cyan hover:bg-neon-cyan/10 transition-all duration-300"
+        title="Admin Settings"
+      >
+        <Settings className="w-5 h-5 text-neon-cyan" />
+      </Link>
       
       <div className="relative z-10">
         <MenuHeader />
