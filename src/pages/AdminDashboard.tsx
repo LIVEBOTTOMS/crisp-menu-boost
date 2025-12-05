@@ -1,18 +1,28 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useMenu } from '@/contexts/MenuContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, LogOut, Menu, Users, Settings, ShieldCheck, ShieldX, Home } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Loader2, LogOut, Menu, Users, Settings, ShieldCheck, ShieldX, Home, Percent, RotateCcw, Download, Edit } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { PrintPreview } from '@/components/PrintPreview';
 
 const AdminDashboard = () => {
   const { user, isAdmin, isLoading, signOut } = useAuth();
-  const { menuData, setIsEditMode, isEditMode } = useMenu();
+  const { menuData, setIsEditMode, isEditMode, adjustPrices, resetToOriginal } = useMenu();
   const navigate = useNavigate();
   const { toast } = useToast();
+  
+  const [pricePercent, setPricePercent] = useState("");
+  const [priceScope, setPriceScope] = useState("all");
+  const [isPriceDialogOpen, setIsPriceDialogOpen] = useState(false);
+  const [isPrintPreviewOpen, setIsPrintPreviewOpen] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -44,6 +54,39 @@ const AdminDashboard = () => {
       description: isEditMode 
         ? 'You can no longer make changes to the menu.' 
         : 'You can now edit menu items.',
+    });
+  };
+
+  const handlePriceAdjust = () => {
+    const percent = parseFloat(pricePercent);
+    if (isNaN(percent)) {
+      toast({
+        title: 'Invalid input',
+        description: 'Please enter a valid percentage',
+        variant: 'destructive',
+      });
+      return;
+    }
+    
+    if (priceScope === "all") {
+      adjustPrices(percent);
+    } else {
+      adjustPrices(percent, priceScope);
+    }
+    
+    toast({
+      title: 'Prices updated',
+      description: `Prices ${percent >= 0 ? "increased" : "decreased"} by ${Math.abs(percent)}%`,
+    });
+    setIsPriceDialogOpen(false);
+    setPricePercent("");
+  };
+
+  const handleReset = () => {
+    resetToOriginal();
+    toast({
+      title: 'Menu reset',
+      description: 'Menu has been reset to original values.',
     });
   };
 
@@ -157,12 +200,111 @@ const AdminDashboard = () => {
           </Card>
         </div>
 
+        {/* Menu Tools */}
+        <Card className="bg-slate-800/80 border-purple-500/30 mb-6">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Settings className="h-5 w-5" />
+              Menu Tools
+            </CardTitle>
+            <CardDescription className="text-slate-300">
+              Quick actions for menu management
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-3">
+              {/* Adjust Prices */}
+              <Dialog open={isPriceDialogOpen} onOpenChange={setIsPriceDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    disabled={!isAdmin}
+                    className="border-yellow-500/50 text-yellow-400 hover:bg-yellow-500/10"
+                  >
+                    <Percent className="w-4 h-4 mr-2" />
+                    Adjust Prices
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="bg-slate-800 border-slate-600">
+                  <DialogHeader>
+                    <DialogTitle className="text-white">Adjust Prices</DialogTitle>
+                  </DialogHeader>
+                  <div className="grid gap-4">
+                    <div>
+                      <Label className="text-slate-300">Percentage Change</Label>
+                      <Input
+                        type="number"
+                        placeholder="e.g., 10 for +10%, -5 for -5%"
+                        value={pricePercent}
+                        onChange={(e) => setPricePercent(e.target.value)}
+                        className="mt-1 bg-slate-700 border-slate-600 text-white"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-slate-300">Apply To</Label>
+                      <Select value={priceScope} onValueChange={setPriceScope}>
+                        <SelectTrigger className="mt-1 bg-slate-700 border-slate-600 text-white">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="bg-slate-700 border-slate-600">
+                          <SelectItem value="all">All Sections</SelectItem>
+                          <SelectItem value="snacksAndStarters">Snacks & Starters</SelectItem>
+                          <SelectItem value="foodMenu">Food Menu</SelectItem>
+                          <SelectItem value="beveragesMenu">Beverages & Spirits</SelectItem>
+                          <SelectItem value="sideItems">Side Items</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <Button onClick={handlePriceAdjust} className="bg-yellow-600 hover:bg-yellow-700">
+                      Apply Price Change
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+
+              {/* Edit Menu */}
+              <Button 
+                onClick={toggleEditMode}
+                disabled={!isAdmin}
+                variant="outline"
+                className={isEditMode 
+                  ? "border-purple-500 bg-purple-500/20 text-purple-300" 
+                  : "border-purple-500/50 text-purple-400 hover:bg-purple-500/10"}
+              >
+                <Edit className="w-4 h-4 mr-2" />
+                {isEditMode ? 'Exit Edit' : 'Edit Menu'}
+              </Button>
+
+              {/* Reset */}
+              <Button 
+                variant="outline" 
+                onClick={handleReset}
+                disabled={!isAdmin}
+                className="border-red-500/50 text-red-400 hover:bg-red-500/10"
+              >
+                <RotateCcw className="w-4 h-4 mr-2" />
+                Reset
+              </Button>
+
+              {/* Download/Print */}
+              <Button 
+                variant="outline" 
+                onClick={() => setIsPrintPreviewOpen(true)}
+                className="border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Download / Print
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Actions */}
         <Card className="bg-slate-800/80 border-purple-500/30">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
-              <Settings className="h-5 w-5" />
-              Menu Management
+              <Menu className="h-5 w-5" />
+              Quick Navigation
             </CardTitle>
             <CardDescription className="text-slate-300">
               {isAdmin 
@@ -172,16 +314,6 @@ const AdminDashboard = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex flex-col sm:flex-row gap-3">
-              <Button 
-                onClick={toggleEditMode}
-                disabled={!isAdmin}
-                className={isEditMode 
-                  ? "bg-orange-600 hover:bg-orange-700" 
-                  : "bg-purple-600 hover:bg-purple-700"}
-              >
-                <Menu className="h-4 w-4 mr-2" />
-                {isEditMode ? 'Disable Edit Mode' : 'Enable Edit Mode'}
-              </Button>
               <Button 
                 variant="outline"
                 onClick={() => navigate('/')}
@@ -201,6 +333,8 @@ const AdminDashboard = () => {
           </CardContent>
         </Card>
       </div>
+
+      <PrintPreview isOpen={isPrintPreviewOpen} onClose={() => setIsPrintPreviewOpen(false)} />
     </div>
   );
 };
