@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import QRCode from 'qrcode';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -11,32 +11,31 @@ interface QRCodeGeneratorProps {
 }
 
 export const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ isOpen, onClose }) => {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const [qrCodeUrl, setQrCodeUrl] = useState<string>('');
     const [menuUrl, setMenuUrl] = useState('');
 
     useEffect(() => {
-        // Get the current URL origin (works in dev and production)
         const url = window.location.origin;
         setMenuUrl(url);
     }, []);
 
     useEffect(() => {
-        if (isOpen && canvasRef.current && menuUrl) {
-            console.log('Generating QR code for:', menuUrl);
+        if (isOpen && menuUrl) {
             generateQRCode();
         }
     }, [isOpen, menuUrl]);
 
     const generateQRCode = async () => {
-        if (!canvasRef.current || !menuUrl) {
-            console.log('Cannot generate QR: missing canvas or URL');
+        if (!menuUrl) {
+            console.error('No menu URL available');
             return;
         }
 
         try {
-            console.log('Starting QR generation...');
-            await QRCode.toCanvas(canvasRef.current, menuUrl, {
-                width: 400,
+            console.log('Generating QR for:', menuUrl);
+
+            const qrDataUrl = await QRCode.toDataURL(menuUrl, {
+                width: 300,
                 margin: 2,
                 color: {
                     dark: '#000000',
@@ -44,25 +43,30 @@ export const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ isOpen, onClos
                 },
                 errorCorrectionLevel: 'H'
             });
+
+            setQrCodeUrl(qrDataUrl);
             console.log('QR code generated successfully');
         } catch (error) {
-            console.error('QR Code generation error:', error);
+            console.error('QR generation error:', error);
             toast.error('Failed to generate QR code');
         }
     };
 
     const downloadQRCode = () => {
-        if (!canvasRef.current) return;
+        if (!qrCodeUrl) {
+            toast.error('QR code not ready');
+            return;
+        }
 
         try {
             const link = document.createElement('a');
             link.download = 'LiveBar-Menu-QR-Code.png';
-            link.href = canvasRef.current.toDataURL('image/png');
+            link.href = qrCodeUrl;
             link.click();
-            toast.success('QR code downloaded successfully!');
+            toast.success('QR code downloaded!');
         } catch (error) {
             console.error('Download error:', error);
-            toast.error('Failed to download QR code');
+            toast.error('Failed to download');
         }
     };
 
@@ -81,32 +85,37 @@ export const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ isOpen, onClos
                     </div>
                 </DialogHeader>
 
-                <div className="space-y-6">
+                <div className="space-y-6 pt-4">
                     {/* QR Code Display */}
-                    <div className="bg-white p-8 rounded-lg flex items-center justify-center">
-                        <canvas ref={canvasRef} />
+                    <div className="bg-white p-8 rounded-lg flex items-center justify-center min-h-[316px]">
+                        {qrCodeUrl ? (
+                            <img src={qrCodeUrl} alt="Menu QR Code" className="w-[300px] h-[300px]" />
+                        ) : (
+                            <p className="text-gray-500 text-sm">Generating QR code...</p>
+                        )}
                     </div>
 
                     {/* Instructions */}
                     <div className="bg-slate-700/50 p-4 rounded-lg border border-slate-600">
                         <h3 className="text-white font-semibold mb-2">How to use:</h3>
                         <ul className="text-slate-300 text-sm space-y-1">
-                            <li>• Customers can scan this QR code to view the menu</li>
-                            <li>• Download and print the QR code for display</li>
-                            <li>• Place on tables, counters, or promotional materials</li>
+                            <li>• Customers scan this QR code to view the menu</li>
+                            <li>• Download and print for display</li>
+                            <li>• Place on tables or promotional materials</li>
                         </ul>
                     </div>
 
                     {/* URL Display */}
                     <div className="bg-slate-700/50 p-3 rounded-lg border border-slate-600">
                         <p className="text-xs text-slate-400 mb-1">Menu URL:</p>
-                        <p className="text-slate-200 text-sm font-mono break-all">{menuUrl}</p>
+                        <p className="text-slate-200 text-sm font-mono break-all">{menuUrl || 'Loading...'}</p>
                     </div>
 
                     {/* Download Button */}
                     <Button
                         onClick={downloadQRCode}
-                        className="w-full bg-cyan-600 hover:bg-cyan-700 text-white"
+                        disabled={!qrCodeUrl}
+                        className="w-full bg-cyan-600 hover:bg-cyan-700 text-white disabled:opacity-50"
                     >
                         <Download className="w-4 h-4 mr-2" />
                         Download QR Code
