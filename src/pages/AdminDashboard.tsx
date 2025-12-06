@@ -9,20 +9,22 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, LogOut, Menu, Users, Settings, ShieldCheck, ShieldX, Home, Percent, Download, Edit } from 'lucide-react';
+import { Loader2, LogOut, Menu, Users, Settings, ShieldCheck, ShieldX, Home, Percent, Download, Edit, QrCode } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { PrintPreview } from '@/components/PrintPreview';
+import { QRCodeGenerator } from '@/components/QRCodeGenerator';
 
 const AdminDashboard = () => {
   const { user, isAdmin, isLoading, signOut } = useAuth();
   const { menuData, setIsEditMode, isEditMode, adjustPrices } = useMenu();
   const navigate = useNavigate();
   const { toast } = useToast();
-  
+
   const [pricePercent, setPricePercent] = useState("");
   const [priceScope, setPriceScope] = useState("all");
   const [isPriceDialogOpen, setIsPriceDialogOpen] = useState(false);
   const [isPrintPreviewOpen, setIsPrintPreviewOpen] = useState(false);
+  const [isQRCodeOpen, setIsQRCodeOpen] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -51,8 +53,8 @@ const AdminDashboard = () => {
     setIsEditMode(!isEditMode);
     toast({
       title: isEditMode ? 'Edit mode disabled' : 'Edit mode enabled',
-      description: isEditMode 
-        ? 'You can no longer make changes to the menu.' 
+      description: isEditMode
+        ? 'You can no longer make changes to the menu.'
         : 'You can now edit menu items.',
     });
   };
@@ -67,13 +69,13 @@ const AdminDashboard = () => {
       });
       return;
     }
-    
+
     if (priceScope === "all") {
       await adjustPrices(percent);
     } else {
       await adjustPrices(percent, priceScope);
     }
-    
+
     toast({
       title: 'Prices updated',
       description: `Prices ${percent >= 0 ? "increased" : "decreased"} by ${Math.abs(percent)}%. Previous menu archived.`,
@@ -97,14 +99,14 @@ const AdminDashboard = () => {
   // Count menu items
   const totalSections = Object.keys(menuData).length;
   const totalCategories = Object.values(menuData).reduce(
-    (acc, section) => acc + (section?.categories?.length || 0), 
+    (acc, section) => acc + (section?.categories?.length || 0),
     0
   );
   const totalItems = Object.values(menuData).reduce(
     (acc, section) => acc + (section?.categories?.reduce(
-      (catAcc, cat) => catAcc + (cat?.items?.length || 0), 
+      (catAcc, cat) => catAcc + (cat?.items?.length || 0),
       0
-    ) || 0), 
+    ) || 0),
     0
   );
 
@@ -118,16 +120,16 @@ const AdminDashboard = () => {
             <p className="text-slate-300 mt-1">Manage your menu and settings</p>
           </div>
           <div className="flex items-center gap-3">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={() => navigate('/')}
               className="border-slate-600 text-slate-300 hover:bg-slate-700"
             >
               <Home className="h-4 w-4 mr-2" />
               View Menu
             </Button>
-            <Button 
-              variant="destructive" 
+            <Button
+              variant="destructive"
               onClick={handleSignOut}
               className="bg-red-600 hover:bg-red-700"
             >
@@ -150,7 +152,7 @@ const AdminDashboard = () => {
                   {user.email}
                 </CardDescription>
               </div>
-              <Badge 
+              <Badge
                 variant={isAdmin ? "default" : "secondary"}
                 className={isAdmin ? "bg-green-600" : "bg-slate-600"}
               >
@@ -208,8 +210,8 @@ const AdminDashboard = () => {
               {/* Adjust Prices */}
               <Dialog open={isPriceDialogOpen} onOpenChange={setIsPriceDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     disabled={!isAdmin}
                     className="border-yellow-500/50 text-yellow-400 hover:bg-yellow-500/10"
                   >
@@ -255,12 +257,12 @@ const AdminDashboard = () => {
               </Dialog>
 
               {/* Edit Menu */}
-              <Button 
+              <Button
                 onClick={toggleEditMode}
                 disabled={!isAdmin}
                 variant="outline"
-                className={isEditMode 
-                  ? "border-purple-500 bg-purple-500/20 text-purple-300" 
+                className={isEditMode
+                  ? "border-purple-500 bg-purple-500/20 text-purple-300"
                   : "border-purple-500/50 text-purple-400 hover:bg-purple-500/10"}
               >
                 <Edit className="w-4 h-4 mr-2" />
@@ -268,13 +270,23 @@ const AdminDashboard = () => {
               </Button>
 
               {/* Download/Print */}
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => setIsPrintPreviewOpen(true)}
                 className="border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10"
               >
                 <Download className="w-4 h-4 mr-2" />
                 Download / Print
+              </Button>
+
+              {/* QR Code Generator */}
+              <Button
+                variant="outline"
+                onClick={() => setIsQRCodeOpen(true)}
+                className="border-green-500/50 text-green-400 hover:bg-green-500/10"
+              >
+                <QrCode className="w-4 h-4 mr-2" />
+                Generate QR Code
               </Button>
             </div>
           </CardContent>
@@ -288,14 +300,14 @@ const AdminDashboard = () => {
               Quick Navigation
             </CardTitle>
             <CardDescription className="text-slate-300">
-              {isAdmin 
+              {isAdmin
                 ? 'You have admin privileges. You can edit the menu.'
                 : 'You do not have admin privileges. Contact an administrator to get access.'}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex flex-col sm:flex-row gap-3">
-              <Button 
+              <Button
                 variant="outline"
                 onClick={() => navigate('/')}
                 className="border-slate-600 text-slate-300 hover:bg-slate-700"
@@ -303,7 +315,7 @@ const AdminDashboard = () => {
                 Go to Menu {isEditMode && '(Edit Mode Active)'}
               </Button>
             </div>
-            
+
             {!isAdmin && (
               <div className="p-4 bg-yellow-900/30 border border-yellow-600/30 rounded-lg">
                 <p className="text-yellow-200 text-sm">
@@ -316,6 +328,7 @@ const AdminDashboard = () => {
       </div>
 
       <PrintPreview isOpen={isPrintPreviewOpen} onClose={() => setIsPrintPreviewOpen(false)} />
+      <QRCodeGenerator isOpen={isQRCodeOpen} onClose={() => setIsQRCodeOpen(false)} />
     </div>
   );
 };
