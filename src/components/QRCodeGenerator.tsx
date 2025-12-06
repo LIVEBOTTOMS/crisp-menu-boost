@@ -22,14 +22,19 @@ export const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ isOpen, onClos
 
     useEffect(() => {
         if (isOpen && canvasRef.current && menuUrl) {
+            console.log('Generating QR code for:', menuUrl);
             generateQRCode();
         }
     }, [isOpen, menuUrl]);
 
     const generateQRCode = async () => {
-        if (!canvasRef.current || !menuUrl) return;
+        if (!canvasRef.current || !menuUrl) {
+            console.log('Cannot generate QR: missing canvas or URL');
+            return;
+        }
 
         try {
+            console.log('Starting QR generation...');
             await QRCode.toCanvas(canvasRef.current, menuUrl, {
                 width: 400,
                 margin: 2,
@@ -39,6 +44,7 @@ export const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ isOpen, onClos
                 },
                 errorCorrectionLevel: 'H'
             });
+            console.log('QR code generated successfully');
         } catch (error) {
             console.error('QR Code generation error:', error);
             toast.error('Failed to generate QR code');
