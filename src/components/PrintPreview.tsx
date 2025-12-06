@@ -80,7 +80,7 @@ const CategoryBlock = ({ category, index }: { category: MenuCategoryType; index:
           {category.title}
         </h3>
       </div>
-      
+
       {/* Size Headers for drinks */}
       {category.items[0]?.sizes && (
         <div className="flex justify-end gap-4 px-4 pb-2 border-b border-gray-800">
@@ -90,7 +90,7 @@ const CategoryBlock = ({ category, index }: { category: MenuCategoryType; index:
           <span className="text-[9px] text-gray-500 min-w-[50px] text-center uppercase tracking-wider">180ml</span>
         </div>
       )}
-      
+
       {/* Items */}
       <div className="divide-y divide-gray-800/50">
         {category.items.map((item, idx) => (
@@ -101,23 +101,23 @@ const CategoryBlock = ({ category, index }: { category: MenuCategoryType; index:
   );
 };
 
-const PrintablePage = ({ 
-  section, 
+const PrintablePage = ({
+  section,
   pageRef,
   variant,
   pageNumber,
   totalPages
-}: { 
-  section: MenuSectionType; 
+}: {
+  section: MenuSectionType;
   pageRef: React.RefObject<HTMLDivElement>;
   variant: "cyan" | "magenta" | "gold";
   pageNumber: number;
   totalPages: number;
 }) => {
   const accentColor = variant === "cyan" ? "#00f0ff" : variant === "magenta" ? "#ff00ff" : "#ffd700";
-  
+
   return (
-    <div 
+    <div
       ref={pageRef}
       className="bg-[#0a0a0f] w-[794px] min-h-[1123px] relative flex flex-col"
       style={{ fontFamily: "'Rajdhani', sans-serif" }}
@@ -125,7 +125,7 @@ const PrintablePage = ({
       {/* Elegant Border */}
       <div className="absolute inset-4 border border-gray-700/30 pointer-events-none" />
       <div className="absolute inset-6 border border-gray-700/20 pointer-events-none" />
-      
+
       {/* Header */}
       <div className="pt-12 pb-6 text-center">
         <div className="mb-2">
@@ -145,7 +145,7 @@ const PrintablePage = ({
       {/* Section Title */}
       <div className="text-center mb-6 px-12">
         <div className="inline-block">
-          <h2 
+          <h2
             className="text-xl font-bold tracking-[0.2em] uppercase mb-2"
             style={{ color: accentColor, fontFamily: "'Orbitron', sans-serif" }}
           >
@@ -157,7 +157,7 @@ const PrintablePage = ({
 
       {/* Content */}
       <div className="flex-1 px-10 pb-8">
-        <div className={`grid gap-6 ${section.categories.length >= 2 ? "grid-cols-2" : "grid-cols-1 max-w-lg mx-auto"}`}>
+        <div className="max-w-3xl mx-auto">
           {section.categories.map((category, index) => (
             <CategoryBlock key={category.title} category={category} index={index} />
           ))}
@@ -188,11 +188,88 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
   const [isExporting, setIsExporting] = useState(false);
   const pageRefs = useRef<(HTMLDivElement | null)[]>([]);
 
+  // Smart grouping for ~10 pages world-class layout
   const pages = [
-    { section: menuData.snacksAndStarters, variant: "cyan" as const, key: "snacks" },
-    { section: menuData.foodMenu, variant: "magenta" as const, key: "food" },
-    { section: menuData.beveragesMenu, variant: "cyan" as const, key: "beverages" },
-    { section: menuData.sideItems, variant: "gold" as const, key: "sides" },
+    // Page 1: Veg Snacks (13 items)
+    {
+      section: {
+        title: "SNACKS & STARTERS",
+        categories: [menuData.snacksAndStarters.categories[0]]
+      },
+      variant: "cyan" as const,
+      key: "snacks-veg"
+    },
+    // Page 2: Non-Veg Snacks (14 items)
+    {
+      section: {
+        title: "SNACKS & STARTERS",
+        categories: [menuData.snacksAndStarters.categories[1]]
+      },
+      variant: "cyan" as const,
+      key: "snacks-nonveg"
+    },
+    // Page 3: Handi & Mutton (9 items)
+    {
+      section: {
+        title: "CHEF'S SIGNATURE CURRIES",
+        categories: [menuData.foodMenu.categories[0], menuData.foodMenu.categories[1]]
+      },
+      variant: "magenta" as const,
+      key: "food-curries"
+    },
+    // Page 4: Thali & Veg Mains (16 items)
+    {
+      section: {
+        title: "MAINS & THALIS",
+        categories: [menuData.foodMenu.categories[3], menuData.foodMenu.categories[2]]
+      },
+      variant: "magenta" as const,
+      key: "food-mains"
+    },
+    // Page 5: Beers & Vodkas (12 items)
+    {
+      section: {
+        title: "BREWS & SPIRITS",
+        categories: [menuData.beveragesMenu.categories[0], menuData.beveragesMenu.categories[1]]
+      },
+      variant: "cyan" as const,
+      key: "drinks-beer-vodka"
+    },
+    // Page 6: Rums & Whiskies (13 items)
+    {
+      section: {
+        title: "AGED SPIRITS",
+        categories: [
+          menuData.beveragesMenu.categories[2],
+          menuData.beveragesMenu.categories[3],
+          menuData.beveragesMenu.categories[4]
+        ]
+      },
+      variant: "cyan" as const,
+      key: "drinks-dark-spirits"
+    },
+    // Page 7: Celebration Bottles (8 items)
+    {
+      section: {
+        title: "CELEBRATION BOTTLES",
+        categories: [menuData.beveragesMenu.categories[5]]
+      },
+      variant: "gold" as const,
+      key: "drinks-bottles"
+    },
+    // Page 8: Sides & Refreshments (9 items)
+    {
+      section: {
+        title: "SIDES & REFRESHMENTS",
+        categories: [
+          menuData.sideItems.categories[0],
+          menuData.sideItems.categories[1],
+          menuData.sideItems.categories[2]
+        ]
+      },
+      variant: "gold" as const,
+      key: "sides-all"
+    },
   ];
 
   const capturePageAtIndex = async (index: number): Promise<HTMLCanvasElement | null> => {
@@ -233,7 +310,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
         </div>
         
         <div style="flex: 1; padding: 0 40px 32px;">
-          <div style="display: grid; grid-template-columns: ${page.section.categories.length >= 2 ? "1fr 1fr" : "1fr"}; gap: 24px; ${page.section.categories.length < 2 ? "max-width: 512px; margin: 0 auto;" : ""}">
+          <div style="max-width: 768px; margin: 0 auto;">
             ${page.section.categories.map((category, catIdx) => `
               <div style="margin-bottom: 24px;">
                 <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(55,65,81,0.5);">
@@ -300,7 +377,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
 
     try {
       const canvas = await html2canvas(pageElement.firstElementChild as HTMLElement, {
-        scale: 3,
+        scale: 2, // Reduced from 3 to 2 for better performance and stability
         backgroundColor: "#0a0a0f",
         useCORS: true,
         logging: false,
@@ -310,6 +387,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       document.body.removeChild(tempDiv);
       return canvas;
     } catch (error) {
+      console.error("Canvas capture error:", error);
       document.body.removeChild(tempDiv);
       return null;
     }
@@ -320,7 +398,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
     try {
       const canvas = await capturePageAtIndex(currentPage);
       if (!canvas) throw new Error("Failed to capture");
-      
+
       const link = document.createElement("a");
       link.download = `menu-${pages[currentPage].key}.${format}`;
       link.href = canvas.toDataURL(format === "jpg" ? "image/jpeg" : "image/png", 1.0);
@@ -344,7 +422,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
           link.download = `menu-${pages[i].key}.${format}`;
           link.href = canvas.toDataURL(format === "jpg" ? "image/jpeg" : "image/png", 1.0);
           link.click();
-          await new Promise(resolve => setTimeout(resolve, 800));
+          await new Promise(resolve => setTimeout(resolve, 500));
         }
       }
       toast.success(`All ${pages.length} pages downloaded`);
@@ -360,27 +438,61 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
     try {
       const pdf = new jsPDF({
         orientation: "portrait",
-        unit: "px",
-        format: [794, 1123],
+        unit: "mm",
+        format: "a4",
+        compress: true
       });
 
       const pagesToExport = allPages ? pages.map((_, i) => i) : [currentPage];
+      const pdfWidth = 210;
+      const pdfHeight = 297;
+      let pagesAdded = 0;
 
       for (let i = 0; i < pagesToExport.length; i++) {
         const pageIndex = pagesToExport[i];
-        toast.info(`Processing page ${i + 1} of ${pagesToExport.length}...`);
+        toast.info(allPages ? `Processing page ${i + 1} of ${pages.length}...` : "Generating PDF...", {
+          duration: 2000,
+        });
+
+        // Wait a bit to ensure browser doesn't freeze and DOM is ready
+        await new Promise(resolve => setTimeout(resolve, 200));
+
         const canvas = await capturePageAtIndex(pageIndex);
         if (canvas) {
-          if (i > 0) pdf.addPage();
-          const imgData = canvas.toDataURL("image/png", 1.0);
-          pdf.addImage(imgData, "PNG", 0, 0, 794, 1123);
+          if (pagesAdded > 0) pdf.addPage();
+
+          // Use JPEG with high quality to ensure valid image data
+          const imgData = canvas.toDataURL("image/jpeg", 1.0);
+          pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight, undefined, "FAST");
+          pagesAdded++;
         }
       }
 
-      pdf.save(allPages ? "menu-complete.pdf" : `menu-${pages[currentPage].key}.pdf`);
-      toast.success("PDF downloaded successfully");
+      if (pagesAdded > 0) {
+        const fileName = allPages ? "LiveBar-Full-Menu.pdf" : `LiveBar-Menu-${pages[currentPage].key}.pdf`;
+
+        // Use Blob download with explicit MIME type to ensure proper file format
+        const pdfBlob = pdf.output('blob');
+        const blobUrl = URL.createObjectURL(new Blob([pdfBlob], { type: 'application/pdf' }));
+
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = fileName;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        //Clean up the blob URL
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
+
+        toast.success("PDF downloaded successfully!");
+      } else {
+        throw new Error("No valid pages could be generated");
+      }
     } catch (error) {
-      toast.error("Failed to create PDF");
+      console.error("PDF generation failed:", error);
+      toast.error("Failed to create PDF. Please try again.");
     } finally {
       setIsExporting(false);
     }
@@ -391,13 +503,13 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
     try {
       const canvas = await capturePageAtIndex(currentPage);
       if (!canvas) throw new Error("Failed to capture");
-      
+
       const printWindow = window.open("", "_blank");
       if (!printWindow) {
         toast.error("Please allow popups for printing");
         return;
       }
-      
+
       printWindow.document.write(`
         <!DOCTYPE html>
         <html>
@@ -472,13 +584,12 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                   <button
                     key={i}
                     onClick={() => setCurrentPage(i)}
-                    className={`px-3 h-8 rounded text-xs font-medium transition-colors ${
-                      i === currentPage 
-                        ? "bg-primary text-primary-foreground" 
-                        : "bg-muted hover:bg-muted/80"
-                    }`}
+                    className={`px-3 h-8 rounded text-xs font-medium transition-colors ${i === currentPage
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted hover:bg-muted/80"
+                      }`}
                   >
-                    {page.key.charAt(0).toUpperCase() + page.key.slice(1)}
+                    {String(i + 1).padStart(2, '0')}
                   </button>
                 ))}
               </div>
@@ -494,50 +605,23 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
 
             {/* Export Actions */}
             <div className="flex items-center gap-2 flex-wrap">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={() => downloadCurrentAsImage("png")}
-                disabled={isExporting}
-              >
-                <FileImage className="w-4 h-4 mr-1" />
-                PNG
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={() => downloadAllAsImages("png")}
-                disabled={isExporting}
-              >
-                <Download className="w-4 h-4 mr-1" />
-                All PNG
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => downloadAsPDF(false)}
                 disabled={isExporting}
               >
                 <FileText className="w-4 h-4 mr-1" />
-                PDF
+                PDF Page
               </Button>
-              <Button 
-                size="sm" 
+              <Button
+                size="sm"
                 onClick={() => downloadAsPDF(true)}
                 disabled={isExporting}
                 className="bg-neon-cyan/20 hover:bg-neon-cyan/30 text-neon-cyan border border-neon-cyan/50"
               >
                 <FileText className="w-4 h-4 mr-1" />
                 Full Menu PDF
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={handlePrint}
-                disabled={isExporting}
-              >
-                <Printer className="w-4 h-4 mr-1" />
-                Print
               </Button>
             </div>
           </div>

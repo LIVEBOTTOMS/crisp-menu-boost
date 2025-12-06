@@ -120,17 +120,29 @@ export const beveragesMenu: MenuSection = {
   title: "BEVERAGES & SPIRITS",
   categories: [
     {
-      title: "Craft & Classic Brews",
+      title: "Craft & Classic Brews - Large (650 ml)",
       icon: "🍺",
       items: [
-        { name: "Kingfisher Premium (650 ml)", price: "₹289", description: "India's favorite crisp, refreshing lager" },
-        { name: "Budweiser Mild (650 ml)", price: "₹319", description: "Smooth American-style pale lager" },
-        { name: "Budweiser Magnum Strong (650 ml)", price: "₹349", description: "Bold & full-bodied with rich malt character" },
-        { name: "Tuborg Strong (650 ml)", price: "₹279", description: "Danish heritage with robust flavor profile" },
-        { name: "Carlsberg Smooth (650 ml)", price: "₹299", description: "Exceptionally smooth Scandinavian brew" },
-        { name: "Heineken (650 ml)", price: "₹329", description: "Iconic Dutch pilsner with balanced bitterness" },
+        { name: "Kingfisher Premium", price: "₹289", description: "India's favorite crisp, refreshing lager" },
+        { name: "Budweiser Mild", price: "₹319", description: "Smooth American-style pale lager" },
+        { name: "Budweiser Magnum Strong", price: "₹349", description: "Bold & full-bodied with rich malt character" },
+        { name: "Tuborg Strong", price: "₹279", description: "Danish heritage with robust flavor profile" },
+        { name: "Carlsberg Smooth", price: "₹299", description: "Exceptionally smooth Scandinavian brew" },
+        { name: "Heineken", price: "₹329", description: "Iconic Dutch pilsner with balanced bitterness" },
         { name: "Breezer Cranberry (275 ml)", price: "₹269", description: "Light & fruity with tart cranberry notes" },
         { name: "Breezer Blackberry (275 ml)", price: "₹269", description: "Sweet berry refreshment, perfectly chilled" },
+      ],
+    },
+    {
+      title: "Craft & Classic Brews - Pint",
+      icon: "🍺",
+      items: [
+        { name: "Kingfisher Premium", price: "₹199", description: "India's favorite crisp, refreshing lager" },
+        { name: "Budweiser Mild", price: "₹219", description: "Smooth American-style pale lager" },
+        { name: "Budweiser Magnum Strong", price: "₹239", description: "Bold & full-bodied with rich malt character" },
+        { name: "Tuborg Strong", price: "₹189", description: "Danish heritage with robust flavor profile" },
+        { name: "Carlsberg Smooth", price: "₹209", description: "Exceptionally smooth Scandinavian brew" },
+        { name: "Heineken", price: "₹229", description: "Iconic Dutch pilsner with balanced bitterness" },
       ],
     },
     {
