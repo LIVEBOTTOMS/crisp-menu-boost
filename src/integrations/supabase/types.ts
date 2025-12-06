@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      archived_menus: {
+        Row: {
+          archived_at: string
+          archived_by: string | null
+          id: string
+          menu_data: Json
+          notes: string | null
+        }
+        Insert: {
+          archived_at?: string
+          archived_by?: string | null
+          id?: string
+          menu_data: Json
+          notes?: string | null
+        }
+        Update: {
+          archived_at?: string
+          archived_by?: string | null
+          id?: string
+          menu_data?: Json
+          notes?: string | null
+        }
+        Relationships: []
+      }
       menu_categories: {
         Row: {
           created_at: string

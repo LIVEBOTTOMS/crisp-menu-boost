@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { MenuSection, MenuItem, snacksAndStarters, foodMenu, beveragesMenu, sideItems } from "@/data/menuData";
-
+import { Json } from "@/integrations/supabase/types";
 type MenuSectionType = 'snacks' | 'food' | 'beverages' | 'sides';
 
 interface DbMenuItem {
@@ -235,10 +235,58 @@ export const useMenuDatabase = () => {
     setIsLoading(false);
   };
 
+  // Archive current menu before making changes
+  const archiveCurrentMenu = async (notes?: string): Promise<boolean> => {
+    try {
+      const currentData = await fetchMenuData();
+      if (!currentData) {
+        console.error('No menu data to archive');
+        return false;
+      }
+
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      const { error } = await supabase
+        .from('archived_menus')
+        .insert({
+          menu_data: currentData as unknown as Json,
+          archived_by: user?.id || null,
+          notes: notes || 'Menu updated'
+        });
+
+      if (error) {
+        console.error('Error archiving menu:', error);
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Error in archiveCurrentMenu:', error);
+      return false;
+    }
+  };
+
+  // Fetch archived menus
+  const fetchArchivedMenus = async () => {
+    const { data, error } = await supabase
+      .from('archived_menus')
+      .select('*')
+      .order('archived_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching archived menus:', error);
+      return [];
+    }
+
+    return data || [];
+  };
+
   return {
     fetchMenuData,
     updateMenuItem,
     checkAndSeed,
+    archiveCurrentMenu,
+    fetchArchivedMenus,
     isLoading,
     isSeeded,
   };
