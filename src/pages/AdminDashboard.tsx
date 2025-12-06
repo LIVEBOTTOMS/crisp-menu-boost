@@ -9,13 +9,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, LogOut, Menu, Users, Settings, ShieldCheck, ShieldX, Home, Percent, RotateCcw, Download, Edit } from 'lucide-react';
+import { Loader2, LogOut, Menu, Users, Settings, ShieldCheck, ShieldX, Home, Percent, Download, Edit } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { PrintPreview } from '@/components/PrintPreview';
 
 const AdminDashboard = () => {
   const { user, isAdmin, isLoading, signOut } = useAuth();
-  const { menuData, setIsEditMode, isEditMode, adjustPrices, resetToOriginal } = useMenu();
+  const { menuData, setIsEditMode, isEditMode, adjustPrices } = useMenu();
   const navigate = useNavigate();
   const { toast } = useToast();
   
@@ -57,7 +57,7 @@ const AdminDashboard = () => {
     });
   };
 
-  const handlePriceAdjust = () => {
+  const handlePriceAdjust = async () => {
     const percent = parseFloat(pricePercent);
     if (isNaN(percent)) {
       toast({
@@ -69,25 +69,17 @@ const AdminDashboard = () => {
     }
     
     if (priceScope === "all") {
-      adjustPrices(percent);
+      await adjustPrices(percent);
     } else {
-      adjustPrices(percent, priceScope);
+      await adjustPrices(percent, priceScope);
     }
     
     toast({
       title: 'Prices updated',
-      description: `Prices ${percent >= 0 ? "increased" : "decreased"} by ${Math.abs(percent)}%`,
+      description: `Prices ${percent >= 0 ? "increased" : "decreased"} by ${Math.abs(percent)}%. Previous menu archived.`,
     });
     setIsPriceDialogOpen(false);
     setPricePercent("");
-  };
-
-  const handleReset = () => {
-    resetToOriginal();
-    toast({
-      title: 'Menu reset',
-      description: 'Menu has been reset to original values.',
-    });
   };
 
   if (isLoading) {
@@ -273,17 +265,6 @@ const AdminDashboard = () => {
               >
                 <Edit className="w-4 h-4 mr-2" />
                 {isEditMode ? 'Exit Edit' : 'Edit Menu'}
-              </Button>
-
-              {/* Reset */}
-              <Button 
-                variant="outline" 
-                onClick={handleReset}
-                disabled={!isAdmin}
-                className="border-red-500/50 text-red-400 hover:bg-red-500/10"
-              >
-                <RotateCcw className="w-4 h-4 mr-2" />
-                Reset
               </Button>
 
               {/* Download/Print */}

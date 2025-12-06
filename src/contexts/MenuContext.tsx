@@ -17,8 +17,7 @@ interface MenuContextType {
   updateMenuItem: (sectionKey: string, categoryIndex: number, itemIndex: number, updatedItem: MenuItem) => void;
   addMenuItem: (sectionKey: string, categoryIndex: number, newItem: MenuItem) => void;
   deleteMenuItem: (sectionKey: string, categoryIndex: number, itemIndex: number) => void;
-  adjustPrices: (percentage: number, sectionKey?: string, categoryIndex?: number) => void;
-  resetToOriginal: () => void;
+  adjustPrices: (percentage: number, sectionKey?: string, categoryIndex?: number) => Promise<void>;
   refreshMenu: () => Promise<void>;
 }
 
@@ -63,7 +62,7 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   
-  const { fetchMenuData, updateMenuItem: dbUpdateMenuItem, checkAndSeed } = useMenuDatabase();
+  const { fetchMenuData, updateMenuItem: dbUpdateMenuItem, checkAndSeed, archiveCurrentMenu } = useMenuDatabase();
 
   const refreshMenu = async () => {
     setIsLoading(true);
@@ -121,7 +120,10 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
     // TODO: Delete from database
   };
 
-  const adjustPrices = (percentage: number, sectionKey?: string, categoryIndex?: number) => {
+  const adjustPrices = async (percentage: number, sectionKey?: string, categoryIndex?: number) => {
+    // Archive current menu before price adjustment
+    await archiveCurrentMenu(`Price adjustment: ${percentage > 0 ? '+' : ''}${percentage}%`);
+    
     const multiplier = 1 + percentage / 100;
     
     setMenuData(prev => {
@@ -149,12 +151,6 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
     // TODO: Batch update prices in database
   };
 
-  const resetToOriginal = async () => {
-    setMenuData(getDefaultMenuData());
-    // Refresh from database
-    await refreshMenu();
-  };
-
   return (
     <MenuContext.Provider value={{ 
       menuData, 
@@ -164,8 +160,7 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
       updateMenuItem, 
       addMenuItem, 
       deleteMenuItem, 
-      adjustPrices, 
-      resetToOriginal,
+      adjustPrices,
       refreshMenu 
     }}>
       {children}
