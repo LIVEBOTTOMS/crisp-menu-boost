@@ -85,6 +85,7 @@ export type Database = {
           full_price: number | null
           half_price: number | null
           id: string
+          image_url: string | null
           name: string
           price: number | null
           sizes: Json | null
@@ -98,6 +99,7 @@ export type Database = {
           full_price?: number | null
           half_price?: number | null
           id?: string
+          image_url?: string | null
           name: string
           price?: number | null
           sizes?: Json | null
@@ -111,6 +113,7 @@ export type Database = {
           full_price?: number | null
           half_price?: number | null
           id?: string
+          image_url?: string | null
           name?: string
           price?: number | null
           sizes?: Json | null
