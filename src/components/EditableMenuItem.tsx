@@ -17,7 +17,6 @@ interface EditableMenuItemProps {
 export const EditableMenuItem = ({ 
   item, 
   index, 
-  accentColor, 
   sectionKey, 
   categoryIndex, 
   itemIndex 
@@ -46,19 +45,19 @@ export const EditableMenuItem = ({
 
   if (isEditMode && isEditing) {
     return (
-      <div className="py-3 px-4 rounded-lg bg-card/60 border border-primary/30 backdrop-blur-sm">
+      <div className="py-3 px-4 rounded-sm bg-card/80 border border-primary/30">
         <div className="flex flex-col gap-3">
           <Input
             value={editedItem.name}
             onChange={(e) => setEditedItem({ ...editedItem, name: e.target.value })}
             placeholder="Item name"
-            className="h-9 text-sm font-medium bg-background/50"
+            className="h-9 text-sm font-medium bg-background/50 border-border/40"
           />
           <Input
             value={editedItem.description || ""}
             onChange={(e) => setEditedItem({ ...editedItem, description: e.target.value })}
             placeholder="Description (e.g., Artisan preparation with house-made spices)"
-            className="h-9 text-sm bg-background/50"
+            className="h-9 text-sm bg-background/50 border-border/40"
           />
           <div className="flex gap-2 items-center">
             {hasSizes ? (
@@ -71,7 +70,7 @@ export const EditableMenuItem = ({
                     newSizes[i] = e.target.value;
                     setEditedItem({ ...editedItem, sizes: newSizes });
                   }}
-                  className="h-9 w-20 text-sm bg-background/50"
+                  className="h-9 w-20 text-sm bg-background/50 border-border/40"
                 />
               ))
             ) : hasMultiplePrices ? (
@@ -80,13 +79,13 @@ export const EditableMenuItem = ({
                   value={editedItem.halfPrice || ""}
                   onChange={(e) => setEditedItem({ ...editedItem, halfPrice: e.target.value })}
                   placeholder="Half"
-                  className="h-9 w-24 text-sm bg-background/50"
+                  className="h-9 w-24 text-sm bg-background/50 border-border/40"
                 />
                 <Input
                   value={editedItem.fullPrice || ""}
                   onChange={(e) => setEditedItem({ ...editedItem, fullPrice: e.target.value })}
                   placeholder="Full"
-                  className="h-9 w-24 text-sm bg-background/50"
+                  className="h-9 w-24 text-sm bg-background/50 border-border/40"
                 />
               </>
             ) : (
@@ -94,13 +93,13 @@ export const EditableMenuItem = ({
                 value={editedItem.price || ""}
                 onChange={(e) => setEditedItem({ ...editedItem, price: e.target.value })}
                 placeholder="Price"
-                className="h-9 w-24 text-sm bg-background/50"
+                className="h-9 w-24 text-sm bg-background/50 border-border/40"
               />
             )}
-            <button onClick={handleSave} className="p-2 hover:bg-primary/20 rounded-lg transition-colors">
+            <button onClick={handleSave} className="p-2 hover:bg-primary/20 rounded-sm transition-colors">
               <Check className="w-4 h-4 text-primary" />
             </button>
-            <button onClick={handleCancel} className="p-2 hover:bg-destructive/20 rounded-lg transition-colors">
+            <button onClick={handleCancel} className="p-2 hover:bg-destructive/20 rounded-sm transition-colors">
               <X className="w-4 h-4 text-destructive" />
             </button>
           </div>
@@ -112,10 +111,10 @@ export const EditableMenuItem = ({
   return (
     <div 
       className={cn(
-        "group relative py-3 px-3 rounded-lg transition-all duration-300",
-        "hover:bg-card/40 hover:shadow-lg hover:shadow-primary/5",
-        index % 2 === 0 ? "bg-transparent" : "bg-card/20",
-        isEditMode && "cursor-pointer hover:ring-1 hover:ring-primary/40"
+        "group relative py-2.5 px-3 rounded-sm transition-all duration-300",
+        "hover:bg-primary/5",
+        index % 2 === 0 ? "bg-transparent" : "bg-card/30",
+        isEditMode && "cursor-pointer hover:ring-1 hover:ring-primary/30"
       )}
       onClick={() => isEditMode && setIsEditing(true)}
     >
@@ -123,29 +122,25 @@ export const EditableMenuItem = ({
       {isEditMode && (
         <button 
           onClick={handleDelete}
-          className="absolute right-2 top-2 p-1.5 rounded-lg bg-destructive/10 hover:bg-destructive/30 opacity-0 group-hover:opacity-100 transition-all z-10"
+          className="absolute right-1 top-1/2 -translate-y-1/2 p-1.5 rounded-sm bg-destructive/10 hover:bg-destructive/30 opacity-0 group-hover:opacity-100 transition-all z-10"
         >
           <Trash2 className="w-3.5 h-3.5 text-destructive" />
         </button>
       )}
 
-      {/* Row layout - name/description on left, prices on right */}
-      <div className="flex items-start justify-between gap-2">
+      {/* Row layout */}
+      <div className="flex items-start justify-between gap-4">
         {/* Item name and description */}
         <div className="flex-1 min-w-0">
-          <div className="flex items-start gap-2">
-            <span className={cn(
-              "w-1 h-1 rounded-full transition-all duration-300 group-hover:scale-150 group-hover:shadow-lg mt-2 flex-shrink-0",
-              accentColor === "cyan" 
-                ? "bg-primary group-hover:shadow-primary/50" 
-                : "bg-secondary group-hover:shadow-secondary/50"
-            )} />
-            <span className="font-cinzel text-sm tracking-wide text-foreground font-medium group-hover:text-foreground/90">
+          <div className="flex items-baseline gap-2">
+            <span className="font-cormorant text-base md:text-lg tracking-wide text-foreground font-medium leading-tight">
               {item.name}
             </span>
+            {/* Dotted line filler */}
+            <span className="flex-1 border-b border-dotted border-border/40 min-w-8 mb-1" />
           </div>
           {item.description && (
-            <p className="text-xs text-muted-foreground ml-3 mt-1 italic leading-relaxed font-light">
+            <p className="text-xs text-muted-foreground mt-0.5 italic font-cormorant leading-relaxed">
               {item.description}
             </p>
           )}
@@ -154,24 +149,24 @@ export const EditableMenuItem = ({
         {/* Price(s) */}
         <div className="flex-shrink-0 text-right">
           {hasSizes ? (
-            <div className="flex flex-wrap gap-x-3 gap-y-1 justify-end text-sm font-rajdhani font-semibold text-accent">
+            <div className="flex gap-3 justify-end text-sm font-montserrat font-medium text-primary">
               {item.sizes!.map((size, i) => (
-                <span key={i} className="tracking-wide whitespace-nowrap">{size}</span>
+                <span key={i} className="tracking-wide whitespace-nowrap min-w-[3rem] text-center">{size}</span>
               ))}
             </div>
           ) : hasMultiplePrices ? (
-            <div className="text-sm font-rajdhani flex flex-wrap gap-x-2 justify-end">
+            <div className="text-sm font-montserrat flex gap-3 justify-end">
               <span className="whitespace-nowrap">
-                <span className="text-muted-foreground/70 text-xs uppercase tracking-wider">H </span>
-                <span className="text-accent font-semibold tracking-wide">{item.halfPrice}</span>
+                <span className="text-muted-foreground/60 text-[10px] uppercase tracking-wider">H </span>
+                <span className="text-primary font-medium tracking-wide">{item.halfPrice}</span>
               </span>
               <span className="whitespace-nowrap">
-                <span className="text-muted-foreground/70 text-xs uppercase tracking-wider">F </span>
-                <span className="text-accent font-semibold tracking-wide">{item.fullPrice}</span>
+                <span className="text-muted-foreground/60 text-[10px] uppercase tracking-wider">F </span>
+                <span className="text-primary font-medium tracking-wide">{item.fullPrice}</span>
               </span>
             </div>
           ) : (
-            <span className="font-rajdhani text-base font-bold text-accent tracking-wide whitespace-nowrap">
+            <span className="font-montserrat text-sm md:text-base font-semibold text-primary tracking-wide whitespace-nowrap">
               {item.price}
             </span>
           )}

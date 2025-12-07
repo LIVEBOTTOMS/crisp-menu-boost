@@ -47,16 +47,16 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        neon: {
-          cyan: "hsl(var(--neon-cyan))",
-          magenta: "hsl(var(--neon-magenta))",
-          gold: "hsl(var(--neon-gold))",
-          purple: "hsl(var(--neon-purple))",
+        gold: {
+          light: "hsl(var(--gold-light))",
+          DEFAULT: "hsl(var(--gold))",
+          dark: "hsl(var(--gold-dark))",
         },
-        surface: {
-          dark: "hsl(var(--dark-surface))",
-          darker: "hsl(var(--darker-surface))",
-        },
+        champagne: "hsl(var(--champagne))",
+        bronze: "hsl(var(--bronze))",
+        cream: "hsl(var(--cream))",
+        espresso: "hsl(var(--espresso))",
+        charcoal: "hsl(var(--charcoal))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -69,9 +69,9 @@ export default {
         },
       },
       fontFamily: {
-        orbitron: ['Orbitron', 'sans-serif'],
-        rajdhani: ['Rajdhani', 'sans-serif'],
+        cormorant: ['Cormorant Garamond', 'serif'],
         cinzel: ['Cinzel', 'serif'],
+        montserrat: ['Montserrat', 'sans-serif'],
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -87,26 +87,25 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        "glow-pulse": {
-          "0%, 100%": { boxShadow: "0 0 20px hsl(var(--neon-cyan) / 0.5)" },
-          "50%": { boxShadow: "0 0 40px hsl(var(--neon-cyan) / 0.8)" },
+        "shimmer": {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
         },
-        "border-flow": {
-          "0%": { backgroundPosition: "0% 50%" },
-          "50%": { backgroundPosition: "100% 50%" },
-          "100%": { backgroundPosition: "0% 50%" },
+        "float": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-5px)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "glow-pulse": "glow-pulse 2s ease-in-out infinite",
-        "border-flow": "border-flow 3s ease infinite",
+        "shimmer": "shimmer 3s linear infinite",
+        "float": "float 3s ease-in-out infinite",
       },
       backgroundImage: {
-        "gradient-neon": "linear-gradient(135deg, hsl(var(--neon-cyan)), hsl(var(--neon-magenta)))",
-        "gradient-gold": "linear-gradient(135deg, hsl(42 100% 45%), hsl(42 100% 60%))",
+        "gradient-gold": "linear-gradient(135deg, hsl(var(--gold-light)), hsl(var(--gold)), hsl(var(--gold-dark)))",
         "gradient-radial": "radial-gradient(ellipse at center, var(--tw-gradient-stops))",
+        "gradient-warm": "linear-gradient(180deg, hsl(var(--espresso)), hsl(var(--charcoal)))",
       },
     },
   },

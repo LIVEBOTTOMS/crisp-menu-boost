@@ -14,22 +14,26 @@ const sections = [
 
 export const MenuNavigation = ({ activeSection, onSectionChange }: MenuNavigationProps) => {
   return (
-    <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/50 mb-8">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="flex items-center justify-center gap-1 py-3 overflow-x-auto scrollbar-hide">
-          {sections.map((section) => (
-            <button
-              key={section.id}
-              onClick={() => onSectionChange(section.id)}
-              className={cn(
-                "px-4 py-2 rounded-sm font-rajdhani text-sm font-medium tracking-wide transition-all duration-300 whitespace-nowrap",
-                activeSection === section.id
-                  ? "bg-gradient-neon text-primary-foreground shadow-[0_0_20px_hsl(180_100%_50%/0.4)]"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+    <nav className="sticky top-0 z-50 bg-background/98 backdrop-blur-md border-y border-border/40 mb-10">
+      <div className="px-4 md:px-10">
+        <div className="flex items-center justify-center gap-2 py-4 overflow-x-auto scrollbar-hide">
+          {sections.map((section, index) => (
+            <div key={section.id} className="flex items-center">
+              <button
+                onClick={() => onSectionChange(section.id)}
+                className={cn(
+                  "px-5 py-2 font-cinzel text-xs md:text-sm font-medium tracking-[0.15em] transition-all duration-300 whitespace-nowrap uppercase",
+                  activeSection === section.id
+                    ? "text-primary border-b-2 border-primary"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {section.label}
+              </button>
+              {index < sections.length - 1 && (
+                <div className="w-1 h-1 rotate-45 bg-border mx-2 hidden md:block" />
               )}
-            >
-              {section.label}
-            </button>
+            </div>
           ))}
         </div>
       </div>
