@@ -32,45 +32,67 @@ const Index = () => {
     <div className="min-h-screen bg-background relative">
       <BackgroundEffects />
       
-      {/* Admin Button */}
-      <Link 
-        to={user ? "/admin" : "/auth"} 
-        className="fixed top-4 right-4 z-50 p-2 rounded-lg bg-background/80 backdrop-blur-sm border border-neon-cyan/30 hover:border-neon-cyan hover:bg-neon-cyan/10 transition-all duration-300"
-        title="Admin Settings"
-      >
-        <Settings className="w-5 h-5 text-neon-cyan" />
-      </Link>
-      
-      <div className="relative z-10">
+      {/* Outer decorative border for print */}
+      <div className="relative z-10 min-h-screen border-x-2 border-primary/20 mx-auto max-w-6xl">
+        {/* Top border line */}
+        <div className="h-2 bg-gradient-to-r from-primary/10 via-primary/30 to-primary/10" />
+        
+        {/* Admin Button */}
+        <Link 
+          to={user ? "/admin" : "/auth"} 
+          className="fixed top-4 right-4 z-50 p-2 rounded-sm bg-background/90 backdrop-blur-sm border border-primary/30 hover:border-primary hover:bg-primary/10 transition-all duration-300 no-print"
+          title="Admin Settings"
+        >
+          <Settings className="w-5 h-5 text-primary" />
+        </Link>
+        
         <MenuHeader />
         <MenuNavigation 
           activeSection={activeSection} 
           onSectionChange={setActiveSection} 
         />
         
-        <main className="max-w-6xl mx-auto px-4 pb-16">
+        <main className="px-6 md:px-10 pb-16">
           {isLoading ? (
             <div className="flex items-center justify-center py-20">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-neon-cyan"></div>
-              <span className="ml-3 text-muted-foreground">Loading menu...</span>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              <span className="ml-3 text-muted-foreground font-cormorant">Loading menu...</span>
             </div>
           ) : (
             renderActiveSection()
           )}
         </main>
 
-        <footer className="border-t border-border/30 py-8 mt-12">
-          <div className="max-w-6xl mx-auto px-4 text-center">
-            <p className="font-rajdhani text-muted-foreground text-sm tracking-wide">
-              © 2024 LIVE BAR • Fine Dining & Premium Spirits
-            </p>
-            <div className="flex items-center justify-center gap-2 mt-3">
-              <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-neon-cyan/50" />
-              <div className="w-1.5 h-1.5 rotate-45 bg-neon-gold/50" />
-              <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-neon-magenta/50" />
+        {/* Footer */}
+        <footer className="border-t border-border/40 py-10">
+          <div className="px-6 md:px-10">
+            {/* Decorative element */}
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <div className="h-px w-16 bg-gradient-to-r from-transparent to-primary/40" />
+              <div className="flex gap-1">
+                <div className="w-1 h-1 rotate-45 bg-primary/30" />
+                <div className="w-1.5 h-1.5 rotate-45 border border-primary/50" />
+                <div className="w-1 h-1 rotate-45 bg-primary/30" />
+              </div>
+              <div className="h-px w-16 bg-gradient-to-l from-transparent to-primary/40" />
+            </div>
+            
+            <div className="text-center">
+              <p className="font-cormorant text-muted-foreground text-base tracking-wider italic">
+                Thank you for dining with us
+              </p>
+              <p className="font-cinzel text-foreground/80 text-sm tracking-[0.2em] mt-2">
+                LIVE BAR
+              </p>
+              <p className="font-montserrat text-muted-foreground/60 text-xs tracking-[0.15em] mt-1">
+                © 2024 • Fine Dining & Premium Spirits
+              </p>
             </div>
           </div>
         </footer>
+        
+        {/* Bottom border line */}
+        <div className="h-2 bg-gradient-to-r from-primary/10 via-primary/30 to-primary/10" />
       </div>
     </div>
   );

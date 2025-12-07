@@ -7,32 +7,37 @@ interface MenuSectionProps {
   sectionKey: string;
 }
 
-export const MenuSection = ({ section, variant = "cyan", sectionKey }: MenuSectionProps) => {
+export const MenuSection = ({ section, sectionKey }: MenuSectionProps) => {
   return (
-    <section className="mb-12 animate-slide-up">
-      {/* Premium Section Title */}
-      <div className="text-center mb-10">
+    <section className="mb-16 animate-slide-up">
+      {/* Elegant Section Title */}
+      <div className="text-center mb-12">
         <div className="inline-block relative">
-          <h2 className={`font-cinzel text-xl md:text-2xl font-semibold tracking-[0.2em] uppercase ${
-            variant === "cyan" ? "text-glow-cyan text-primary" :
-            variant === "magenta" ? "text-glow-magenta text-secondary" :
-            "text-glow-gold text-accent"
-          }`}>
+          {/* Top decorative line */}
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="h-px w-16 bg-gradient-to-r from-transparent to-primary/50" />
+            <div className="flex gap-1">
+              <div className="w-1 h-1 rotate-45 bg-primary/40" />
+              <div className="w-1.5 h-1.5 rotate-45 border border-primary/60" />
+              <div className="w-1 h-1 rotate-45 bg-primary/40" />
+            </div>
+            <div className="h-px w-16 bg-gradient-to-l from-transparent to-primary/50" />
+          </div>
+          
+          <h2 className="font-cinzel text-2xl md:text-3xl font-semibold tracking-[0.25em] uppercase text-shimmer">
             {section.title}
           </h2>
-          {/* Elegant underline decoration */}
-          <div className="flex items-center justify-center gap-3 mt-4">
-            <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-primary/60" />
-            <div className="w-5 h-5 relative">
-              <div className="absolute inset-0 border border-primary/40 rotate-45" />
-              <div className="absolute inset-1.5 bg-primary/10 rotate-45" />
-            </div>
-            <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-secondary/60" />
+          
+          {/* Bottom decorative line */}
+          <div className="flex items-center justify-center gap-4 mt-4">
+            <div className="h-px w-12 bg-gradient-to-r from-transparent to-border" />
+            <div className="w-2 h-2 rotate-45 border border-primary/40" />
+            <div className="h-px w-12 bg-gradient-to-l from-transparent to-border" />
           </div>
         </div>
       </div>
 
-      {/* Categories Grid - max 2 columns for items with sizes to prevent cramped names */}
+      {/* Categories Grid */}
       {(() => {
         const hasSizedItems = section.categories.some(cat => cat.items.some(item => item.sizes && item.sizes.length > 0));
         const gridClass = hasSizedItems || section.categories.length <= 2
@@ -41,7 +46,7 @@ export const MenuSection = ({ section, variant = "cyan", sectionKey }: MenuSecti
             ? "md:grid-cols-2 lg:grid-cols-3" 
             : "max-w-2xl mx-auto";
         return (
-          <div className={`grid gap-8 ${gridClass}`}>
+          <div className={`grid gap-10 ${gridClass}`}>
             {section.categories.map((category, index) => (
               <MenuCategory 
                 key={category.title} 
