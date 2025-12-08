@@ -45,7 +45,7 @@ export const EditableMenuItem = ({
 
   if (isEditMode && isEditing) {
     return (
-      <div className="py-3 px-4 rounded-sm bg-card/80 border border-primary/30">
+      <div className="py-3 px-4 bg-card/80 border border-primary/30">
         <div className="flex flex-col gap-3">
           <Input
             value={editedItem.name}
@@ -96,10 +96,10 @@ export const EditableMenuItem = ({
                 className="h-9 w-24 text-sm bg-background/50 border-border/40"
               />
             )}
-            <button onClick={handleSave} className="p-2 hover:bg-primary/20 rounded-sm transition-colors">
+            <button onClick={handleSave} className="p-2 hover:bg-primary/20 transition-colors">
               <Check className="w-4 h-4 text-primary" />
             </button>
-            <button onClick={handleCancel} className="p-2 hover:bg-destructive/20 rounded-sm transition-colors">
+            <button onClick={handleCancel} className="p-2 hover:bg-destructive/20 transition-colors">
               <X className="w-4 h-4 text-destructive" />
             </button>
           </div>
@@ -111,9 +111,9 @@ export const EditableMenuItem = ({
   return (
     <div 
       className={cn(
-        "group relative py-2.5 px-3 rounded-sm transition-all duration-300",
-        "hover:bg-primary/5",
-        index % 2 === 0 ? "bg-transparent" : "bg-card/30",
+        "group relative py-3 px-3 transition-all duration-300",
+        "hover:bg-primary/[0.04]",
+        index % 2 === 0 ? "bg-transparent" : "bg-card/20",
         isEditMode && "cursor-pointer hover:ring-1 hover:ring-primary/30"
       )}
       onClick={() => isEditMode && setIsEditing(true)}
@@ -122,7 +122,7 @@ export const EditableMenuItem = ({
       {isEditMode && (
         <button 
           onClick={handleDelete}
-          className="absolute right-1 top-1/2 -translate-y-1/2 p-1.5 rounded-sm bg-destructive/10 hover:bg-destructive/30 opacity-0 group-hover:opacity-100 transition-all z-10"
+          className="absolute right-1 top-1/2 -translate-y-1/2 p-1.5 bg-destructive/10 hover:bg-destructive/30 opacity-0 group-hover:opacity-100 transition-all z-10"
         >
           <Trash2 className="w-3.5 h-3.5 text-destructive" />
         </button>
@@ -132,15 +132,15 @@ export const EditableMenuItem = ({
       <div className="flex items-start justify-between gap-4">
         {/* Item name and description */}
         <div className="flex-1 min-w-0">
-          <div className="flex items-baseline gap-2">
-            <span className="font-cormorant text-base md:text-lg tracking-wide text-foreground font-medium leading-tight">
+          <div className="flex items-baseline gap-3">
+            <span className="font-cormorant text-[15px] md:text-base tracking-wide text-foreground font-medium leading-tight">
               {item.name}
             </span>
-            {/* Dotted line filler */}
-            <span className="flex-1 border-b border-dotted border-border/40 min-w-8 mb-1" />
+            {/* Elegant dotted line filler */}
+            <span className="flex-1 border-b border-dotted border-primary/20 min-w-8 mb-1" />
           </div>
           {item.description && (
-            <p className="text-xs text-muted-foreground mt-0.5 italic font-cormorant leading-relaxed">
+            <p className="text-[11px] text-muted-foreground/80 mt-1 italic font-cormorant leading-relaxed tracking-wide">
               {item.description}
             </p>
           )}
@@ -149,24 +149,24 @@ export const EditableMenuItem = ({
         {/* Price(s) */}
         <div className="flex-shrink-0 text-right">
           {hasSizes ? (
-            <div className="flex gap-3 justify-end text-sm font-montserrat font-medium text-primary">
+            <div className="flex gap-3 justify-end text-[13px] font-montserrat font-semibold text-primary">
               {item.sizes!.map((size, i) => (
                 <span key={i} className="tracking-wide whitespace-nowrap min-w-[3rem] text-center">{size}</span>
               ))}
             </div>
           ) : hasMultiplePrices ? (
-            <div className="text-sm font-montserrat flex gap-3 justify-end">
+            <div className="text-[13px] font-montserrat flex gap-4 justify-end">
               <span className="whitespace-nowrap">
-                <span className="text-muted-foreground/60 text-[10px] uppercase tracking-wider">H </span>
-                <span className="text-primary font-medium tracking-wide">{item.halfPrice}</span>
+                <span className="text-muted-foreground/50 text-[9px] uppercase tracking-wider mr-1">H</span>
+                <span className="text-primary font-semibold tracking-wide">{item.halfPrice}</span>
               </span>
               <span className="whitespace-nowrap">
-                <span className="text-muted-foreground/60 text-[10px] uppercase tracking-wider">F </span>
-                <span className="text-primary font-medium tracking-wide">{item.fullPrice}</span>
+                <span className="text-muted-foreground/50 text-[9px] uppercase tracking-wider mr-1">F</span>
+                <span className="text-primary font-semibold tracking-wide">{item.fullPrice}</span>
               </span>
             </div>
           ) : (
-            <span className="font-montserrat text-sm md:text-base font-semibold text-primary tracking-wide whitespace-nowrap">
+            <span className="font-montserrat text-[14px] font-semibold text-primary tracking-wide whitespace-nowrap">
               {item.price}
             </span>
           )}
