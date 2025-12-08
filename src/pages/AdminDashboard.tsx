@@ -9,10 +9,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, LogOut, Menu, Users, Settings, ShieldCheck, ShieldX, Home, Percent, Download, Edit, QrCode } from 'lucide-react';
+import { Loader2, LogOut, Menu, Users, Settings, ShieldCheck, ShieldX, Home, Percent, Download, Edit, QrCode, Archive } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { PrintPreview } from '@/components/PrintPreview';
 import { QRCodeGenerator } from '@/components/QRCodeGenerator';
+import { ArchivedMenus } from '@/components/ArchivedMenus';
 
 const AdminDashboard = () => {
   const { user, isAdmin, isLoading, signOut } = useAuth();
@@ -25,6 +26,8 @@ const AdminDashboard = () => {
   const [isPriceDialogOpen, setIsPriceDialogOpen] = useState(false);
   const [isPrintPreviewOpen, setIsPrintPreviewOpen] = useState(false);
   const [isQRCodeOpen, setIsQRCodeOpen] = useState(false);
+  const [isArchivedMenusOpen, setIsArchivedMenusOpen] = useState(false);
+  const [showPDFPrompt, setShowPDFPrompt] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -82,6 +85,9 @@ const AdminDashboard = () => {
     });
     setIsPriceDialogOpen(false);
     setPricePercent("");
+    
+    // Show PDF prompt after price adjustment
+    setShowPDFPrompt(true);
   };
 
   if (isLoading) {
@@ -288,6 +294,16 @@ const AdminDashboard = () => {
                 <QrCode className="w-4 h-4 mr-2" />
                 Generate QR Code
               </Button>
+
+              {/* Archived Menus */}
+              <Button
+                variant="outline"
+                onClick={() => setIsArchivedMenusOpen(true)}
+                className="border-orange-500/50 text-orange-400 hover:bg-orange-500/10"
+              >
+                <Archive className="w-4 h-4 mr-2" />
+                Menu Archives
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -329,6 +345,49 @@ const AdminDashboard = () => {
 
       <PrintPreview isOpen={isPrintPreviewOpen} onClose={() => setIsPrintPreviewOpen(false)} />
       <QRCodeGenerator isOpen={isQRCodeOpen} onClose={() => setIsQRCodeOpen(false)} />
+      <ArchivedMenus isOpen={isArchivedMenusOpen} onClose={() => setIsArchivedMenusOpen(false)} />
+      
+      {/* PDF Prompt Dialog after price adjustment */}
+      <Dialog open={showPDFPrompt} onOpenChange={setShowPDFPrompt}>
+        <DialogContent className="bg-slate-800 border-slate-600">
+          <DialogHeader>
+            <DialogTitle className="text-white">Download Updated Menu PDF?</DialogTitle>
+          </DialogHeader>
+          <p className="text-slate-300 text-sm">
+            Prices have been updated and the previous menu has been archived. Would you like to download the new menu as a PDF?
+          </p>
+          <div className="flex gap-3 mt-4">
+            <Button
+              onClick={() => {
+                setShowPDFPrompt(false);
+                setIsPrintPreviewOpen(true);
+              }}
+              className="bg-cyan-600 hover:bg-cyan-700"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Download PDF
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowPDFPrompt(false);
+                setIsArchivedMenusOpen(true);
+              }}
+              className="border-orange-500/50 text-orange-400 hover:bg-orange-500/10"
+            >
+              <Archive className="w-4 h-4 mr-2" />
+              View Archives
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => setShowPDFPrompt(false)}
+              className="text-slate-400"
+            >
+              Later
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
