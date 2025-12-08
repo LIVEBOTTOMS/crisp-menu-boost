@@ -324,17 +324,18 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       variant: "cyan" as const,
       key: "drinks-vodkas"
     },
-    // Page 8: RUMS & GIN
+    // Page 8: RUMS, GIN & LIQUEURS
     {
       section: {
-        title: "RUMS & BOTANICALS",
+        title: "SPIRITS & LIQUEURS",
         categories: [
           menuData.beveragesMenu.categories[4], // Rums
           menuData.beveragesMenu.categories[10], // Gin & Brandy
+          menuData.beveragesMenu.categories[11], // Premium Liqueurs (Moved here for better visibility)
         ]
       },
       variant: "cyan" as const,
-      key: "drinks-rums-gin"
+      key: "drinks-rums-gin-liqueurs"
     },
     // Page 9: INDIAN RESERVES
     {
@@ -367,13 +368,12 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       variant: "gold" as const,
       key: "drinks-bottles"
     },
-    // Page 12: WINES & LIQUEURS
+    // Page 12: WINES
     {
       section: {
-        title: "WINES & LIQUEURS",
+        title: "FINE WINES COLLECTION",
         categories: [
           menuData.beveragesMenu.categories[9], // Wines
-          menuData.beveragesMenu.categories[11]  // Liqueurs
         ]
       },
       variant: "magenta" as const,
