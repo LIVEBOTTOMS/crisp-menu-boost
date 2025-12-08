@@ -13,6 +13,7 @@ import { Loader2, LogOut, Menu, Users, Settings, ShieldCheck, ShieldX, Home, Per
 import { useToast } from '@/hooks/use-toast';
 import { PrintPreview } from '@/components/PrintPreview';
 import { QRCodeGenerator } from '@/components/QRCodeGenerator';
+import { BackgroundEffects } from '@/components/BackgroundEffects';
 import { ArchivedMenus } from '@/components/ArchivedMenus';
 
 const AdminDashboard = () => {
@@ -85,7 +86,7 @@ const AdminDashboard = () => {
     });
     setIsPriceDialogOpen(false);
     setPricePercent("");
-    
+
     // Show PDF prompt after price adjustment
     setShowPDFPrompt(true);
   };
@@ -117,13 +118,19 @@ const AdminDashboard = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4 md:p-8">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-background relative p-4 md:p-8 font-rajdhani overflow-hidden">
+      <BackgroundEffects />
+      <div className="max-w-6xl mx-auto relative z-10">
         {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
           <div>
-            <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
-            <p className="text-slate-300 mt-1">Manage your menu and settings</p>
+            <h1 className="text-4xl md:text-5xl font-black text-white font-orbitron tracking-widest drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+              LIVE <span className="text-neon-cyan">ADMIN</span>
+            </h1>
+            <div className="flex items-center gap-3 mt-2">
+              <div className="h-[1px] w-12 bg-neon-cyan/50" />
+              <p className="text-neon-cyan font-orbitron text-[10px] tracking-[0.3em] uppercase font-bold">Eat.Drink.Code.Repeat</p>
+            </div>
           </div>
           <div className="flex items-center gap-3">
             <Button
@@ -146,7 +153,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* User Info Card */}
-        <Card className="bg-slate-800/80 border-purple-500/30 mb-6">
+        <Card className="bg-black/40 backdrop-blur-xl border-white/10 shadow-[0_0_30px_-10px_rgba(0,240,255,0.15)] mb-8">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <div>
@@ -179,20 +186,20 @@ const AdminDashboard = () => {
         </Card>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <Card className="bg-slate-800/80 border-purple-500/30">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <Card className="bg-black/40 backdrop-blur-xl border-white/10 hover:border-neon-cyan/30 transition-colors">
             <CardHeader className="pb-2">
               <CardDescription className="text-slate-400">Menu Sections</CardDescription>
               <CardTitle className="text-3xl text-white">{totalSections}</CardTitle>
             </CardHeader>
           </Card>
-          <Card className="bg-slate-800/80 border-purple-500/30">
+          <Card className="bg-black/40 backdrop-blur-xl border-white/10 hover:border-neon-magenta/30 transition-colors">
             <CardHeader className="pb-2">
               <CardDescription className="text-slate-400">Categories</CardDescription>
               <CardTitle className="text-3xl text-white">{totalCategories}</CardTitle>
             </CardHeader>
           </Card>
-          <Card className="bg-slate-800/80 border-purple-500/30">
+          <Card className="bg-black/40 backdrop-blur-xl border-white/10 hover:border-neon-gold/30 transition-colors">
             <CardHeader className="pb-2">
               <CardDescription className="text-slate-400">Menu Items</CardDescription>
               <CardTitle className="text-3xl text-white">{totalItems}</CardTitle>
@@ -201,7 +208,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Menu Tools */}
-        <Card className="bg-slate-800/80 border-purple-500/30 mb-6">
+        <Card className="bg-black/40 backdrop-blur-xl border-white/10 shadow-[0_0_30px_-10px_rgba(217,70,239,0.15)] mb-8">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <Settings className="h-5 w-5" />
@@ -309,7 +316,7 @@ const AdminDashboard = () => {
         </Card>
 
         {/* Actions */}
-        <Card className="bg-slate-800/80 border-purple-500/30">
+        <Card className="bg-black/40 backdrop-blur-xl border-white/10">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <Menu className="h-5 w-5" />
@@ -346,7 +353,7 @@ const AdminDashboard = () => {
       <PrintPreview isOpen={isPrintPreviewOpen} onClose={() => setIsPrintPreviewOpen(false)} />
       <QRCodeGenerator isOpen={isQRCodeOpen} onClose={() => setIsQRCodeOpen(false)} />
       <ArchivedMenus isOpen={isArchivedMenusOpen} onClose={() => setIsArchivedMenusOpen(false)} />
-      
+
       {/* PDF Prompt Dialog after price adjustment */}
       <Dialog open={showPDFPrompt} onOpenChange={setShowPDFPrompt}>
         <DialogContent className="bg-slate-800 border-slate-600">

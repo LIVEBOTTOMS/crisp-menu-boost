@@ -14,6 +14,7 @@ interface DbMenuItem {
   full_price: number | null;
   sizes: string[] | null;
   display_order: number;
+  image_url: string | null;
 }
 
 interface DbCategory {
@@ -50,6 +51,7 @@ const dbToMenuItem = (item: DbMenuItem): MenuItem => ({
   halfPrice: formatPrice(item.half_price),
   fullPrice: formatPrice(item.full_price),
   sizes: item.sizes || undefined,
+  image: item.image_url || undefined,
 });
 
 const dbToMenuSection = (section: DbSection): MenuSection => ({
@@ -77,7 +79,7 @@ export const useMenuDatabase = () => {
         menu_categories (
           id, section_id, title, icon, display_order,
           menu_items (
-            id, category_id, name, description, price, half_price, full_price, sizes, display_order
+            id, category_id, name, description, price, half_price, full_price, sizes, display_order, image_url
           )
         )
       `)
@@ -135,7 +137,7 @@ export const useMenuDatabase = () => {
       // Insert categories
       for (let catIdx = 0; catIdx < section.data.categories.length; catIdx++) {
         const category = section.data.categories[catIdx];
-        
+
         const { data: catResult, error: catError } = await supabase
           .from("menu_categories")
           .insert({
@@ -162,6 +164,7 @@ export const useMenuDatabase = () => {
           full_price: parsePrice(item.fullPrice),
           sizes: item.sizes || null,
           display_order: idx,
+          image_url: item.image || null,
         }));
 
         const { error: itemsError } = await supabase
@@ -220,6 +223,7 @@ export const useMenuDatabase = () => {
         half_price: parsePrice(updatedItem.halfPrice),
         full_price: parsePrice(updatedItem.fullPrice),
         sizes: updatedItem.sizes || null,
+        image_url: updatedItem.image || null,
       })
       .eq("id", items[itemIndex].id);
   };
@@ -227,11 +231,11 @@ export const useMenuDatabase = () => {
   const checkAndSeed = async () => {
     setIsLoading(true);
     const data = await fetchMenuData();
-    
+
     if (!data) {
       await seedDatabase();
     }
-    
+
     setIsLoading(false);
   };
 
@@ -245,7 +249,7 @@ export const useMenuDatabase = () => {
       }
 
       const { data: { user } } = await supabase.auth.getUser();
-      
+
       const { error } = await supabase
         .from('archived_menus')
         .insert({

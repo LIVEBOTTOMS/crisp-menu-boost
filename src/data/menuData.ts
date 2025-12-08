@@ -5,6 +5,7 @@ export interface MenuItem {
   halfPrice?: string;
   fullPrice?: string;
   sizes?: string[];
+  image?: string;
 }
 
 export interface MenuCategory {
@@ -19,24 +20,28 @@ export interface MenuSection {
 }
 
 export const snacksAndStarters: MenuSection = {
-  title: "SNACKS & STARTERS",
+  title: "ARTISAN APPETIZERS",
   categories: [
     {
       title: "VEG",
       items: [
         { name: "Fried Peanuts", price: "₹150", description: "Crispy salted peanuts roasted to golden perfection" },
-        { name: "Fried Papad", price: "₹120", description: "Traditional crispy lentil wafers, lightly spiced" },
-        { name: "Masala Papad", price: "₹130", description: "Topped with fresh onions, tomatoes & tangy chaat masala" },
+        { name: "Fried Papad", price: "₹116", description: "Traditional crispy lentil wafers, lightly spiced" },
+        { name: "Masala Papad", price: "₹126", description: "Topped with fresh onions, tomatoes & tangy chaat masala" },
         { name: "Veg Pakoda", price: "₹180", description: "Assorted vegetables in chickpea batter, golden fried" },
         { name: "Veg Crispie", price: "₹150", description: "Crunchy vegetable fritters with house-made green chutney" },
-        { name: "Paneer Pakoda", price: "₹200", description: "Cottage cheese cubes in spiced gram flour coating" },
+        { name: "Paneer Pakoda", price: "₹194", description: "Cottage cheese cubes in spiced gram flour coating" },
         { name: "Veg Cutlet", price: "₹180", description: "Hand-pressed mixed vegetable patties, herb-crusted" },
-        { name: "Cheese Pakoda", price: "₹220", description: "Melting cheese encased in crispy golden batter" },
+        { name: "Cheese Pakoda", price: "₹213", description: "Melting cheese encased in crispy golden batter" },
         { name: "Cheese Balls", price: "₹200", description: "Creamy cheese spheres with a crunchy breadcrumb shell" },
         { name: "French Fries", price: "₹160", description: "Hand-cut potatoes, twice-fried for extra crispiness" },
         { name: "Corn Crisipie", price: "₹140", description: "Sweet corn kernels flash-fried with aromatic spices" },
         { name: "Matki Fry", price: "₹150", description: "Sprouted moth beans sautéed with fresh herbs" },
-        { name: "Vajri Fry", price: "₹160", description: "Crispy lotus stem chips with signature seasoning" },
+        { name: "Kaju Masala Fry", price: "₹309", description: "Premium cashews tossed in aromatic spices" },
+        { name: "Onion Rings", price: "₹173", description: "Crispy beer-battered onion rings with tangy dip" },
+        { name: "Cheese Nachos", price: "₹290", description: "Tortilla chips loaded with melted cheese & jalapeños" },
+        { name: "Peri Peri Fries", price: "₹212", description: "Spicy peri-peri seasoned crispy fries" },
+        { name: "Cheese French Fries", price: "₹241", description: "Golden fries smothered in melted cheese sauce" },
       ],
     },
     {
@@ -44,7 +49,6 @@ export const snacksAndStarters: MenuSection = {
       items: [
         { name: "Fried Chicken", price: "₹220", description: "Succulent pieces marinated overnight, deep-fried crispy" },
         { name: "Chicken Lollypop", price: "₹250", description: "Frenched drumettes in spicy Indo-Chinese glaze" },
-        { name: "Veg Crispie", price: "₹150", description: "Garden fresh vegetables in light tempura batter" },
         { name: "Chicken Cutlet", price: "₹250", description: "Minced chicken patties with caramelized onions" },
         { name: "Tandoori Chicken (Full)", price: "₹350", description: "Whole bird marinated in yogurt & 24 spices, clay-oven roasted" },
         { name: "Tandoori Chicken (Half)", price: "₹200", description: "Half portion of our signature clay-oven specialty" },
@@ -56,20 +60,31 @@ export const snacksAndStarters: MenuSection = {
         { name: "Chicken Tawa", price: "₹280", description: "Griddle-seared with bell peppers & onions" },
         { name: "Paneer 65", price: "₹220", description: "Cottage cheese in fiery Hyderabadi-style batter" },
         { name: "Paneer & Chillie", price: "₹230", description: "Wok-tossed with fresh chilies & soy glaze" },
+        { name: "Boiled Eggs (2 Pcs)", price: "₹76", description: "Perfectly boiled farm-fresh eggs" },
+        { name: "Egg Pakoda", price: "₹183", description: "Boiled eggs in spiced chickpea batter, deep-fried" },
+        { name: "Chicken Nachos", price: "₹309", description: "Loaded nachos with spiced chicken & cheese" },
+        { name: "Chicken Nuggets", price: "₹338", description: "Crispy breaded chicken bites with dipping sauce" },
+        { name: "Fish Finger", price: "₹357", description: "Tender fish strips in golden breadcrumb coating" },
+        { name: "Chicken 65", price: "₹452", description: "Spicy South Indian-style fried chicken" },
       ],
     },
   ],
 };
 
 export const foodMenu: MenuSection = {
-  title: "FOOD MENU",
+  title: "GLOBAL MAINS",
   categories: [
     {
       title: "Non-Vegetarian Handi & Firepot",
       icon: "🍲",
       items: [
         { name: "Chicken Kolhapuri Firepot", price: "₹379", description: "Intensely spiced with dried red chilies & coconut" },
-        { name: "Solapuri Chicken Handi", halfPrice: "₹459", fullPrice: "₹799", description: "Rustic preparation with black stone flower & wild spices" },
+        {
+          name: "Solapuri Chicken Handi",
+          halfPrice: "₹459",
+          fullPrice: "₹799",
+          description: "Rustic preparation with black stone flower & wild spices"
+        },
         { name: "Slow-Cooked Butter Chicken Handi", halfPrice: "₹529", fullPrice: "₹899", description: "Velvety tomato-cream gravy with charred chicken" },
         { name: "Royal Murgh Musallam Handi", halfPrice: "₹579", fullPrice: "₹949", description: "Whole chicken stuffed with aromatic rice & eggs" },
       ],
@@ -89,7 +104,11 @@ export const foodMenu: MenuSection = {
       title: "The Live Thali Experience",
       icon: "🍽️",
       items: [
-        { name: "Luxe Veg Thali", price: "₹249", description: "Seasonal vegetables, signature gravy, dal fry, rice, salad, papad & assorted breads" },
+        {
+          name: "Luxe Veg Thali",
+          price: "₹249",
+          description: "Seasonal vegetables, signature gravy, dal fry, rice, salad, papad & assorted breads"
+        },
         { name: "Egg Thali", price: "₹279", description: "Masala egg preparation, rassa, dal, rice, salad & assorted breads" },
         { name: "Classic Chicken Thali", price: "₹339", description: "Chicken fry, rassa, soup, rice, salad & assorted breads" },
         { name: "Royal Mutton Thali", price: "₹499", description: "Mutton fry, Solapuri rassa, soup, wajdi, rice, salad & assorted breads" },
@@ -111,13 +130,18 @@ export const foodMenu: MenuSection = {
         { name: "Kaju Cream Curry", price: "₹399", description: "Whole cashews swimming in delicate white gravy" },
         { name: "Veg Patiyala", price: "₹329", description: "Garden vegetables in royal Punjabi-style sauce" },
         { name: "Veg Kolhapuri Pot", price: "₹329", description: "Seasonal vegetables in spicy Kolhapuri masala" },
+        { name: "Paneer Chilli", price: "₹452", description: "Indo-Chinese style paneer with bell peppers & soy sauce" },
+        { name: "Mushroom Chilli", price: "₹376", description: "Button mushrooms in spicy garlic chilli sauce" },
+        { name: "Gobi Manchurian", price: "₹418", description: "Crispy cauliflower in tangy Manchurian sauce" },
+        { name: "Veg Spring Roll", price: "₹418", description: "Crispy rolls filled with fresh vegetables" },
+        { name: "Honey Chilli Potato", price: "₹384", description: "Crispy potato fingers in sweet & spicy glaze" },
       ],
     },
   ],
 };
 
 export const beveragesMenu: MenuSection = {
-  title: "BEVERAGES & SPIRITS",
+  title: "CRAFT LIBATIONS",
   categories: [
     {
       title: "Craft & Classic Brews - Large (650 ml)",
@@ -129,30 +153,45 @@ export const beveragesMenu: MenuSection = {
         { name: "Tuborg Strong", price: "₹279", description: "Danish heritage with robust flavor profile" },
         { name: "Carlsberg Smooth", price: "₹299", description: "Exceptionally smooth Scandinavian brew" },
         { name: "Heineken", price: "₹329", description: "Iconic Dutch pilsner with balanced bitterness" },
-        { name: "Breezer Cranberry (275 ml)", price: "₹269", description: "Light & fruity with tart cranberry notes" },
-        { name: "Breezer Blackberry (275 ml)", price: "₹269", description: "Sweet berry refreshment, perfectly chilled" },
+        { name: "Tuborg Can (500 ml)", price: "₹259", description: "Smooth Danish lager in convenient can" },
       ],
     },
     {
-      title: "Craft & Classic Brews - Pint",
+      title: "Premium Beers & Imports (330 ml)",
       icon: "🍺",
       items: [
-        { name: "Kingfisher Premium", price: "₹199", description: "India's favorite crisp, refreshing lager" },
-        { name: "Budweiser Mild", price: "₹219", description: "Smooth American-style pale lager" },
+        { name: "Corona Extra", price: "₹349", description: "Mexican lager, served with lime" },
+        { name: "Hoegaarden", price: "₹399", description: "Belgian white beer with citrus notes" },
         { name: "Budweiser Magnum Strong", price: "₹239", description: "Bold & full-bodied with rich malt character" },
-        { name: "Tuborg Strong", price: "₹189", description: "Danish heritage with robust flavor profile" },
-        { name: "Carlsberg Smooth", price: "₹209", description: "Exceptionally smooth Scandinavian brew" },
         { name: "Heineken", price: "₹229", description: "Iconic Dutch pilsner with balanced bitterness" },
+        { name: "Budweiser Mild", price: "₹219", description: "Smooth American-style pale lager" },
+        { name: "Carlsberg Smooth", price: "₹209", description: "Exceptionally smooth Scandinavian brew" },
+        { name: "Kingfisher Premium", price: "₹199", description: "India's favorite crisp, refreshing lager" },
+        { name: "Tuborg Strong", price: "₹189", description: "Danish heritage with robust flavor profile" },
+      ],
+    },
+    {
+      title: "Refreshing Breezers (275 ml)",
+      icon: "🍹",
+      items: [
+        { name: "Breezer Cranberry", price: "₹269", description: "Light & fruity with tart cranberry notes" },
+        { name: "Breezer Blackberry", price: "₹269", description: "Sweet berry refreshment, perfectly chilled" },
+        { name: "Breezer Lime", price: "₹269", description: "Zesty citrus with a refreshing twist" },
+        { name: "Breezer Orange", price: "₹269", description: "Tropical orange burst, ice-cold" },
       ],
     },
     {
       title: "Crystal Clear Vodkas",
       icon: "🍸",
       items: [
-        { name: "Magic Moments (Plain)", sizes: ["₹159", "₹279", "₹399", "₹749"], description: "Triple-distilled smoothness with clean finish" },
-        { name: "Magic Moments Apple / Orange", sizes: ["₹169", "₹299", "₹429", "₹799"], description: "Fruit-infused with natural flavor essences" },
+        {
+          name: "Magic Moments (Plain)",
+          sizes: ["₹154", "₹271", "₹399", "₹749"],
+          description: "Triple-distilled smoothness with clean finish"
+        },
+        { name: "Magic Moments Apple / Orange", sizes: ["₹164", "₹290", "₹429", "₹799"], description: "Fruit-infused with natural flavor essences" },
         { name: "Romanov Vodka (Plain / Apple)", sizes: ["₹139", "₹239", "₹339", "₹649"], description: "Classic Russian-style with subtle sweetness" },
-        { name: "Smirnoff", sizes: ["₹219", "₹399", "₹579", "₹1,099"], description: "World-renowned purity, filtered ten times" },
+        { name: "Smirnoff", sizes: ["₹213", "₹387", "₹579", "₹1,099"], description: "World-renowned purity, filtered ten times" },
       ],
     },
     {
@@ -160,51 +199,134 @@ export const beveragesMenu: MenuSection = {
       icon: "🥃",
       items: [
         { name: "Old Monk", sizes: ["₹169", "₹289", "₹399", "₹749"], description: "Legendary 7-year aged dark rum with vanilla notes" },
-        { name: "Bacardi White", sizes: ["₹189", "₹329", "₹469", "₹899"], description: "Light & crisp, perfect for cocktails" },
+        { name: "Bacardi White", sizes: ["₹183", "₹319", "₹469", "₹899"], description: "Light & crisp, perfect for cocktails" },
         { name: "Bacardi Black", sizes: ["₹199", "₹349", "₹499", "₹949"], description: "Rich molasses flavor with oak undertones" },
         { name: "Bacardi Lemon", sizes: ["₹209", "₹369", "₹529", "₹979"], description: "Zesty citrus twist on classic rum" },
-        { name: "McDowell's Rum", sizes: ["₹149", "₹259", "₹369", "₹699"], description: "Smooth Caribbean-inspired blend" },
+        { name: "Bacardi Mango", sizes: ["₹209", "₹369", "₹529", "₹979"], description: "Tropical mango-infused rum" },
+        { name: "McDowell's Rum", sizes: ["₹144", "₹251", "₹369", "₹699"], description: "Smooth Caribbean-inspired blend" },
       ],
     },
     {
       title: "Indian Reserve Whiskies",
       icon: "🥃",
       items: [
-        { name: "Imperial Blue", sizes: ["₹159", "₹279", "₹399", "₹749"], description: "Smooth blend with hints of oak & spice" },
-        { name: "Royal Challenge", sizes: ["₹189", "₹329", "₹469", "₹899"], description: "Premium grain whisky with mellow character" },
-        { name: "Royal Green", sizes: ["₹199", "₹349", "₹499", "₹929"], description: "Distinctively smooth with herbal notes" },
+        { name: "Imperial Blue", sizes: ["₹154", "₹271", "₹399", "₹749"], description: "Smooth blend with hints of oak & spice" },
+        { name: "Royal Challenge", sizes: ["₹183", "₹319", "₹455", "₹899"], description: "Premium grain whisky with mellow character" },
+        { name: "Royal Green", sizes: ["₹193", "₹339", "₹484", "₹929"], description: "Distinctively smooth with herbal notes" },
+        { name: "Royal Stag", sizes: ["₹115", "₹183", "₹379", "₹749"], description: "India's iconic smooth whisky" },
+        { name: "Royal Stag Barrel", sizes: ["₹135", "₹219", "₹449", "₹849"], description: "Barrel-select premium variant" },
+        { name: "Signature", sizes: ["₹135", "₹219", "₹449", "₹849"], description: "Rare grain whisky with smooth finish" },
+        { name: "McDowell's No.1", sizes: ["₹129", "₹209", "₹429", "₹799"], description: "India's largest-selling whisky" },
+        { name: "Antiquity Blue", sizes: ["₹179", "₹299", "₹649", "₹3,199"], description: "Ultra-premium aged blend" },
+        { name: "Blender's Pride Reserve", sizes: ["₹169", "₹289", "₹599", "₹2,999"], description: "Rare malt reserve collection" },
+        { name: "DSP Black", sizes: ["₹139", "₹229", "₹469", "₹899"], description: "Premium dark whisky blend" },
+        { name: "Rockford Reserve", sizes: ["₹149", "₹249", "₹509", "₹999"], description: "Reserve collection with oak notes" },
+        { name: "Rockford Classic", sizes: ["₹129", "₹209", "₹429", "₹799"], description: "Classic smooth blend" },
+        { name: "Oaken Glow", sizes: ["₹139", "₹229", "₹469", "₹899"], description: "Oak-aged premium whisky" },
       ],
     },
     {
       title: "World Whisky Collection",
       icon: "🥃",
       items: [
-        { name: "Ballantine's Finest (30 ml)", price: "₹399", description: "Scottish blend with honey & apple notes" },
-        { name: "Black & White", price: "₹359", description: "Smoky Highland character with gentle peat" },
-        { name: "Black Dog", price: "₹399", description: "Triple gold matured for exceptional smoothness" },
-        { name: "Jameson Irish Whiskey", price: "₹449", description: "Triple-distilled with signature Irish smoothness" },
-        { name: "Johnnie Walker Red Label", price: "₹429", description: "Bold & vibrant with cinnamon spice" },
+        { name: "Ballantine's Finest", sizes: ["₹387", "₹774", "₹1,161", "₹2,322"], description: "Scottish blend with honey & apple notes" },
+        { name: "Black & White", sizes: ["₹359", "₹718", "₹1,077", "₹2,154"], description: "Smoky Highland character with gentle peat" },
+        { name: "Black Dog", sizes: ["₹449", "₹898", "₹1,347", "₹2,694"], description: "Triple gold matured for exceptional smoothness" },
+        { name: "VAT 69", sizes: ["₹241", "₹482", "₹723", "₹1,446"], description: "Classic Scotch with smooth character" },
+        { name: "Teachers Highland", sizes: ["₹290", "₹580", "₹870", "₹1,740"], description: "Highland single malt excellence" },
+        { name: "Teachers 50", sizes: ["₹319", "₹638", "₹957", "₹1,914"], description: "Premium 50-year heritage blend" },
+        { name: "100 Pipers", sizes: ["₹299", "₹598", "₹897", "₹1,794"], description: "Smooth Scotch with fruity notes" },
+        { name: "Jameson Irish Whiskey", sizes: ["₹449", "₹898", "₹1,347", "₹2,694"], description: "Triple-distilled with signature Irish smoothness" },
+        { name: "Johnnie Walker Red Label", sizes: ["₹429", "₹858", "₹1,287", "₹2,574"], description: "Bold & vibrant with cinnamon spice" },
+        { name: "Johnnie Walker Black Label", sizes: ["₹599", "₹1,198", "₹1,797", "₹3,594"], description: "12-year aged premium Scotch" },
+        { name: "Chivas Regal", sizes: ["₹649", "₹1,298", "₹1,947", "₹3,894"], description: "Luxury Scotch with honey & vanilla" },
+        { name: "Jack Daniel's", sizes: ["₹549", "₹1,098", "₹1,647", "₹3,294"], description: "Tennessee whiskey, charcoal mellowed" },
+        { name: "Jim Beam Bourbon", sizes: ["₹449", "₹898", "₹1,347", "₹2,694"], description: "Kentucky straight bourbon whiskey" },
+        { name: "Monkey Shoulder", sizes: ["₹499", "₹998", "₹1,497", "₹2,994"], description: "Triple malt Scotch whisky" },
+        { name: "Glenfiddich 12Y", sizes: ["₹899", "₹1,798", "₹2,697", "₹5,394"], description: "Single malt Speyside excellence" },
+        { name: "Talisker 10Y", sizes: ["₹849", "₹1,698", "₹2,547", "₹5,094"], description: "Isle of Skye single malt" },
       ],
     },
     {
       title: "Celebration Bottles (750 ml)",
       icon: "🍾",
       items: [
-        { name: "Blender's Pride", price: "₹2,999", description: "Rare malt whisky for special occasions" },
+        { name: "Blender's Pride", price: "₹2,799", description: "Rare malt whisky for special occasions" },
         { name: "Antiquity Blue", price: "₹3,199", description: "Ultra-premium blend with distinguished character" },
         { name: "Royal Challenge", price: "₹2,699", description: "Full bottle of our refined grain whisky" },
-        { name: "Royal Green", price: "₹2,799", description: "Complete bottle for sharing with friends" },
+        { name: "Royal Green", price: "₹3,199", description: "Complete bottle for sharing with friends" },
         { name: "Oak Smith Gold", price: "₹3,099", description: "Japanese-inspired craft with delicate oak finish" },
-        { name: "Old Monk", price: "₹2,199", description: "Full bottle of the iconic dark rum" },
-        { name: "Magic Moments (Plain / Apple)", price: "₹2,499", description: "Party-sized premium vodka" },
-        { name: "Smirnoff", price: "₹3,499", description: "Celebration-ready international vodka" },
+        { name: "Old Monk", price: "₹2,049", description: "Full bottle of the iconic dark rum" },
+        { name: "Magic Moments (Plain / Apple)", price: "₹2,599", description: "Party-sized premium vodka" },
+        { name: "Smirnoff", price: "₹3,399", description: "Celebration-ready international vodka" },
+        { name: "Jägermeister (700ml)", price: "₹5,499", description: "The iconic German herbal liqueur bottle" },
+      ],
+    },
+    {
+      title: "Premium Vodkas",
+      icon: "🍸",
+      items: [
+        { name: "Grey Goose (30 ml)", price: "₹649", description: "French luxury vodka, ultra-smooth" },
+        { name: "Absolut Vodka (30 ml)", price: "₹449", description: "Swedish premium vodka, pure & crisp" },
+        { name: "Absolut Raspberry (30 ml)", price: "₹479", description: "Natural raspberry infusion" },
+        { name: "Ketel One (30 ml)", price: "₹549", description: "Dutch craft vodka, copper pot distilled" },
+        { name: "Smirnoff Orange (30 ml)", price: "₹229", description: "Citrus-infused vodka" },
+      ],
+    },
+
+    {
+      title: "Fine Wines",
+      icon: "🍷",
+      items: [
+        { name: "Fratelli Classic Shiraz (Glass)", price: "₹445", description: "Full-bodied red with berry notes" },
+        { name: "Fratelli Classic Merlot (Glass)", price: "₹445", description: "Smooth red with plum flavors" },
+        { name: "Fratelli Chenin Blanc (Glass)", price: "₹445", description: "Crisp white with tropical fruit" },
+        { name: "Fratelli Shiraz Rosé (Glass)", price: "₹445", description: "Refreshing rosé with strawberry hints" },
+        { name: "Sula Satori Merlot (Glass)", price: "₹445", description: "Indian red wine, smooth & fruity" },
+        { name: "Sula Cabernet Shiraz (Glass)", price: "₹445", description: "Bold red blend" },
+        { name: "Sula Chenin Blanc (Glass)", price: "₹445", description: "Light white with citrus notes" },
+        { name: "Sula Zinfandel Rosé (Glass)", price: "₹445", description: "Sweet rosé with berry flavors" },
+        { name: "Sula Red Wine (Half Bottle 375ml)", price: "₹1,066", description: "Premium half bottle" },
+      ],
+    },
+    {
+      title: "Gin & Brandy",
+      icon: "🍸",
+      items: [
+        { name: "Bombay Sapphire (30 ml)", price: "₹449", description: "Premium London Dry Gin" },
+        { name: "Beefeater (30 ml)", price: "₹399", description: "Classic London Dry Gin" },
+        { name: "Mansion House Brandy (30 ml)", price: "₹199", description: "Smooth French-style brandy" },
+        { name: "Honey Bee Brandy (30 ml)", price: "₹189", description: "Sweet honey-infused brandy" },
+      ],
+    },
+    {
+      title: "Premium Liqueurs",
+      icon: "🍹",
+      items: [
+        { name: "Jägermeister (30 ml)", price: "₹549", description: "German herbal liqueur" },
+        { name: "Kahlúa (30 ml)", price: "₹349", description: "Coffee liqueur from Mexico" },
+        { name: "Baileys Irish Cream (30 ml)", price: "₹449", description: "Creamy Irish whiskey liqueur" },
+      ],
+    },
+    {
+      title: "Soft Drinks & Beverages",
+      icon: "🥤",
+      items: [
+        { name: "Mineral Water (1L)", price: "₹59", description: "Premium packaged water" },
+        { name: "Mineral Water (500ml)", price: "₹39", description: "Half liter bottled water" },
+        { name: "Sprite (250ml)", price: "₹49", description: "Lemon-lime soda" },
+        { name: "Sprite (600ml)", price: "₹79", description: "Large lemon-lime soda" },
+        { name: "Thums Up (250ml)", price: "₹49", description: "Strong cola" },
+        { name: "Thums Up (600ml)", price: "₹79", description: "Large strong cola" },
+        { name: "Soda Water", price: "₹39", description: "Carbonated water" },
+        { name: "Red Bull (250ml)", price: "₹199", description: "Energy drink" },
       ],
     },
   ],
 };
 
 export const sideItems: MenuSection = {
-  title: "SIDE ITEMS & REFRESHMENTS",
+  title: "ARTISAN SIDES",
   categories: [
     {
       title: "Refresh & Rehydrate",

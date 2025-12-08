@@ -70,24 +70,57 @@ const MenuItemRow = ({ item, isEven }: { item: MenuItem; isEven: boolean }) => {
   );
 };
 
-const CategoryBlock = ({ category, index }: { category: MenuCategoryType; index: number }) => {
+const CategoryBlock = ({
+  category,
+  index,
+  accentColor = "#00f0ff",
+  dietIcon = null
+}: {
+  category: MenuCategoryType;
+  index: number;
+  accentColor?: string;
+  dietIcon?: "veg" | "non-veg" | null;
+}) => {
   return (
     <div className="mb-6">
-      {/* Category Header */}
-      <div className="flex items-center gap-3 mb-3 pb-2 border-b border-gray-700/50">
+      {/* Category Header with Holographic Gradient */}
+      <div className="flex items-center gap-3 mb-3 pb-2 relative">
+        <div
+          className="absolute bottom-0 left-0 right-0 h-[1px]"
+          style={{ background: `linear-gradient(90deg, transparent, ${accentColor}88, transparent)` }}
+        />
+
         {category.icon && <span className="text-lg">{category.icon}</span>}
-        <h3 className="text-[13px] font-bold tracking-[0.2em] uppercase text-cyan-400">
+
+        <h3 className="text-[13px] font-bold tracking-[0.2em] uppercase" style={{ color: accentColor }}>
           {category.title}
         </h3>
+
+        {/* Veg/Non-Veg Indicator */}
+        {dietIcon && (
+          <div className={`ml-auto border border-current p-[2px] ${dietIcon === "veg" ? "text-green-500" : "text-red-500"}`}>
+            <div className={`w-2 h-2 rounded-full ${dietIcon === "veg" ? "bg-green-500" : "bg-red-500"}`} />
+          </div>
+        )}
       </div>
 
       {/* Size Headers for drinks */}
       {category.items[0]?.sizes && (
         <div className="flex justify-end gap-4 px-4 pb-2 border-b border-gray-800">
-          <span className="text-[9px] text-gray-500 min-w-[50px] text-center uppercase tracking-wider">30ml</span>
-          <span className="text-[9px] text-gray-500 min-w-[50px] text-center uppercase tracking-wider">60ml</span>
-          <span className="text-[9px] text-gray-500 min-w-[50px] text-center uppercase tracking-wider">90ml</span>
-          <span className="text-[9px] text-gray-500 min-w-[50px] text-center uppercase tracking-wider">180ml</span>
+          {category.items[0].sizes.length === 4 ? (
+            <>
+              <span className="text-[9px] text-gray-400 min-w-[50px] text-center uppercase tracking-wider font-semibold">30ml</span>
+              <span className="text-[9px] text-gray-400 min-w-[50px] text-center uppercase tracking-wider font-semibold">60ml</span>
+              <span className="text-[9px] text-gray-400 min-w-[50px] text-center uppercase tracking-wider font-semibold">90ml</span>
+              <span className="text-[9px] text-gray-400 min-w-[50px] text-center uppercase tracking-wider font-semibold">180ml</span>
+            </>
+          ) : (
+            category.items[0].sizes.map((_, i) => (
+              <span key={i} className="text-[9px] text-gray-500 min-w-[50px] text-center uppercase tracking-wider">
+                Size {i + 1}
+              </span>
+            ))
+          )}
         </div>
       )}
 
@@ -119,64 +152,134 @@ const PrintablePage = ({
   return (
     <div
       ref={pageRef}
-      className="bg-[#0a0a0f] w-[794px] min-h-[1123px] relative flex flex-col"
-      style={{ fontFamily: "'Rajdhani', sans-serif" }}
+      className="bg-[#0a0a0f] w-[559px] min-h-[794px] relative flex flex-col overflow-hidden"
+      style={{
+        fontFamily: "'Rajdhani', sans-serif",
+        backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px)",
+        backgroundSize: "30px 30px"
+      }}
     >
-      {/* Elegant Border */}
-      <div className="absolute inset-4 border border-gray-700/30 pointer-events-none" />
-      <div className="absolute inset-6 border border-gray-700/20 pointer-events-none" />
+      {/* World-Class Boundary System - A5 Optimized */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Outer Frame with tech corners */}
+        <div className="absolute inset-[8px] border border-gray-800/80">
+          {/* Tech notches */}
+          <div className="absolute top-1/4 left-[-1px] w-[3px] h-8 bg-gray-800" />
+          <div className="absolute bottom-1/4 right-[-1px] w-[3px] h-8 bg-gray-800" />
+        </div>
 
-      {/* Header */}
-      <div className="pt-12 pb-6 text-center">
-        <div className="mb-2">
-          <span className="text-[10px] tracking-[0.4em] text-gray-500 uppercase">Est. 2024</span>
-        </div>
-        <h1 className="text-4xl font-bold tracking-[0.15em] text-white mb-2" style={{ fontFamily: "'Orbitron', sans-serif" }}>
-          LIVE BAR
-        </h1>
-        <div className="flex items-center justify-center gap-4 mb-3">
-          <div className="h-[1px] w-20 bg-gradient-to-r from-transparent to-gray-600" />
-          <div className="w-2 h-2 rotate-45 border border-gray-600" />
-          <div className="h-[1px] w-20 bg-gradient-to-l from-transparent to-gray-600" />
-        </div>
-        <p className="text-[10px] tracking-[0.3em] text-gray-400 uppercase">Fine Dining & Premium Spirits • Pune</p>
+        {/* Inner Frame with Accent */}
+        <div className="absolute inset-[15px] border border-opacity-30" style={{ borderColor: accentColor }} />
+
+        {/* corner SVG Circuits */}
+        <svg className="absolute top-[15px] left-[15px] w-24 h-24 opacity-60" viewBox="0 0 100 100" style={{ color: accentColor }}>
+          <path fill="none" stroke="currentColor" strokeWidth="1" d="M 0,0 L 40,0 L 45,5 L 45,20 M 0,0 L 0,40 L 5,45 L 20,45" />
+          <circle cx="45" cy="20" r="2" fill="currentColor" />
+          <circle cx="20" cy="45" r="2" fill="currentColor" />
+          <rect x="2" y="2" width="10" height="10" fill="currentColor" opacity="0.5" />
+        </svg>
+
+        <svg className="absolute top-[15px] right-[15px] w-24 h-24 opacity-60" viewBox="0 0 100 100" style={{ color: accentColor, transform: "scaleX(-1)" }}>
+          <path fill="none" stroke="currentColor" strokeWidth="1" d="M 0,0 L 40,0 L 45,5 L 45,20 M 0,0 L 0,40 L 5,45 L 20,45" />
+          <circle cx="45" cy="20" r="2" fill="currentColor" />
+          <circle cx="20" cy="45" r="2" fill="currentColor" />
+          <rect x="2" y="2" width="10" height="10" fill="currentColor" opacity="0.5" />
+        </svg>
+
+        <svg className="absolute bottom-[15px] left-[15px] w-24 h-24 opacity-60" viewBox="0 0 100 100" style={{ color: accentColor, transform: "scaleY(-1)" }}>
+          <path fill="none" stroke="currentColor" strokeWidth="1" d="M 0,0 L 40,0 L 45,5 L 45,20 M 0,0 L 0,40 L 5,45 L 20,45" />
+          <circle cx="45" cy="20" r="2" fill="currentColor" />
+          <circle cx="20" cy="45" r="2" fill="currentColor" />
+          <rect x="2" y="2" width="10" height="10" fill="currentColor" opacity="0.5" />
+        </svg>
+
+        <svg className="absolute bottom-[15px] right-[15px] w-24 h-24 opacity-60" viewBox="0 0 100 100" style={{ color: accentColor, transform: "rotate(180deg)" }}>
+          <path fill="none" stroke="currentColor" strokeWidth="1" d="M 0,0 L 40,0 L 45,5 L 45,20 M 0,0 L 0,40 L 5,45 L 20,45" />
+          <circle cx="45" cy="20" r="2" fill="currentColor" />
+          <circle cx="20" cy="45" r="2" fill="currentColor" />
+          <rect x="2" y="2" width="10" height="10" fill="currentColor" opacity="0.5" />
+        </svg>
       </div>
 
-      {/* Section Title */}
-      <div className="text-center mb-6 px-12">
-        <div className="inline-block">
-          <h2
-            className="text-xl font-bold tracking-[0.2em] uppercase mb-2"
-            style={{ color: accentColor, fontFamily: "'Orbitron', sans-serif" }}
+      {/* Premium Header with New Logo - ENHANCED BRIGHTNESS */}
+      <div className="pt-8 pb-4 text-center relative z-10">
+        <div className="flex justify-center mb-4">
+          <div className="relative p-2 border border-dashed border-gray-700 rounded-lg bg-black/40">
+            <img
+              src="/live_logo_actual.jpg"
+              alt="LIVE"
+              className="h-32 w-auto object-contain drop-shadow-[0_0_15px_rgba(0,0,0,0.8)]"
+              style={{ filter: "brightness(1.2) contrast(1.1) saturate(1.1)" }}
+            />
+          </div>
+        </div>
+
+        <div className="flex items-center justify-center gap-3 mb-2">
+          <div className="h-[1px] w-16 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
+          <span className="text-[10px] tracking-[0.25em] uppercase font-bold text-white drop-shadow-md" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+            EAT . DRINK . CODE . REPEAT
+          </span>
+          <div className="h-[1px] w-16 bg-gradient-to-l from-transparent via-magenta-500 to-transparent" />
+        </div>
+      </div>
+
+      {/* Section Title with Neon Glow */}
+      <div className="mb-6 px-8 relative">
+        <div className="absolute top-1/2 left-8 right-8 h-[1px] bg-gray-800 -z-10" />
+        <div className="text-center">
+          <span
+            className="inline-block px-8 py-2 bg-[#0a0a0f] text-2xl font-bold tracking-[0.25em] uppercase border-y border-gray-800"
+            style={{
+              color: accentColor,
+              fontFamily: "'Orbitron', sans-serif",
+              textShadow: `0 0 10px ${accentColor}66`
+            }}
           >
             {section.title}
-          </h2>
-          <div className="h-[2px] w-full" style={{ background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)` }} />
+          </span>
         </div>
       </div>
 
       {/* Content */}
-      <div className="flex-1 px-10 pb-8">
-        <div className="max-w-3xl mx-auto">
-          {section.categories.map((category, index) => (
-            <CategoryBlock key={category.title} category={category} index={index} />
-          ))}
+      <div className="flex-1 px-8 pb-8">
+        <div className="max-w-md mx-auto">
+          {section.categories.map((category, index) => {
+            // Auto-detect Veg/Non-Veg for Food Pages
+            const isVeg = section.title.includes("VEG") && !section.title.includes("NON");
+            const isNonVeg = section.title.includes("NON-VEG") || section.title.includes("MEAT") || section.title.includes("CHICKEN");
+            // Only show icons for Food pages (Indices 0-4 roughly, or just logic check)
+            const showDietIcon = isVeg || isNonVeg;
+
+            return (
+              <CategoryBlock
+                key={category.title}
+                category={category}
+                index={index}
+                accentColor={accentColor}
+                dietIcon={showDietIcon ? (isVeg ? "veg" : "non-veg") : null}
+              />
+            );
+          })}
         </div>
       </div>
 
+
       {/* Footer */}
-      <div className="pb-8 text-center">
-        <div className="flex items-center justify-center gap-4 mb-3">
-          <div className="h-[1px] w-16 bg-gray-700" />
-          <div className="w-1.5 h-1.5 rotate-45 bg-amber-500/50" />
-          <div className="h-[1px] w-16 bg-gray-700" />
+      <div className="pb-6 text-center relative z-10">
+        <div className="flex justify-between items-end px-12">
+          <div className="text-left">
+            <p className="text-[8px] tracking-[0.15em] text-gray-600 uppercase">PUNE</p>
+          </div>
+          <div className="text-center">
+            <p className="text-[8px] text-gray-500 mb-0.5" style={{ color: accentColor }}>page</p>
+            <p className="text-[12px] font-bold text-white" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+              0{pageNumber} <span className="text-gray-600 text-[9px]">/ 0{totalPages}</span>
+            </p>
+          </div>
+          <div className="text-right">
+            <p className="text-[8px] tracking-[0.15em] text-gray-600 uppercase">DINING</p>
+          </div>
         </div>
-        <p className="text-[9px] tracking-[0.2em] text-gray-500 uppercase mb-1">
-          All prices inclusive of applicable taxes
-        </p>
-        <p className="text-[9px] text-gray-600">
-          Page {pageNumber} of {totalPages}
-        </p>
       </div>
     </div>
   );
@@ -188,36 +291,36 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
   const [isExporting, setIsExporting] = useState(false);
   const pageRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Smart grouping for ~10 pages world-class layout
+  // Smart grouping for A5 pages (more pages to ensure no cutoff)
   const pages = [
-    // Page 1: Veg Snacks (13 items)
+    // Page 1: Veg Snacks
     {
       section: {
-        title: "SNACKS & STARTERS",
+        title: "APPETIZERS (VEG)",
         categories: [menuData.snacksAndStarters.categories[0]]
       },
       variant: "cyan" as const,
       key: "snacks-veg"
     },
-    // Page 2: Non-Veg Snacks (14 items)
+    // Page 2: Non-Veg Snacks
     {
       section: {
-        title: "SNACKS & STARTERS",
+        title: "APPETIZERS (NON-VEG)",
         categories: [menuData.snacksAndStarters.categories[1]]
       },
       variant: "cyan" as const,
       key: "snacks-nonveg"
     },
-    // Page 3: Handi & Mutton (9 items)
+    // Page 3: Curries
     {
       section: {
-        title: "CHEF'S SIGNATURE CURRIES",
+        title: "SIGNATURE CURRIES",
         categories: [menuData.foodMenu.categories[0], menuData.foodMenu.categories[1]]
       },
       variant: "magenta" as const,
       key: "food-curries"
     },
-    // Page 4: Thali & Veg Mains (16 items)
+    // Page 4: Mains & Thalis
     {
       section: {
         title: "MAINS & THALIS",
@@ -226,49 +329,109 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       variant: "magenta" as const,
       key: "food-mains"
     },
-    // Page 5: Beers & Vodkas (12 items)
+    // Page 5: Gourmet Sides (Food separation)
     {
       section: {
-        title: "BREWS & SPIRITS",
-        categories: [menuData.beveragesMenu.categories[0], menuData.beveragesMenu.categories[1]]
-      },
-      variant: "cyan" as const,
-      key: "drinks-beer-vodka"
-    },
-    // Page 6: Rums & Whiskies (13 items)
-    {
-      section: {
-        title: "AGED SPIRITS",
+        title: "GOURMET SIDES",
         categories: [
-          menuData.beveragesMenu.categories[2],
-          menuData.beveragesMenu.categories[3],
-          menuData.beveragesMenu.categories[4]
+          menuData.sideItems.categories[1],      // Bar Bites
+          menuData.sideItems.categories[2]       // Rice
+        ]
+      },
+      variant: "magenta" as const,
+      key: "food-sides"
+    },
+    // Page 6: BEERS (Large & Pints)
+    {
+      section: {
+        title: "CRAFT BREWS",
+        categories: [
+          menuData.beveragesMenu.categories[0], // Large
+          menuData.beveragesMenu.categories[1], // Premium Pints
         ]
       },
       variant: "cyan" as const,
-      key: "drinks-dark-spirits"
+      key: "drinks-beers"
     },
-    // Page 7: Celebration Bottles (8 items)
+    // Page 7: COOLERS & VODKAS
+    {
+      section: {
+        title: "COOLERS & VODKAS",
+        categories: [
+          menuData.beveragesMenu.categories[2], // Breezers
+          menuData.beveragesMenu.categories[8], // Premium Vodkas
+          menuData.beveragesMenu.categories[3], // Crystal Vodkas
+        ]
+      },
+      variant: "cyan" as const,
+      key: "drinks-vodkas"
+    },
+    // Page 8: RUMS, GIN & LIQUEURS
+    {
+      section: {
+        title: "SPIRITS & LIQUEURS",
+        categories: [
+          menuData.beveragesMenu.categories[4], // Rums
+          menuData.beveragesMenu.categories[10], // Gin & Brandy
+          menuData.beveragesMenu.categories[11], // Premium Liqueurs (Moved here for better visibility)
+        ]
+      },
+      variant: "cyan" as const,
+      key: "drinks-rums-gin-liqueurs"
+    },
+    // Page 9: INDIAN RESERVES
+    {
+      section: {
+        title: "INDIAN RESERVES",
+        categories: [
+          menuData.beveragesMenu.categories[5], // Indian Whiskies
+        ]
+      },
+      variant: "gold" as const,
+      key: "drinks-indian-whisky"
+    },
+    // Page 10: WORLD WHISKIES
+    {
+      section: {
+        title: "WORLD COLLECTION",
+        categories: [
+          menuData.beveragesMenu.categories[6], // World Whiskies
+        ]
+      },
+      variant: "gold" as const,
+      key: "drinks-world-whisky"
+    },
+    // Page 11: CELEBRATION BOTTLES
     {
       section: {
         title: "CELEBRATION BOTTLES",
-        categories: [menuData.beveragesMenu.categories[5]]
+        categories: [menuData.beveragesMenu.categories[7]]
       },
       variant: "gold" as const,
       key: "drinks-bottles"
     },
-    // Page 8: Sides & Refreshments (9 items)
+    // Page 12: WINES
     {
       section: {
-        title: "SIDES & REFRESHMENTS",
+        title: "FINE WINES COLLECTION",
         categories: [
-          menuData.sideItems.categories[0],
-          menuData.sideItems.categories[1],
-          menuData.sideItems.categories[2]
+          menuData.beveragesMenu.categories[9], // Wines
         ]
       },
-      variant: "gold" as const,
-      key: "sides-all"
+      variant: "magenta" as const,
+      key: "drinks-wines"
+    },
+    // Page 13: Refreshments
+    {
+      section: {
+        title: "REFRESHMENTS",
+        categories: [
+          menuData.sideItems.categories[0],      // Water/Soda (Refresh & Rehydrate)
+          menuData.beveragesMenu.categories[12], // Soft Drinks
+        ]
+      },
+      variant: "cyan" as const,
+      key: "refreshments"
     },
   ];
 
@@ -281,108 +444,163 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
     document.body.appendChild(tempDiv);
 
     const page = pages[index];
+    const accentColor = page.variant === "cyan" ? "#00f0ff" : page.variant === "magenta" ? "#ff00ff" : "#ffd700";
+
+    // Auto-detect Veg/Non-Veg for PDF generation
+    const isVeg = page.section.title.includes("VEG") && !page.section.title.includes("NON");
+    const isNonVeg = page.section.title.includes("NON-VEG") || page.section.title.includes("MEAT") || page.section.title.includes("CHICKEN");
+    const showDietIcon = isVeg || isNonVeg;
+
     const pageElement = document.createElement("div");
+    // A5 Dimensions: 148mm x 210mm (~560px x 794px at 96dpi)
     pageElement.innerHTML = `
-      <div style="font-family: 'Rajdhani', sans-serif; background: #0a0a0f; width: 794px; min-height: 1123px; position: relative; display: flex; flex-direction: column;">
-        <div style="position: absolute; inset: 16px; border: 1px solid rgba(55,65,81,0.3); pointer-events: none;"></div>
-        <div style="position: absolute; inset: 24px; border: 1px solid rgba(55,65,81,0.2); pointer-events: none;"></div>
+      <div style="font-family: 'Rajdhani', sans-serif; background: #0a0a0f; background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px); background-size: 30px 30px; width: 559px; min-height: 794px; position: relative; display: flex; flex-direction: column; overflow: hidden;">
         
-        <div style="padding-top: 48px; padding-bottom: 24px; text-align: center;">
-          <div style="margin-bottom: 8px;">
-            <span style="font-size: 10px; letter-spacing: 0.4em; color: #6b7280; text-transform: uppercase;">Est. 2024</span>
+        <!-- World-Class Boundary System -->
+        <div style="position: absolute; inset: 0; pointer-events: none;">
+          <!-- Outer Frame -->
+          <div style="position: absolute; inset: 8px; border: 1px solid rgba(55,65,81,0.8);">
+            <!-- Tech notches -->
+            <div style="position: absolute; top: 25%; left: -1px; width: 3px; height: 32px; background: #1f2937;"></div>
+            <div style="position: absolute; bottom: 25%; right: -1px; width: 3px; height: 32px; background: #1f2937;"></div>
           </div>
-          <h1 style="font-size: 36px; font-weight: bold; letter-spacing: 0.15em; color: white; margin-bottom: 8px; font-family: 'Orbitron', sans-serif;">LIVE BAR</h1>
-          <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 12px;">
-            <div style="height: 1px; width: 80px; background: linear-gradient(to right, transparent, #4b5563);"></div>
-            <div style="width: 8px; height: 8px; transform: rotate(45deg); border: 1px solid #4b5563;"></div>
-            <div style="height: 1px; width: 80px; background: linear-gradient(to left, transparent, #4b5563);"></div>
-          </div>
-          <p style="font-size: 10px; letter-spacing: 0.3em; color: #9ca3af; text-transform: uppercase;">Fine Dining & Premium Spirits • Pune</p>
+          
+          <!-- Inner Frame with Accent -->
+          <div style="position: absolute; inset: 15px; border: 1px solid ${accentColor}44;"></div>
+          
+          <!-- Corner Accents SVG Simulated -->
+           <div style="position: absolute; top: 15px; left: 15px; width: 48px; height: 48px; border-top: 3px solid ${accentColor}; border-left: 3px solid ${accentColor}; box-shadow: -2px -2px 10px ${accentColor}44;"></div>
+           <div style="position: absolute; top: 15px; right: 15px; width: 48px; height: 48px; border-top: 3px solid ${accentColor}; border-right: 3px solid ${accentColor}; box-shadow: 2px -2px 10px ${accentColor}44;"></div>
+           <div style="position: absolute; bottom: 15px; left: 15px; width: 48px; height: 48px; border-bottom: 3px solid ${accentColor}; border-left: 3px solid ${accentColor}; box-shadow: -2px 2px 10px ${accentColor}44;"></div>
+           <div style="position: absolute; bottom: 15px; right: 15px; width: 48px; height: 48px; border-bottom: 3px solid ${accentColor}; border-right: 3px solid ${accentColor}; box-shadow: 2px 2px 10px ${accentColor}44;"></div>
         </div>
-        
-        <div style="text-align: center; margin-bottom: 24px; padding: 0 48px;">
-          <div style="display: inline-block;">
-            <h2 style="font-size: 20px; font-weight: bold; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; color: ${page.variant === "cyan" ? "#00f0ff" : page.variant === "magenta" ? "#ff00ff" : "#ffd700"}; font-family: 'Orbitron', sans-serif;">
-              ${escapeHtml(page.section.title)}
-            </h2>
-            <div style="height: 2px; width: 100%; background: linear-gradient(90deg, transparent, ${page.variant === "cyan" ? "#00f0ff" : page.variant === "magenta" ? "#ff00ff" : "#ffd700"}, transparent);"></div>
+
+        <!-- Premium Header -->
+        <div style="padding-top: 32px; padding-bottom: 16px; text-align: center; position: relative; z-index: 10;">
+          <div style="display: flex; justify-content: center; margin-bottom: 16px;">
+             <div style="padding: 8px; border: 1px dashed #374151; border-radius: 8px; background: rgba(0,0,0,0.4);">
+                <img src="/live_logo_actual.jpg" style="height: 120px; width: auto; display: block; filter: brightness(1.2) contrast(1.1) saturate(1.1);" />
+             </div>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 8px;">
+            <div style="height: 1px; width: 64px; background: linear-gradient(to right, transparent, #06b6d4, transparent);"></div>
+            <span style="font-size: 9px; letter-spacing: 0.25em; color: white; text-transform: uppercase; font-weight: bold; font-family: 'Orbitron', sans-serif; text-shadow: 0 0 5px rgba(34,211,238,0.8);">EAT . DRINK . CODE . REPEAT</span>
+            <div style="height: 1px; width: 64px; background: linear-gradient(to left, transparent, #d946ef, transparent);"></div>
           </div>
         </div>
-        
-        <div style="flex: 1; padding: 0 40px 32px;">
-          <div style="max-width: 768px; margin: 0 auto;">
-            ${page.section.categories.map((category, catIdx) => `
-              <div style="margin-bottom: 24px;">
-                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(55,65,81,0.5);">
-                  ${category.icon ? `<span style="font-size: 18px;">${escapeHtml(category.icon)}</span>` : ""}
-                  <h3 style="font-size: 13px; font-weight: bold; letter-spacing: 0.2em; text-transform: uppercase; color: #00f0ff;">${escapeHtml(category.title)}</h3>
-                </div>
-                ${category.items[0]?.sizes ? `
-                  <div style="display: flex; justify-content: flex-end; gap: 16px; padding: 0 16px 8px; border-bottom: 1px solid rgba(31,41,55,1);">
-                    <span style="font-size: 9px; color: #6b7280; min-width: 50px; text-align: center; text-transform: uppercase; letter-spacing: 0.1em;">30ml</span>
-                    <span style="font-size: 9px; color: #6b7280; min-width: 50px; text-align: center; text-transform: uppercase; letter-spacing: 0.1em;">60ml</span>
-                    <span style="font-size: 9px; color: #6b7280; min-width: 50px; text-align: center; text-transform: uppercase; letter-spacing: 0.1em;">90ml</span>
-                    <span style="font-size: 9px; color: #6b7280; min-width: 50px; text-align: center; text-transform: uppercase; letter-spacing: 0.1em;">180ml</span>
+
+        <!-- Section Title -->
+        <div style="margin-bottom: 24px; padding-left: 32px; padding-right: 32px; position: relative; text-align: center;">
+             <div style="position: absolute; top: 50%; left: 32px; right: 32px; height: 1px; background-color: #1f2937; z-index: 0;"></div>
+             <span style="display: inline-block; padding: 6px 24px; background-color: #0a0a0f; font-size: 20px; font-weight: bold; letter-spacing: 0.2em; text-transform: uppercase; border-top: 1px solid #1f2937; border-bottom: 1px solid #1f2937; color: ${accentColor}; font-family: 'Orbitron', sans-serif; position: relative; z-index: 1; text-shadow: 0 0 10px ${accentColor}66;">
+               ${escapeHtml(page.section.title)}
+             </span>
+        </div>
+
+        <!-- Content -->
+        <div style="flex: 1; padding-left: 32px; padding-right: 32px; padding-bottom: 32px;">
+          <div style="max-width: 440px; margin: 0 auto;">
+          ${page.section.categories.map((category, catIdx) => `
+            <div style="margin-bottom: 20px;">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding-bottom: 4px; position: relative;">
+                <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, ${accentColor}88, transparent);"></div>
+                ${category.icon ? `<span style="font-size: 16px;">${escapeHtml(category.icon)}</span>` : ""}
+                <h3 style="font-size: 12px; font-weight: bold; letter-spacing: 0.15em; text-transform: uppercase; color: ${accentColor};">${escapeHtml(category.title)}</h3>
+                ${showDietIcon ? `
+                  <div style="margin-left: auto; border: 1px solid ${isVeg ? "#22c55e" : "#ef4444"}; padding: 2px; width: 12px; height: 12px; display: flex; align-items: center; justify-content: center; border-radius: 2px;">
+                     <div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${isVeg ? "#22c55e" : "#ef4444"};"></div>
                   </div>
                 ` : ""}
-                <div>
-                  ${category.items.map((item, idx) => `
-                    <div style="padding: 12px 16px; ${idx % 2 === 0 ? "background: rgba(255,255,255,0.02);" : ""}">
-                      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
-                        <div style="flex: 1;">
-                          <h4 style="font-size: 15px; font-weight: 600; color: white; letter-spacing: 0.05em; text-transform: uppercase;">${escapeHtml(item.name)}</h4>
-                          ${item.description ? `<p style="font-size: 11px; color: #9ca3af; margin-top: 4px; font-style: italic; line-height: 1.5;">${escapeHtml(item.description)}</p>` : ""}
-                        </div>
-                        <div style="flex-shrink: 0; text-align: right;">
-                          ${item.sizes ? `
-                            <div style="display: flex; gap: 16px;">
-                              ${item.sizes.map(size => `<span style="font-size: 13px; font-weight: 500; color: #fbbf24; min-width: 50px; text-align: center;">${escapeHtml(size)}</span>`).join("")}
-                            </div>
-                          ` : item.halfPrice && item.fullPrice ? `
-                            <div style="display: flex; gap: 16px; align-items: center;">
-                              <div style="text-align: center;">
-                                <span style="font-size: 9px; color: #6b7280; display: block; text-transform: uppercase; letter-spacing: 0.1em;">Half</span>
-                                <span style="font-size: 13px; font-weight: 500; color: #fbbf24;">${escapeHtml(item.halfPrice)}</span>
-                              </div>
-                              <div style="text-align: center;">
-                                <span style="font-size: 9px; color: #6b7280; display: block; text-transform: uppercase; letter-spacing: 0.1em;">Full</span>
-                                <span style="font-size: 13px; font-weight: 500; color: #fbbf24;">${escapeHtml(item.fullPrice)}</span>
-                              </div>
-                            </div>
-                          ` : `
-                            <span style="font-size: 14px; font-weight: 600; color: #fbbf24;">${escapeHtml(item.price)}</span>
-                          `}
-                        </div>
+              </div>
+              ${category.items[0]?.sizes ? `
+                <div style="display: flex; justify-content: flex-end; gap: 16px; padding: 0 16px 8px; border-bottom: 1px solid rgba(31,41,55,1);">
+                  ${category.items[0].sizes.length === 4 ? `
+                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 50px;">30ml</span>
+                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 50px;">60ml</span>
+                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 50px;">90ml</span>
+                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 50px;">180ml</span>
+                  ` : `
+                    ${category.items[0].sizes.map((_, i) => `<span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right;">Size ${i + 1}</span>`).join("")}
+                  `}
+                </div>
+              ` : category.items[0]?.halfPrice ? `
+                 <div style="display: flex; justify-content: flex-end; gap: 12px; padding: 0 16px 8px; border-bottom: 1px solid rgba(31,41,55,1);">
+                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">Half</span>
+                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">Full</span>
+                 </div>
+              ` : ""}
+              <div style="display: flex; flex-direction: column; gap: 1px; margin-top: 4px;">
+                ${category.items.map((item, idx) => `
+                  <div style="padding: 8px 10px; ${idx % 2 === 0 ? "background: rgba(255,255,255,0.02);" : ""}">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+                      <div style="flex: 1;">
+                        <h4 style="font-size: 13px; font-weight: 600; color: white; letter-spacing: 0.05em; text-transform: uppercase;">${escapeHtml(item.name)}</h4>
+                        ${item.description ? `<p style="font-size: 9px; color: #9ca3af; margin-top: 2px; font-style: italic; line-height: 1.4;">${escapeHtml(item.description)}</p>` : ""}
+                      </div>
+                      <div style="flex-shrink: 0; text-align: right;">
+                        ${item.sizes ? `
+                          <div style="display: flex; gap: 16px; justify-content: flex-end;">
+                            ${item.sizes.map(size => `<span style="font-size: 11px; font-weight: 500; color: #fbbf24; min-width: 40px; text-align: right; width: 50px;">${escapeHtml(size)}</span>`).join("")}
+                          </div>
+                        ` : item.halfPrice && item.fullPrice ? `
+                          <div style="display: flex; gap: 12px; align-items: center; justify-content: flex-end;">
+                            <span style="font-size: 11px; font-weight: 500; color: #fbbf24; min-width: 40px; text-align: right;">${escapeHtml(item.halfPrice)}</span>
+                            <span style="font-size: 11px; font-weight: 500; color: #fbbf24; min-width: 40px; text-align: right;">${escapeHtml(item.fullPrice)}</span>
+                          </div>
+                        ` : `
+                          <span style="font-size: 13px; font-weight: 600; color: #fbbf24;">${escapeHtml(item.price)}</span>
+                        `}
                       </div>
                     </div>
-                  `).join("")}
-                </div>
+                  </div>
+                `).join("")}
               </div>
-            `).join("")}
+            </div>
+          `).join("")}
           </div>
         </div>
-        
-        <div style="padding-bottom: 32px; text-align: center;">
-          <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 12px;">
-            <div style="height: 1px; width: 64px; background: #374151;"></div>
-            <div style="width: 6px; height: 6px; transform: rotate(45deg); background: rgba(245,158,11,0.5);"></div>
-            <div style="height: 1px; width: 64px; background: #374151;"></div>
+
+        <!-- Footer -->
+        <div style="padding-bottom: 24px; padding-left: 48px; padding-right: 48px; position: relative; z-index: 10;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+            <div style="text-align: left;">
+              <p style="font-size: 8px; letter-spacing: 0.15em; color: #4b5563; text-transform: uppercase; margin: 0;">PUNE</p>
+            </div>
+            <div style="text-align: center;">
+               <p style="font-size: 8px; color: ${accentColor}; margin-bottom: 2px; margin: 0;">page</p>
+               <p style="font-size: 12px; font-weight: bold; color: white; font-family: 'Orbitron', sans-serif; margin: 0;">
+                 0${index + 1} <span style="font-size: 10px; color: #4b5563;">/ 0${pages.length}</span>
+               </p>
+            </div>
+            <div style="text-align: right;">
+              <p style="font-size: 8px; letter-spacing: 0.15em; color: #4b5563; text-transform: uppercase; margin: 0;">DINING</p>
+            </div>
           </div>
-          <p style="font-size: 9px; letter-spacing: 0.2em; color: #6b7280; text-transform: uppercase; margin-bottom: 4px;">All prices inclusive of applicable taxes</p>
-          <p style="font-size: 9px; color: #4b5563;">Page ${index + 1} of ${pages.length}</p>
         </div>
       </div>
     `;
     tempDiv.appendChild(pageElement);
 
+    // Wait for images to load explicitly to ensure they are captured
+    const images = Array.from(pageElement.getElementsByTagName("img"));
+    await Promise.all(images.map((img: any) => {
+      if (img.complete) return Promise.resolve();
+      return new Promise((resolve) => {
+        img.onload = () => resolve(null);
+        img.onerror = () => resolve(null);
+        // Force resolve after 1s to prevent hanging
+        setTimeout(() => resolve(null), 1000);
+      });
+    }));
+
     try {
       const canvas = await html2canvas(pageElement.firstElementChild as HTMLElement, {
-        scale: 2, // Reduced from 3 to 2 for better performance and stability
+        scale: 2,
         backgroundColor: "#0a0a0f",
         useCORS: true,
         logging: false,
-        width: 794,
-        height: 1123,
+        width: 559, // A5 width
+        height: 794, // A5 height
       });
       document.body.removeChild(tempDiv);
       return canvas;
@@ -439,13 +657,13 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       const pdf = new jsPDF({
         orientation: "portrait",
         unit: "mm",
-        format: "a4",
+        format: "a5", // A5 Format
         compress: true
       });
 
       const pagesToExport = allPages ? pages.map((_, i) => i) : [currentPage];
-      const pdfWidth = 210;
-      const pdfHeight = 297;
+      const pdfWidth = 148; // A5 width
+      const pdfHeight = 210; // A5 height
       let pagesAdded = 0;
 
       for (let i = 0; i < pagesToExport.length; i++) {
@@ -471,20 +689,24 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       if (pagesAdded > 0) {
         const fileName = allPages ? "LiveBar-Full-Menu.pdf" : `LiveBar-Menu-${pages[currentPage].key}.pdf`;
 
-        // Use Blob download with explicit MIME type to ensure proper file format
+        // Manual Blob download for maximum compatibility
         const pdfBlob = pdf.output('blob');
-        const blobUrl = URL.createObjectURL(new Blob([pdfBlob], { type: 'application/pdf' }));
+        const url = URL.createObjectURL(pdfBlob);
 
         const link = document.createElement('a');
-        link.href = blobUrl;
-        link.download = fileName;
+        link.href = url;
+        const simpleName = allPages ? "LiveBar_Full_Menu.pdf" : "LiveBar_Page.pdf";
+        link.setAttribute('download', simpleName); // Explicit attribute
         link.style.display = 'none';
         document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
 
-        //Clean up the blob URL
-        setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
+        link.click();
+
+        // Cleanup
+        setTimeout(() => {
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        }, 100);
 
         toast.success("PDF downloaded successfully!");
       } else {
@@ -518,7 +740,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
             <style>
               @media print {
                 body { margin: 0; padding: 0; }
-                @page { size: A4; margin: 0; }
+                @page { size: A5; margin: 0; }
               }
               body { display: flex; justify-content: center; margin: 0; }
               img { max-width: 100%; height: auto; }
@@ -580,17 +802,13 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                 <ChevronLeft className="w-4 h-4" />
               </Button>
               <div className="flex gap-1">
-                {pages.map((page, i) => (
+                {pages.map((_, i) => (
                   <button
                     key={i}
                     onClick={() => setCurrentPage(i)}
-                    className={`px-3 h-8 rounded text-xs font-medium transition-colors ${i === currentPage
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted hover:bg-muted/80"
+                    className={`w-2 h-2 rounded-full transition-colors ${currentPage === i ? "bg-primary" : "bg-muted"
                       }`}
-                  >
-                    {String(i + 1).padStart(2, '0')}
-                  </button>
+                  />
                 ))}
               </div>
               <Button
@@ -604,30 +822,50 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
             </div>
 
             {/* Export Actions */}
-            <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-2">
+              <div className="flex gap-1 border-r border-border pr-2 mr-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handlePrint}
+                  disabled={isExporting}
+                >
+                  <Printer className="w-4 h-4 mr-2" />
+                  Print
+                </Button>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => downloadCurrentAsImage("png")}
+                disabled={isExporting}
+              >
+                <FileImage className="w-4 h-4 mr-2" />
+                Current PNG
+              </Button>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => downloadAsPDF(false)}
                 disabled={isExporting}
               >
-                <FileText className="w-4 h-4 mr-1" />
-                PDF Page
+                <FileText className="w-4 h-4 mr-2" />
+                Current PDF
               </Button>
               <Button
-                size="sm"
                 onClick={() => downloadAsPDF(true)}
                 disabled={isExporting}
-                className="bg-neon-cyan/20 hover:bg-neon-cyan/30 text-neon-cyan border border-neon-cyan/50"
+                className="bg-primary hover:bg-primary/90 min-w-[120px]"
               >
-                <FileText className="w-4 h-4 mr-1" />
-                Full Menu PDF
+                {isExporting ? (
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+                ) : (
+                  <Download className="w-4 h-4 mr-2" />
+                )}
+                Export Full PDF
               </Button>
             </div>
           </div>
-          {isExporting && (
-            <p className="text-sm text-muted-foreground mt-2 text-center">Generating high-quality export...</p>
-          )}
         </div>
       </DialogContent>
     </Dialog>

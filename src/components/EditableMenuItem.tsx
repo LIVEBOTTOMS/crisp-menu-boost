@@ -14,16 +14,18 @@ interface EditableMenuItemProps {
   itemIndex: number;
 }
 
-export const EditableMenuItem = ({ 
-  item, 
-  index, 
-  sectionKey, 
-  categoryIndex, 
-  itemIndex 
+export const EditableMenuItem = ({
+  item,
+  index,
+  accentColor,
+  sectionKey,
+  categoryIndex,
+  itemIndex
 }: EditableMenuItemProps) => {
   const { isEditMode, updateMenuItem, deleteMenuItem } = useMenu();
   const [isEditing, setIsEditing] = useState(false);
   const [editedItem, setEditedItem] = useState(item);
+  const [imageError, setImageError] = useState(false);
 
   const hasMultiplePrices = item.halfPrice && item.fullPrice;
   const hasSizes = item.sizes && item.sizes.length > 0;
@@ -45,7 +47,7 @@ export const EditableMenuItem = ({
 
   if (isEditMode && isEditing) {
     return (
-      <div className="py-3 px-4 bg-card/80 border border-primary/30">
+      <div className="py-3 px-4 rounded-sm bg-card/80 border border-primary/30">
         <div className="flex flex-col gap-3">
           <Input
             value={editedItem.name}
@@ -58,6 +60,12 @@ export const EditableMenuItem = ({
             onChange={(e) => setEditedItem({ ...editedItem, description: e.target.value })}
             placeholder="Description (e.g., Artisan preparation with house-made spices)"
             className="h-9 text-sm bg-background/50 border-border/40"
+          />
+          <Input
+            value={editedItem.image || ""}
+            onChange={(e) => setEditedItem({ ...editedItem, image: e.target.value })}
+            placeholder="Image URL (https://...)"
+            className="h-9 text-sm bg-background/50 font-mono text-xs text-muted-foreground"
           />
           <div className="flex gap-2 items-center">
             {hasSizes ? (
@@ -96,10 +104,10 @@ export const EditableMenuItem = ({
                 className="h-9 w-24 text-sm bg-background/50 border-border/40"
               />
             )}
-            <button onClick={handleSave} className="p-2 hover:bg-primary/20 transition-colors">
+            <button onClick={handleSave} className="p-2 hover:bg-primary/20 rounded-sm transition-colors">
               <Check className="w-4 h-4 text-primary" />
             </button>
-            <button onClick={handleCancel} className="p-2 hover:bg-destructive/20 transition-colors">
+            <button onClick={handleCancel} className="p-2 hover:bg-destructive/20 rounded-sm transition-colors">
               <X className="w-4 h-4 text-destructive" />
             </button>
           </div>
@@ -109,69 +117,114 @@ export const EditableMenuItem = ({
   }
 
   return (
-    <div 
+    <div
       className={cn(
-        "group relative py-3 px-3 transition-all duration-300",
-        "hover:bg-primary/[0.04]",
-        index % 2 === 0 ? "bg-transparent" : "bg-card/20",
-        isEditMode && "cursor-pointer hover:ring-1 hover:ring-primary/30"
+        "group relative p-4 rounded-xl transition-all duration-500 overflow-hidden",
+        "border border-transparent hover:border-white/5",
+        "hover:bg-card/40 hover:shadow-[0_0_15px_-5px_hsl(var(--primary)/0.1)]",
+        "backdrop-blur-sm",
+        index % 2 === 0 ? "bg-transparent" : "bg-white/[0.02]",
+        isEditMode && "cursor-pointer ring-1 ring-transparent hover:ring-primary/40"
       )}
       onClick={() => isEditMode && setIsEditing(true)}
     >
+      {/* Subtle Tech Background Pattern on Hover */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
+        <div className={`absolute top-0 left-0 w-8 h-8 border-l border-t ${accentColor === 'cyan' ? 'border-neon-cyan/20' : 'border-neon-magenta/20'}`} />
+        <div className={`absolute bottom-0 right-0 w-8 h-8 border-r border-b ${accentColor === 'cyan' ? 'border-neon-cyan/20' : 'border-neon-magenta/20'}`} />
+      </div>
+
       {/* Delete button in edit mode */}
       {isEditMode && (
-        <button 
+        <button
           onClick={handleDelete}
-          className="absolute right-1 top-1/2 -translate-y-1/2 p-1.5 bg-destructive/10 hover:bg-destructive/30 opacity-0 group-hover:opacity-100 transition-all z-10"
+          className="absolute right-2 top-2 p-1.5 rounded-lg bg-destructive/10 hover:bg-destructive/30 opacity-0 group-hover:opacity-100 transition-all z-20"
         >
           <Trash2 className="w-3.5 h-3.5 text-destructive" />
         </button>
       )}
 
-      {/* Row layout */}
-      <div className="flex items-start justify-between gap-4">
-        {/* Item name and description */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-baseline gap-3">
-            <span className="font-cormorant text-[15px] md:text-base tracking-wide text-foreground font-medium leading-tight">
-              {item.name}
-            </span>
-            {/* Elegant dotted line filler */}
-            <span className="flex-1 border-b border-dotted border-primary/20 min-w-8 mb-1" />
-          </div>
-          {item.description && (
-            <p className="text-[11px] text-muted-foreground/80 mt-1 italic font-cormorant leading-relaxed tracking-wide">
-              {item.description}
-            </p>
-          )}
-        </div>
+      {/* Row layout - name/description on left, prices on right */}
+      <div className="flex items-start gap-6 relative z-10">
 
-        {/* Price(s) */}
-        <div className="flex-shrink-0 text-right">
-          {hasSizes ? (
-            <div className="flex gap-3 justify-end text-[13px] font-montserrat font-semibold text-primary">
-              {item.sizes!.map((size, i) => (
-                <span key={i} className="tracking-wide whitespace-nowrap min-w-[3rem] text-center">{size}</span>
-              ))}
-            </div>
-          ) : hasMultiplePrices ? (
-            <div className="text-[13px] font-montserrat flex gap-4 justify-end">
-              <span className="whitespace-nowrap">
-                <span className="text-muted-foreground/50 text-[9px] uppercase tracking-wider mr-1">H</span>
-                <span className="text-primary font-semibold tracking-wide">{item.halfPrice}</span>
+        {/* Item Image */}
+        {item.image && !imageError && (
+          <div className={cn(
+            "w-32 h-32 rounded-xl overflow-hidden border border-white/10 flex-shrink-0 bg-black/40 shadow-2xl relative group-hover:shadow-[0_0_20px_-5px_var(--accent-color)]",
+            accentColor === "cyan" ? "group-hover:border-neon-cyan/50 shadow-neon-cyan/10" : "group-hover:border-neon-magenta/50 shadow-neon-magenta/10",
+            "transition-all duration-500 group-hover:scale-[1.02]"
+          )}>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
+            <img
+              src={item.image}
+              alt={item.name}
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              onError={() => setImageError(true)}
+            />
+          </div>
+        )}
+
+        <div className="flex-1 flex justify-between gap-4 min-w-0 pt-1">
+          {/* Item name and description */}
+          <div className="flex-1 min-w-0 pr-2">
+            <div className="flex items-baseline gap-3">
+              <span className={cn(
+                "w-1.5 h-1.5 rounded-sm rotate-45 transition-all duration-300 group-hover:scale-125 group-hover:shadow-[0_0_8px_currentColor] flex-shrink-0 self-center",
+                accentColor === "cyan"
+                  ? "bg-neon-cyan shadow-neon-cyan/20 text-neon-cyan"
+                  : "bg-neon-magenta shadow-neon-magenta/20 text-neon-magenta"
+              )} />
+              <span className="font-orbitron text-base font-medium tracking-wide text-foreground group-hover:text-white transition-colors">
+                {item.name}
               </span>
-              <span className="whitespace-nowrap">
-                <span className="text-muted-foreground/50 text-[9px] uppercase tracking-wider mr-1">F</span>
-                <span className="text-primary font-semibold tracking-wide">{item.fullPrice}</span>
-              </span>
+              {/* New Badge for premium/signature items if marked (can be added to data later) */}
+              {item.name.toLowerCase().includes('signature') && (
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-neon-gold/10 text-neon-gold tracking-widest uppercase border border-neon-gold/20">
+                  Signature
+                </span>
+              )}
             </div>
-          ) : (
-            <span className="font-montserrat text-[14px] font-semibold text-primary tracking-wide whitespace-nowrap">
-              {item.price}
-            </span>
-          )}
+            {item.description && (
+              <p className="text-sm text-muted-foreground/80 mt-1.5 font-rajdhani leading-relaxed tracking-wide group-hover:text-muted-foreground transition-colors">
+                {item.description}
+              </p>
+            )}
+          </div>
+
+          {/* Price(s) */}
+          <div className="flex-shrink-0 text-right self-start pt-0.5">
+            {hasSizes ? (
+              <div className={`flex items-center gap-4 text-sm font-rajdhani font-semibold ${accentColor === 'cyan' ? 'text-neon-cyan' : 'text-neon-magenta'
+                }`}>
+                {item.sizes!.map((size, i) => (
+                  <div key={i} className="flex flex-col items-end group/price">
+                    <span className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5 opacity-60">
+                      {i === 0 ? '30ml' : i === 1 ? '60ml' : i === 2 ? '90ml' : '180ml'}
+                    </span>
+                    <span className="tracking-wide text-base group-hover:text-white transition-colors">{size}</span>
+                  </div>
+                ))}
+              </div>
+            ) : hasMultiplePrices ? (
+              <div className="flex items-center gap-4 font-rajdhani">
+                <div className="flex flex-col items-end">
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5">Half</span>
+                  <span className="text-neon-gold font-bold tracking-wide text-base">{item.halfPrice}</span>
+                </div>
+                <div className="w-px h-6 bg-white/10" />
+                <div className="flex flex-col items-end">
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5">Full</span>
+                  <span className="text-neon-gold font-bold tracking-wide text-base">{item.fullPrice}</span>
+                </div>
+              </div>
+            ) : (
+              <span className="font-orbitron text-lg font-bold text-neon-gold tracking-wide whitespace-nowrap drop-shadow-[0_0_8px_rgba(255,215,0,0.3)] group-hover:scale-105 transition-transform inline-block">
+                {item.price}
+              </span>
+            )}
+          </div>
         </div>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };
