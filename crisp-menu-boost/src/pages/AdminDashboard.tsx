@@ -14,6 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { PrintPreview } from '@/components/PrintPreview';
 import { QRCodeGenerator } from '@/components/QRCodeGenerator';
 import { BackgroundEffects } from '@/components/BackgroundEffects';
+import { ArchivedMenus } from '@/components/ArchivedMenus';
 
 const AdminDashboard = () => {
   const { user, isAdmin, isLoading, signOut } = useAuth();
@@ -85,7 +86,7 @@ const AdminDashboard = () => {
     });
     setIsPriceDialogOpen(false);
     setPricePercent("");
-    
+
     // Show PDF prompt after price adjustment
     setShowPDFPrompt(true);
   };
@@ -352,7 +353,7 @@ const AdminDashboard = () => {
       <PrintPreview isOpen={isPrintPreviewOpen} onClose={() => setIsPrintPreviewOpen(false)} />
       <QRCodeGenerator isOpen={isQRCodeOpen} onClose={() => setIsQRCodeOpen(false)} />
       <ArchivedMenus isOpen={isArchivedMenusOpen} onClose={() => setIsArchivedMenusOpen(false)} />
-      
+
       {/* PDF Prompt Dialog after price adjustment */}
       <Dialog open={showPDFPrompt} onOpenChange={setShowPDFPrompt}>
         <DialogContent className="bg-slate-800 border-slate-600">

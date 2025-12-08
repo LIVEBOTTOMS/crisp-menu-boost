@@ -61,7 +61,7 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
   const [menuData, setMenuData] = useState<MenuData>(getDefaultMenuData);
   const [isEditMode, setIsEditMode] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   const { fetchMenuData, updateMenuItem: dbUpdateMenuItem, checkAndSeed, archiveCurrentMenu } = useMenuDatabase();
 
   const refreshMenu = async () => {
@@ -75,8 +75,10 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const init = async () => {
-      await checkAndSeed();
-      await refreshMenu();
+      // Temporarily disable DB fetch to use local file data
+      // await checkAndSeed();
+      // await refreshMenu(); 
+      setIsLoading(false);
     };
     init();
   }, []);
@@ -123,12 +125,12 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
   const adjustPrices = async (percentage: number, sectionKey?: string, categoryIndex?: number) => {
     // Archive current menu before price adjustment
     await archiveCurrentMenu(`Price adjustment: ${percentage > 0 ? '+' : ''}${percentage}%`);
-    
+
     const multiplier = 1 + percentage / 100;
-    
+
     setMenuData(prev => {
       const newData = deepClone(prev);
-      
+
       const adjustSection = (section: MenuSection, catIndex?: number) => {
         section.categories.forEach((category, idx) => {
           if (catIndex === undefined || catIndex === idx) {
@@ -145,23 +147,23 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
       } else {
         (Object.keys(newData) as Array<keyof MenuData>).forEach(key => adjustSection(newData[key]));
       }
-      
+
       return newData;
     });
     // TODO: Batch update prices in database
   };
 
   return (
-    <MenuContext.Provider value={{ 
-      menuData, 
-      isEditMode, 
+    <MenuContext.Provider value={{
+      menuData,
+      isEditMode,
       isLoading,
-      setIsEditMode, 
-      updateMenuItem, 
-      addMenuItem, 
-      deleteMenuItem, 
+      setIsEditMode,
+      updateMenuItem,
+      addMenuItem,
+      deleteMenuItem,
       adjustPrices,
-      refreshMenu 
+      refreshMenu
     }}>
       {children}
     </MenuContext.Provider>

@@ -119,53 +119,48 @@ const PrintablePage = ({
   return (
     <div
       ref={pageRef}
-      className="bg-[#0a0a0f] w-[794px] min-h-[1123px] relative flex flex-col overflow-hidden"
+      className="bg-[#0a0a0f] w-[559px] min-h-[794px] relative flex flex-col overflow-hidden"
       style={{
         fontFamily: "'Rajdhani', sans-serif",
         backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px)",
-        backgroundSize: "40px 40px"
+        backgroundSize: "30px 30px"
       }}
     >
-      {/* World-Class Boundary System */}
+      {/* World-Class Boundary System - A5 Optimized */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Outer Frame */}
-        <div className="absolute inset-[10px] border border-gray-800/50" />
+        <div className="absolute inset-[8px] border border-gray-800/80" />
 
         {/* Inner Frame with Accent */}
-        <div className="absolute inset-[20px] border border-opacity-20" style={{ borderColor: accentColor }} />
+        <div className="absolute inset-[15px] border border-opacity-30" style={{ borderColor: accentColor }} />
 
         {/* Corner Accents - Thicker & Glowing */}
-        <div className="absolute top-[20px] left-[20px] w-16 h-16 border-t-4 border-l-4" style={{ borderColor: accentColor, boxShadow: `-2px -2px 10px ${accentColor}66` }} />
-        <div className="absolute top-[20px] right-[20px] w-16 h-16 border-t-4 border-r-4" style={{ borderColor: accentColor, boxShadow: `2px -2px 10px ${accentColor}66` }} />
-        <div className="absolute bottom-[20px] left-[20px] w-16 h-16 border-b-4 border-l-4" style={{ borderColor: accentColor, boxShadow: `-2px 2px 10px ${accentColor}66` }} />
-        <div className="absolute bottom-[20px] right-[20px] w-16 h-16 border-b-4 border-r-4" style={{ borderColor: accentColor, boxShadow: `2px 2px 10px ${accentColor}66` }} />
-
-        {/* Decorative Circuit Lines (Subtle) */}
-        <div className="absolute top-[50%] left-[20px] w-8 h-[1px]" style={{ backgroundColor: accentColor, opacity: 0.5 }} />
-        <div className="absolute top-[50%] right-[20px] w-8 h-[1px]" style={{ backgroundColor: accentColor, opacity: 0.5 }} />
+        <div className="absolute top-[15px] left-[15px] w-12 h-12 border-t-[3px] border-l-[3px]" style={{ borderColor: accentColor, boxShadow: `-2px -2px 10px ${accentColor}44` }} />
+        <div className="absolute top-[15px] right-[15px] w-12 h-12 border-t-[3px] border-r-[3px]" style={{ borderColor: accentColor, boxShadow: `2px -2px 10px ${accentColor}44` }} />
+        <div className="absolute bottom-[15px] left-[15px] w-12 h-12 border-b-[3px] border-l-[3px]" style={{ borderColor: accentColor, boxShadow: `-2px 2px 10px ${accentColor}44` }} />
+        <div className="absolute bottom-[15px] right-[15px] w-12 h-12 border-b-[3px] border-r-[3px]" style={{ borderColor: accentColor, boxShadow: `2px 2px 10px ${accentColor}44` }} />
       </div>
 
       {/* Premium Header */}
-      <div className="pt-12 pb-6 text-center relative z-10">
-        <img src="/full_logo.jpg" alt="LIVE" className="h-32 w-auto mx-auto mb-3 drop-shadow-[0_0_10px_rgba(0,240,255,0.3)]" />
-        <h2 className="text-4xl font-bold tracking-[0.5em] text-white/90 mb-4 uppercase drop-shadow-lg" style={{ fontFamily: "'Cinzel', serif" }}>
+      <div className="pt-8 pb-4 text-center relative z-10">
+        <h2 className="text-3xl font-bold tracking-[0.4em] text-white/90 mb-2 uppercase drop-shadow-lg" style={{ fontFamily: "'Cinzel', serif" }}>
           MENU
         </h2>
-        <div className="flex items-center justify-center gap-4 mb-3">
-          <div className="h-[1px] w-24 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
-          <span className="text-[12px] tracking-[0.3em] uppercase font-bold text-cyan-400 drop-shadow-[0_0_5px_rgba(34,211,238,0.8)]" style={{ fontFamily: "'Orbitron', sans-serif" }}>
-            EAT.DRINK.CODE.REPEAT
+        <div className="flex items-center justify-center gap-3 mb-2">
+          <div className="h-[1px] w-16 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
+          <span className="text-[9px] tracking-[0.25em] uppercase font-bold text-cyan-400 drop-shadow-[0_0_5px_rgba(34,211,238,0.8)]" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+            LIVE BAR
           </span>
-          <div className="h-[1px] w-24 bg-gradient-to-l from-transparent via-magenta-500 to-transparent" />
+          <div className="h-[1px] w-16 bg-gradient-to-l from-transparent via-magenta-500 to-transparent" />
         </div>
       </div>
 
-      {/* Section Title - Huge & Elegant */}
-      <div className="mb-10 px-12 relative">
-        <div className="absolute top-1/2 left-12 right-12 h-[1px] bg-gray-800 -z-10" />
+      {/* Section Title */}
+      <div className="mb-6 px-8 relative">
+        <div className="absolute top-1/2 left-8 right-8 h-[1px] bg-gray-800 -z-10" />
         <div className="text-center">
           <span
-            className="inline-block px-8 py-2 bg-[#0a0a0f] text-3xl font-bold tracking-[0.25em] uppercase border-y border-gray-800"
+            className="inline-block px-6 py-1.5 bg-[#0a0a0f] text-xl font-bold tracking-[0.2em] uppercase border-y border-gray-800"
             style={{ color: accentColor, fontFamily: "'Orbitron', sans-serif" }}
           >
             {section.title}
@@ -174,8 +169,8 @@ const PrintablePage = ({
       </div>
 
       {/* Content */}
-      <div className="flex-1 px-16 pb-12">
-        <div className="max-w-4xl mx-auto">
+      <div className="flex-1 px-8 pb-8">
+        <div className="max-w-md mx-auto">
           {section.categories.map((category, index) => (
             <CategoryBlock key={category.title} category={category} index={index} />
           ))}
@@ -183,19 +178,19 @@ const PrintablePage = ({
       </div>
 
       {/* Footer */}
-      <div className="pb-8 text-center relative z-10">
-        <div className="flex justify-between items-end px-20">
+      <div className="pb-6 text-center relative z-10">
+        <div className="flex justify-between items-end px-12">
           <div className="text-left">
-            <p className="text-[10px] tracking-[0.2em] text-gray-600 uppercase">LIVE BAR • PUNE</p>
+            <p className="text-[8px] tracking-[0.15em] text-gray-600 uppercase">PUNE</p>
           </div>
           <div className="text-center">
-            <p className="text-[10px] text-gray-500 mb-1" style={{ color: accentColor }}>page</p>
-            <p className="text-[16px] font-bold text-white" style={{ fontFamily: "'Orbitron', sans-serif" }}>
-              0{pageNumber} <span className="text-gray-600 text-[12px]">/ 0{totalPages}</span>
+            <p className="text-[8px] text-gray-500 mb-0.5" style={{ color: accentColor }}>page</p>
+            <p className="text-[12px] font-bold text-white" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+              0{pageNumber} <span className="text-gray-600 text-[9px]">/ 0{totalPages}</span>
             </p>
           </div>
           <div className="text-right">
-            <p className="text-[10px] tracking-[0.2em] text-gray-600 uppercase">PREMIUM DINING</p>
+            <p className="text-[8px] tracking-[0.15em] text-gray-600 uppercase">DINING</p>
           </div>
         </div>
       </div>
@@ -209,9 +204,9 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
   const [isExporting, setIsExporting] = useState(false);
   const pageRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Smart grouping for ~10 pages world-class layout
+  // Smart grouping for A5 pages (more pages, less content per page)
   const pages = [
-    // Page 1: Veg Snacks (13 items)
+    // Page 1: Veg Snacks
     {
       section: {
         title: "APPETIZERS (VEG)",
@@ -220,7 +215,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       variant: "cyan" as const,
       key: "snacks-veg"
     },
-    // Page 2: Non-Veg Snacks (14 items)
+    // Page 2: Non-Veg Snacks
     {
       section: {
         title: "APPETIZERS (NON-VEG)",
@@ -229,16 +224,16 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       variant: "cyan" as const,
       key: "snacks-nonveg"
     },
-    // Page 3: Handi & Mutton (9 items)
+    // Page 3: Curries
     {
       section: {
-        title: "CHEF'S SIGNATURE CURRIES",
+        title: "SIGNATURE CURRIES",
         categories: [menuData.foodMenu.categories[0], menuData.foodMenu.categories[1]]
       },
       variant: "magenta" as const,
       key: "food-curries"
     },
-    // Page 4: Thali & Veg Mains (16 items)
+    // Page 4: Mains & Thalis
     {
       section: {
         title: "MAINS & THALIS",
@@ -247,49 +242,78 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       variant: "magenta" as const,
       key: "food-mains"
     },
-    // Page 5: Beers & Vodkas (12 items)
+    // Page 5: ALL BEERS (Large, Pints, Breezers)
     {
       section: {
-        title: "BREWS & SPIRITS",
-        categories: [menuData.beveragesMenu.categories[0], menuData.beveragesMenu.categories[1]]
-      },
-      variant: "cyan" as const,
-      key: "drinks-beer-vodka"
-    },
-    // Page 6: Rums & Whiskies (13 items)
-    {
-      section: {
-        title: "AGED SPIRITS",
+        title: "BEERS & COOLERS",
         categories: [
-          menuData.beveragesMenu.categories[2],
-          menuData.beveragesMenu.categories[3],
-          menuData.beveragesMenu.categories[4]
+          menuData.beveragesMenu.categories[0], // Large
+          menuData.beveragesMenu.categories[1], // Premium Pints
+          menuData.beveragesMenu.categories[2]  // Breezers
         ]
       },
       variant: "cyan" as const,
-      key: "drinks-dark-spirits"
+      key: "drinks-beers"
     },
-    // Page 7: Celebration Bottles (8 items)
+    // Page 6: Vodkas (Standard & Premium)
+    {
+      section: {
+        title: "VODKAS & RUMS",
+        categories: [
+          menuData.beveragesMenu.categories[8], // Premium Vodkas
+          menuData.beveragesMenu.categories[3], // Crystal Vodkas
+          menuData.beveragesMenu.categories[4]  // Rums
+        ]
+      },
+      variant: "cyan" as const,
+      key: "drinks-vodka-rum"
+    },
+    // Page 7: Whiskies (Indian & World)
+    {
+      section: {
+        title: "WHISKY COLLECTION",
+        categories: [
+          menuData.beveragesMenu.categories[5], // Indian
+          menuData.beveragesMenu.categories[6]  // World
+        ]
+      },
+      variant: "gold" as const,
+      key: "drinks-whiskies"
+    },
+    // Page 8: Celebration Bottles
     {
       section: {
         title: "CELEBRATION BOTTLES",
-        categories: [menuData.beveragesMenu.categories[5]]
+        categories: [menuData.beveragesMenu.categories[7]]
       },
       variant: "gold" as const,
       key: "drinks-bottles"
     },
-    // Page 8: Sides & Refreshments (9 items)
+    // Page 9: Wines, Gin, Brandy, Liqueurs
     {
       section: {
-        title: "SIDES & REFRESHMENTS",
+        title: "WINES & SPIRITS",
         categories: [
-          menuData.sideItems.categories[0],
-          menuData.sideItems.categories[1],
-          menuData.sideItems.categories[2]
+          menuData.beveragesMenu.categories[9], // Wines
+          menuData.beveragesMenu.categories[10], // Gin & Brandy
+          menuData.beveragesMenu.categories[11]  // Liqueurs
         ]
       },
-      variant: "gold" as const,
-      key: "sides-all"
+      variant: "magenta" as const,
+      key: "drinks-fine-spirits"
+    },
+    // Page 10: Soft Drinks & Sides
+    {
+      section: {
+        title: "REFRESHMENTS & SIDES",
+        categories: [
+          menuData.beveragesMenu.categories[12], // Soft Drinks
+          menuData.sideItems.categories[1],      // Bar Bites
+          menuData.sideItems.categories[2]       // Rice
+        ]
+      },
+      variant: "cyan" as const,
+      key: "sides-refreshments"
     },
   ];
 
@@ -305,90 +329,78 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
     const accentColor = page.variant === "cyan" ? "#00f0ff" : page.variant === "magenta" ? "#ff00ff" : "#ffd700";
 
     const pageElement = document.createElement("div");
+    // A5 Dimensions: 148mm x 210mm (~560px x 794px at 96dpi)
     pageElement.innerHTML = `
-      <div style="font-family: 'Rajdhani', sans-serif; background: #0a0a0f; background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px); background-size: 40px 40px; width: 794px; min-height: 1123px; position: relative; display: flex; flex-direction: column; overflow: hidden;">
+      <div style="font-family: 'Rajdhani', sans-serif; background: #0a0a0f; background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px); background-size: 30px 30px; width: 559px; min-height: 794px; position: relative; display: flex; flex-direction: column; overflow: hidden;">
         
         <!-- World-Class Boundary System -->
         <div style="position: absolute; inset: 0; pointer-events: none;">
           <!-- Outer Frame -->
-          <div style="position: absolute; inset: 10px; border: 1px solid rgba(55,65,81,0.5);"></div>
+          <div style="position: absolute; inset: 8px; border: 1px solid rgba(55,65,81,0.8);"></div>
           
           <!-- Inner Frame with Accent -->
-          <div style="position: absolute; inset: 20px; border: 1px solid ${accentColor}33;"></div>
+          <div style="position: absolute; inset: 15px; border: 1px solid ${accentColor}44;"></div>
           
           <!-- Corner Accents -->
-          <div style="position: absolute; top: 20px; left: 20px; width: 64px; height: 64px; border-top: 4px solid ${accentColor}; border-left: 4px solid ${accentColor}; box-shadow: -2px -2px 10px ${accentColor}66;"></div>
-          <div style="position: absolute; top: 20px; right: 20px; width: 64px; height: 64px; border-top: 4px solid ${accentColor}; border-right: 4px solid ${accentColor}; box-shadow: 2px -2px 10px ${accentColor}66;"></div>
-          <div style="position: absolute; bottom: 20px; left: 20px; width: 64px; height: 64px; border-bottom: 4px solid ${accentColor}; border-left: 4px solid ${accentColor}; box-shadow: -2px 2px 10px ${accentColor}66;"></div>
-          <div style="position: absolute; bottom: 20px; right: 20px; width: 64px; height: 64px; border-bottom: 4px solid ${accentColor}; border-right: 4px solid ${accentColor}; box-shadow: 2px 2px 10px ${accentColor}66;"></div>
-
-          <!-- Decorative Circuit Lines -->
-          <div style="position: absolute; top: 50%; left: 20px; width: 32px; height: 1px; background-color: ${accentColor}; opacity: 0.5;"></div>
-          <div style="position: absolute; top: 50%; right: 20px; width: 32px; height: 1px; background-color: ${accentColor}; opacity: 0.5;"></div>
+          <div style="position: absolute; top: 15px; left: 15px; width: 48px; height: 48px; border-top: 3px solid ${accentColor}; border-left: 3px solid ${accentColor}; box-shadow: -2px -2px 10px ${accentColor}44;"></div>
+          <div style="position: absolute; top: 15px; right: 15px; width: 48px; height: 48px; border-top: 3px solid ${accentColor}; border-right: 3px solid ${accentColor}; box-shadow: 2px -2px 10px ${accentColor}44;"></div>
+          <div style="position: absolute; bottom: 15px; left: 15px; width: 48px; height: 48px; border-bottom: 3px solid ${accentColor}; border-left: 3px solid ${accentColor}; box-shadow: -2px 2px 10px ${accentColor}44;"></div>
+          <div style="position: absolute; bottom: 15px; right: 15px; width: 48px; height: 48px; border-bottom: 3px solid ${accentColor}; border-right: 3px solid ${accentColor}; box-shadow: 2px 2px 10px ${accentColor}44;"></div>
         </div>
 
         <!-- Premium Header -->
-        <div style="padding-top: 50px; padding-bottom: 24px; text-align: center; position: relative; z-index: 10;">
-          <img src="/full_logo.jpg" alt="LIVE" style="height: 140px; width: auto; display: block; margin: 0 auto 12px auto; filter: drop-shadow(0 0 10px rgba(0,240,255,0.3));" />
-          <h2 style="font-size: 40px; font-weight: bold; letter-spacing: 0.5em; color: rgba(255,255,255,0.9); margin-bottom: 16px; text-transform: uppercase; font-family: 'Cinzel', serif; text-shadow: 0 4px 10px rgba(0,0,0,0.5);">MENU</h2>
-          <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 12px;">
-            <div style="height: 1px; width: 96px; background: linear-gradient(to right, transparent, #06b6d4, transparent);"></div>
-            <span style="font-size: 12px; letter-spacing: 0.3em; color: #22d3ee; text-transform: uppercase; font-weight: bold; font-family: 'Orbitron', sans-serif; text-shadow: 0 0 5px rgba(34,211,238,0.8);">EAT.DRINK.CODE.REPEAT</span>
-            <div style="height: 1px; width: 96px; background: linear-gradient(to left, transparent, #d946ef, transparent);"></div>
+        <div style="padding-top: 32px; padding-bottom: 16px; text-align: center; position: relative; z-index: 10;">
+          <h2 style="font-size: 32px; font-weight: bold; letter-spacing: 0.4em; color: rgba(255,255,255,0.9); margin-bottom: 8px; text-transform: uppercase; font-family: 'Cinzel', serif; text-shadow: 0 4px 10px rgba(0,0,0,0.5);">MENU</h2>
+          <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 8px;">
+            <div style="height: 1px; width: 64px; background: linear-gradient(to right, transparent, #06b6d4, transparent);"></div>
+            <span style="font-size: 9px; letter-spacing: 0.25em; color: #22d3ee; text-transform: uppercase; font-weight: bold; font-family: 'Orbitron', sans-serif; text-shadow: 0 0 5px rgba(34,211,238,0.8);">LIVE BAR</span>
+            <div style="height: 1px; width: 64px; background: linear-gradient(to left, transparent, #d946ef, transparent);"></div>
           </div>
         </div>
 
         <!-- Section Title -->
-        <div style="margin-bottom: 40px; padding-left: 48px; padding-right: 48px; position: relative; text-align: center;">
-             <div style="position: absolute; top: 50%; left: 48px; right: 48px; height: 1px; background-color: #1f2937; z-index: 0;"></div>
-             <span style="display: inline-block; padding: 8px 32px; background-color: #0a0a0f; font-size: 30px; font-weight: bold; letter-spacing: 0.25em; text-transform: uppercase; border-top: 1px solid #1f2937; border-bottom: 1px solid #1f2937; color: ${accentColor}; font-family: 'Orbitron', sans-serif; position: relative; z-index: 1;">
+        <div style="margin-bottom: 24px; padding-left: 32px; padding-right: 32px; position: relative; text-align: center;">
+             <div style="position: absolute; top: 50%; left: 32px; right: 32px; height: 1px; background-color: #1f2937; z-index: 0;"></div>
+             <span style="display: inline-block; padding: 6px 24px; background-color: #0a0a0f; font-size: 20px; font-weight: bold; letter-spacing: 0.2em; text-transform: uppercase; border-top: 1px solid #1f2937; border-bottom: 1px solid #1f2937; color: ${accentColor}; font-family: 'Orbitron', sans-serif; position: relative; z-index: 1;">
                ${escapeHtml(page.section.title)}
              </span>
         </div>
 
         <!-- Content -->
-        <div style="flex: 1; padding-left: 64px; padding-right: 64px; padding-bottom: 48px;">
-          <div style="max-width: 896px; margin: 0 auto;">
+        <div style="flex: 1; padding-left: 32px; padding-right: 32px; padding-bottom: 32px;">
+          <div style="max-width: 440px; margin: 0 auto;">
           ${page.section.categories.map((category, catIdx) => `
-            <div style="margin-bottom: 24px;">
-              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(55,65,81,0.5);">
-                ${category.icon ? `<span style="font-size: 18px;">${escapeHtml(category.icon)}</span>` : ""}
-                <h3 style="font-size: 13px; font-weight: bold; letter-spacing: 0.2em; text-transform: uppercase; color: #00f0ff;">${escapeHtml(category.title)}</h3>
+            <div style="margin-bottom: 20px;">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid rgba(55,65,81,0.5);">
+                ${category.icon ? `<span style="font-size: 16px;">${escapeHtml(category.icon)}</span>` : ""}
+                <h3 style="font-size: 12px; font-weight: bold; letter-spacing: 0.15em; text-transform: uppercase; color: #00f0ff;">${escapeHtml(category.title)}</h3>
               </div>
-              ${category.items[0]?.sizes ? `
-                <div style="display: flex; justify-content: flex-end; gap: 16px; padding: 0 16px 8px; border-bottom: 1px solid rgba(31,41,55,1);">
-                  <span style="font-size: 9px; color: #6b7280; min-width: 50px; text-align: center; text-transform: uppercase; letter-spacing: 0.1em;">30ml</span>
-                  <span style="font-size: 9px; color: #6b7280; min-width: 50px; text-align: center; text-transform: uppercase; letter-spacing: 0.1em;">60ml</span>
-                  <span style="font-size: 9px; color: #6b7280; min-width: 50px; text-align: center; text-transform: uppercase; letter-spacing: 0.1em;">90ml</span>
-                  <span style="font-size: 9px; color: #6b7280; min-width: 50px; text-align: center; text-transform: uppercase; letter-spacing: 0.1em;">180ml</span>
-                </div>
-              ` : ""}
-              <div>
+              <div style="display: flex; flex-direction: column; gap: 1px;">
                 ${category.items.map((item, idx) => `
-                  <div style="padding: 12px 16px; ${idx % 2 === 0 ? "background: rgba(255,255,255,0.02);" : ""}">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
+                  <div style="padding: 8px 10px; ${idx % 2 === 0 ? "background: rgba(255,255,255,0.02);" : ""}">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
                       <div style="flex: 1;">
-                        <h4 style="font-size: 15px; font-weight: 600; color: white; letter-spacing: 0.05em; text-transform: uppercase;">${escapeHtml(item.name)}</h4>
-                        ${item.description ? `<p style="font-size: 11px; color: #9ca3af; margin-top: 4px; font-style: italic; line-height: 1.5;">${escapeHtml(item.description)}</p>` : ""}
+                        <h4 style="font-size: 13px; font-weight: 600; color: white; letter-spacing: 0.05em; text-transform: uppercase;">${escapeHtml(item.name)}</h4>
+                        ${item.description ? `<p style="font-size: 9px; color: #9ca3af; margin-top: 2px; font-style: italic; line-height: 1.4;">${escapeHtml(item.description)}</p>` : ""}
                       </div>
                       <div style="flex-shrink: 0; text-align: right;">
                         ${item.sizes ? `
-                          <div style="display: flex; gap: 16px;">
-                            ${item.sizes.map(size => `<span style="font-size: 13px; font-weight: 500; color: #fbbf24; min-width: 50px; text-align: center;">${escapeHtml(size)}</span>`).join("")}
+                          <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                            ${item.sizes.map(size => `<span style="font-size: 11px; font-weight: 500; color: #fbbf24; min-width: 40px; text-align: right;">${escapeHtml(size)}</span>`).join("")}
                           </div>
                         ` : item.halfPrice && item.fullPrice ? `
-                          <div style="display: flex; gap: 16px; align-items: center;">
-                            <div style="text-align: center;">
-                              <span style="font-size: 9px; color: #6b7280; display: block; text-transform: uppercase; letter-spacing: 0.1em;">Half</span>
-                              <span style="font-size: 13px; font-weight: 500; color: #fbbf24;">${escapeHtml(item.halfPrice)}</span>
+                          <div style="display: flex; gap: 12px; align-items: center;">
+                            <div style="text-align: right;">
+                              <span style="font-size: 8px; color: #6b7280; display: block; text-transform: uppercase; letter-spacing: 0.1em;">Half</span>
+                              <span style="font-size: 11px; font-weight: 500; color: #fbbf24;">${escapeHtml(item.halfPrice)}</span>
                             </div>
-                            <div style="text-align: center;">
-                              <span style="font-size: 9px; color: #6b7280; display: block; text-transform: uppercase; letter-spacing: 0.1em;">Full</span>
-                              <span style="font-size: 13px; font-weight: 500; color: #fbbf24;">${escapeHtml(item.fullPrice)}</span>
+                            <div style="text-align: right;">
+                              <span style="font-size: 8px; color: #6b7280; display: block; text-transform: uppercase; letter-spacing: 0.1em;">Full</span>
+                              <span style="font-size: 11px; font-weight: 500; color: #fbbf24;">${escapeHtml(item.fullPrice)}</span>
                             </div>
                           </div>
                         ` : `
-                          <span style="font-size: 14px; font-weight: 600; color: #fbbf24;">${escapeHtml(item.price)}</span>
+                          <span style="font-size: 13px; font-weight: 600; color: #fbbf24;">${escapeHtml(item.price)}</span>
                         `}
                       </div>
                     </div>
@@ -401,19 +413,19 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
         </div>
 
         <!-- Footer -->
-        <div style="padding-bottom: 32px; padding-left: 80px; padding-right: 80px; position: relative; z-index: 10;">
+        <div style="padding-bottom: 24px; padding-left: 48px; padding-right: 48px; position: relative; z-index: 10;">
           <div style="display: flex; justify-content: space-between; align-items: flex-end;">
             <div style="text-align: left;">
-              <p style="font-size: 10px; letter-spacing: 0.2em; color: #4b5563; text-transform: uppercase; margin: 0;">LIVE BAR • PUNE</p>
+              <p style="font-size: 8px; letter-spacing: 0.15em; color: #4b5563; text-transform: uppercase; margin: 0;">PUNE</p>
             </div>
             <div style="text-align: center;">
-               <p style="font-size: 10px; color: ${accentColor}; margin-bottom: 4px; margin: 0;">page</p>
-               <p style="font-size: 16px; font-weight: bold; color: white; font-family: 'Orbitron', sans-serif; margin: 0;">
-                 0${index + 1} <span style="font-size: 12px; color: #4b5563;">/ 0${pages.length}</span>
+               <p style="font-size: 8px; color: ${accentColor}; margin-bottom: 2px; margin: 0;">page</p>
+               <p style="font-size: 12px; font-weight: bold; color: white; font-family: 'Orbitron', sans-serif; margin: 0;">
+                 0${index + 1} <span style="font-size: 10px; color: #4b5563;">/ 0${pages.length}</span>
                </p>
             </div>
             <div style="text-align: right;">
-              <p style="font-size: 10px; letter-spacing: 0.2em; color: #4b5563; text-transform: uppercase; margin: 0;">PREMIUM DINING</p>
+              <p style="font-size: 8px; letter-spacing: 0.15em; color: #4b5563; text-transform: uppercase; margin: 0;">DINING</p>
             </div>
           </div>
         </div>
@@ -439,8 +451,8 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
         backgroundColor: "#0a0a0f",
         useCORS: true,
         logging: false,
-        width: 794,
-        height: 1123,
+        width: 559, // A5 width
+        height: 794, // A5 height
       });
       document.body.removeChild(tempDiv);
       return canvas;
@@ -497,13 +509,13 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       const pdf = new jsPDF({
         orientation: "portrait",
         unit: "mm",
-        format: "a4",
+        format: "a5", // A5 Format
         compress: true
       });
 
       const pagesToExport = allPages ? pages.map((_, i) => i) : [currentPage];
-      const pdfWidth = 210;
-      const pdfHeight = 297;
+      const pdfWidth = 148; // A5 width
+      const pdfHeight = 210; // A5 height
       let pagesAdded = 0;
 
       for (let i = 0; i < pagesToExport.length; i++) {
@@ -580,7 +592,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
             <style>
               @media print {
                 body { margin: 0; padding: 0; }
-                @page { size: A4; margin: 0; }
+                @page { size: A5; margin: 0; }
               }
               body { display: flex; justify-content: center; margin: 0; }
               img { max-width: 100%; height: auto; }

@@ -157,15 +157,17 @@ export const beveragesMenu: MenuSection = {
       ],
     },
     {
-      title: "Craft & Classic Brews - Pint",
+      title: "Premium Beers & Imports (330 ml)",
       icon: "🍺",
       items: [
-        { name: "Kingfisher Premium", price: "₹199", description: "India's favorite crisp, refreshing lager" },
-        { name: "Budweiser Mild", price: "₹219", description: "Smooth American-style pale lager" },
+        { name: "Corona Extra", price: "₹349", description: "Mexican lager, served with lime" },
+        { name: "Hoegaarden", price: "₹399", description: "Belgian white beer with citrus notes" },
         { name: "Budweiser Magnum Strong", price: "₹239", description: "Bold & full-bodied with rich malt character" },
-        { name: "Tuborg Strong", price: "₹189", description: "Danish heritage with robust flavor profile" },
-        { name: "Carlsberg Smooth", price: "₹209", description: "Exceptionally smooth Scandinavian brew" },
         { name: "Heineken", price: "₹229", description: "Iconic Dutch pilsner with balanced bitterness" },
+        { name: "Budweiser Mild", price: "₹219", description: "Smooth American-style pale lager" },
+        { name: "Carlsberg Smooth", price: "₹209", description: "Exceptionally smooth Scandinavian brew" },
+        { name: "Kingfisher Premium", price: "₹199", description: "India's favorite crisp, refreshing lager" },
+        { name: "Tuborg Strong", price: "₹189", description: "Danish heritage with robust flavor profile" },
       ],
     },
     {
@@ -270,14 +272,7 @@ export const beveragesMenu: MenuSection = {
         { name: "Smirnoff Orange (30 ml)", price: "₹229", description: "Citrus-infused vodka" },
       ],
     },
-    {
-      title: "Premium Beers & Imports",
-      icon: "🍺",
-      items: [
-        { name: "Corona Extra (330 ml)", price: "₹349", description: "Mexican lager, served with lime" },
-        { name: "Hoegaarden (330 ml)", price: "₹399", description: "Belgian white beer with citrus notes" },
-      ],
-    },
+
     {
       title: "Fine Wines",
       icon: "🍷",
