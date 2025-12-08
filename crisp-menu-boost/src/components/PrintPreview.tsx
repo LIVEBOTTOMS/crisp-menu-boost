@@ -81,13 +81,23 @@ const CategoryBlock = ({ category, index }: { category: MenuCategoryType; index:
         </h3>
       </div>
 
-      {/* Size Headers for drinks - Simplified for new layout */}
+      {/* Size Headers for drinks */}
       {category.items[0]?.sizes && (
         <div className="flex justify-end gap-4 px-4 pb-2 border-b border-gray-800">
-          <span className="text-[9px] text-gray-500 min-w-[50px] text-center uppercase tracking-wider">30ml</span>
-          <span className="text-[9px] text-gray-500 min-w-[50px] text-center uppercase tracking-wider">60ml</span>
-          <span className="text-[9px] text-gray-500 min-w-[50px] text-center uppercase tracking-wider">90ml</span>
-          <span className="text-[9px] text-gray-500 min-w-[50px] text-center uppercase tracking-wider">180ml</span>
+          {category.items[0].sizes.length === 4 ? (
+            <>
+              <span className="text-[9px] text-gray-400 min-w-[50px] text-center uppercase tracking-wider font-semibold">30ml</span>
+              <span className="text-[9px] text-gray-400 min-w-[50px] text-center uppercase tracking-wider font-semibold">60ml</span>
+              <span className="text-[9px] text-gray-400 min-w-[50px] text-center uppercase tracking-wider font-semibold">90ml</span>
+              <span className="text-[9px] text-gray-400 min-w-[50px] text-center uppercase tracking-wider font-semibold">180ml</span>
+            </>
+          ) : (
+            category.items[0].sizes.map((_, i) => (
+              <span key={i} className="text-[9px] text-gray-500 min-w-[50px] text-center uppercase tracking-wider">
+                Size {i + 1}
+              </span>
+            ))
+          )}
         </div>
       )}
 
@@ -128,28 +138,63 @@ const PrintablePage = ({
     >
       {/* World-Class Boundary System - A5 Optimized */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Outer Frame */}
-        <div className="absolute inset-[8px] border border-gray-800/80" />
+        {/* Outer Frame with tech corners */}
+        <div className="absolute inset-[8px] border border-gray-800/80">
+          {/* Tech notches */}
+          <div className="absolute top-1/4 left-[-1px] w-[3px] h-8 bg-gray-800" />
+          <div className="absolute bottom-1/4 right-[-1px] w-[3px] h-8 bg-gray-800" />
+        </div>
 
         {/* Inner Frame with Accent */}
         <div className="absolute inset-[15px] border border-opacity-30" style={{ borderColor: accentColor }} />
 
-        {/* Corner Accents - Thicker & Glowing */}
-        <div className="absolute top-[15px] left-[15px] w-12 h-12 border-t-[3px] border-l-[3px]" style={{ borderColor: accentColor, boxShadow: `-2px -2px 10px ${accentColor}44` }} />
-        <div className="absolute top-[15px] right-[15px] w-12 h-12 border-t-[3px] border-r-[3px]" style={{ borderColor: accentColor, boxShadow: `2px -2px 10px ${accentColor}44` }} />
-        <div className="absolute bottom-[15px] left-[15px] w-12 h-12 border-b-[3px] border-l-[3px]" style={{ borderColor: accentColor, boxShadow: `-2px 2px 10px ${accentColor}44` }} />
-        <div className="absolute bottom-[15px] right-[15px] w-12 h-12 border-b-[3px] border-r-[3px]" style={{ borderColor: accentColor, boxShadow: `2px 2px 10px ${accentColor}44` }} />
+        {/* corner SVG Circuits */}
+        <svg className="absolute top-[15px] left-[15px] w-24 h-24 opacity-60" viewBox="0 0 100 100" style={{ color: accentColor }}>
+          <path fill="none" stroke="currentColor" strokeWidth="1" d="M 0,0 L 40,0 L 45,5 L 45,20 M 0,0 L 0,40 L 5,45 L 20,45" />
+          <circle cx="45" cy="20" r="2" fill="currentColor" />
+          <circle cx="20" cy="45" r="2" fill="currentColor" />
+          <rect x="2" y="2" width="10" height="10" fill="currentColor" opacity="0.5" />
+        </svg>
+
+        <svg className="absolute top-[15px] right-[15px] w-24 h-24 opacity-60" viewBox="0 0 100 100" style={{ color: accentColor, transform: "scaleX(-1)" }}>
+          <path fill="none" stroke="currentColor" strokeWidth="1" d="M 0,0 L 40,0 L 45,5 L 45,20 M 0,0 L 0,40 L 5,45 L 20,45" />
+          <circle cx="45" cy="20" r="2" fill="currentColor" />
+          <circle cx="20" cy="45" r="2" fill="currentColor" />
+          <rect x="2" y="2" width="10" height="10" fill="currentColor" opacity="0.5" />
+        </svg>
+
+        <svg className="absolute bottom-[15px] left-[15px] w-24 h-24 opacity-60" viewBox="0 0 100 100" style={{ color: accentColor, transform: "scaleY(-1)" }}>
+          <path fill="none" stroke="currentColor" strokeWidth="1" d="M 0,0 L 40,0 L 45,5 L 45,20 M 0,0 L 0,40 L 5,45 L 20,45" />
+          <circle cx="45" cy="20" r="2" fill="currentColor" />
+          <circle cx="20" cy="45" r="2" fill="currentColor" />
+          <rect x="2" y="2" width="10" height="10" fill="currentColor" opacity="0.5" />
+        </svg>
+
+        <svg className="absolute bottom-[15px] right-[15px] w-24 h-24 opacity-60" viewBox="0 0 100 100" style={{ color: accentColor, transform: "rotate(180deg)" }}>
+          <path fill="none" stroke="currentColor" strokeWidth="1" d="M 0,0 L 40,0 L 45,5 L 45,20 M 0,0 L 0,40 L 5,45 L 20,45" />
+          <circle cx="45" cy="20" r="2" fill="currentColor" />
+          <circle cx="20" cy="45" r="2" fill="currentColor" />
+          <rect x="2" y="2" width="10" height="10" fill="currentColor" opacity="0.5" />
+        </svg>
       </div>
 
-      {/* Premium Header */}
+      {/* Premium Header with New Logo - ENHANCED BRIGHTNESS */}
       <div className="pt-8 pb-4 text-center relative z-10">
-        <h2 className="text-3xl font-bold tracking-[0.4em] text-white/90 mb-2 uppercase drop-shadow-lg" style={{ fontFamily: "'Cinzel', serif" }}>
-          MENU
-        </h2>
+        <div className="flex justify-center mb-4">
+          <div className="relative p-2 border border-dashed border-gray-700 rounded-lg bg-black/40">
+            <img
+              src="/live_logo_actual.jpg"
+              alt="LIVE"
+              className="h-32 w-auto object-contain drop-shadow-[0_0_15px_rgba(0,0,0,0.8)]"
+              style={{ filter: "brightness(1.2) contrast(1.1) saturate(1.1)" }}
+            />
+          </div>
+        </div>
+
         <div className="flex items-center justify-center gap-3 mb-2">
           <div className="h-[1px] w-16 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
-          <span className="text-[9px] tracking-[0.25em] uppercase font-bold text-cyan-400 drop-shadow-[0_0_5px_rgba(34,211,238,0.8)]" style={{ fontFamily: "'Orbitron', sans-serif" }}>
-            LIVE BAR
+          <span className="text-[10px] tracking-[0.25em] uppercase font-bold text-white drop-shadow-md" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+            EAT . DRINK . CODE . REPEAT
           </span>
           <div className="h-[1px] w-16 bg-gradient-to-l from-transparent via-magenta-500 to-transparent" />
         </div>
@@ -204,7 +249,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
   const [isExporting, setIsExporting] = useState(false);
   const pageRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Smart grouping for A5 pages (more pages, less content per page)
+  // Smart grouping for A5 pages (more pages to ensure no cutoff)
   const pages = [
     // Page 1: Veg Snacks
     {
@@ -242,45 +287,78 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       variant: "magenta" as const,
       key: "food-mains"
     },
-    // Page 5: ALL BEERS (Large, Pints, Breezers)
+    // Page 5: Gourmet Sides (Food separation)
     {
       section: {
-        title: "BEERS & COOLERS",
+        title: "GOURMET SIDES",
+        categories: [
+          menuData.sideItems.categories[1],      // Bar Bites
+          menuData.sideItems.categories[2]       // Rice
+        ]
+      },
+      variant: "magenta" as const,
+      key: "food-sides"
+    },
+    // Page 6: BEERS (Large & Pints)
+    {
+      section: {
+        title: "CRAFT BREWS",
         categories: [
           menuData.beveragesMenu.categories[0], // Large
           menuData.beveragesMenu.categories[1], // Premium Pints
-          menuData.beveragesMenu.categories[2]  // Breezers
         ]
       },
       variant: "cyan" as const,
       key: "drinks-beers"
     },
-    // Page 6: Vodkas (Standard & Premium)
+    // Page 7: COOLERS & VODKAS
     {
       section: {
-        title: "VODKAS & RUMS",
+        title: "COOLERS & VODKAS",
         categories: [
+          menuData.beveragesMenu.categories[2], // Breezers
           menuData.beveragesMenu.categories[8], // Premium Vodkas
           menuData.beveragesMenu.categories[3], // Crystal Vodkas
-          menuData.beveragesMenu.categories[4]  // Rums
         ]
       },
       variant: "cyan" as const,
-      key: "drinks-vodka-rum"
+      key: "drinks-vodkas"
     },
-    // Page 7: Whiskies (Indian & World)
+    // Page 8: RUMS & GIN
     {
       section: {
-        title: "WHISKY COLLECTION",
+        title: "RUMS & BOTANICALS",
         categories: [
-          menuData.beveragesMenu.categories[5], // Indian
-          menuData.beveragesMenu.categories[6]  // World
+          menuData.beveragesMenu.categories[4], // Rums
+          menuData.beveragesMenu.categories[10], // Gin & Brandy
+        ]
+      },
+      variant: "cyan" as const,
+      key: "drinks-rums-gin"
+    },
+    // Page 9: INDIAN RESERVES
+    {
+      section: {
+        title: "INDIAN RESERVES",
+        categories: [
+          menuData.beveragesMenu.categories[5], // Indian Whiskies
         ]
       },
       variant: "gold" as const,
-      key: "drinks-whiskies"
+      key: "drinks-indian-whisky"
     },
-    // Page 8: Celebration Bottles
+    // Page 10: WORLD WHISKIES
+    {
+      section: {
+        title: "WORLD COLLECTION",
+        categories: [
+          menuData.beveragesMenu.categories[6], // World Whiskies
+        ]
+      },
+      variant: "gold" as const,
+      key: "drinks-world-whisky"
+    },
+    // Page 11: CELEBRATION BOTTLES
     {
       section: {
         title: "CELEBRATION BOTTLES",
@@ -289,31 +367,29 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       variant: "gold" as const,
       key: "drinks-bottles"
     },
-    // Page 9: Wines, Gin, Brandy, Liqueurs
+    // Page 12: WINES & LIQUEURS
     {
       section: {
-        title: "WINES & SPIRITS",
+        title: "WINES & LIQUEURS",
         categories: [
           menuData.beveragesMenu.categories[9], // Wines
-          menuData.beveragesMenu.categories[10], // Gin & Brandy
           menuData.beveragesMenu.categories[11]  // Liqueurs
         ]
       },
       variant: "magenta" as const,
-      key: "drinks-fine-spirits"
+      key: "drinks-wines"
     },
-    // Page 10: Soft Drinks & Sides
+    // Page 13: Refreshments
     {
       section: {
-        title: "REFRESHMENTS & SIDES",
+        title: "REFRESHMENTS",
         categories: [
+          menuData.sideItems.categories[0],      // Water/Soda (Refresh & Rehydrate)
           menuData.beveragesMenu.categories[12], // Soft Drinks
-          menuData.sideItems.categories[1],      // Bar Bites
-          menuData.sideItems.categories[2]       // Rice
         ]
       },
       variant: "cyan" as const,
-      key: "sides-refreshments"
+      key: "refreshments"
     },
   ];
 
@@ -336,24 +412,32 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
         <!-- World-Class Boundary System -->
         <div style="position: absolute; inset: 0; pointer-events: none;">
           <!-- Outer Frame -->
-          <div style="position: absolute; inset: 8px; border: 1px solid rgba(55,65,81,0.8);"></div>
+          <div style="position: absolute; inset: 8px; border: 1px solid rgba(55,65,81,0.8);">
+            <!-- Tech notches -->
+            <div style="position: absolute; top: 25%; left: -1px; width: 3px; height: 32px; background: #1f2937;"></div>
+            <div style="position: absolute; bottom: 25%; right: -1px; width: 3px; height: 32px; background: #1f2937;"></div>
+          </div>
           
           <!-- Inner Frame with Accent -->
           <div style="position: absolute; inset: 15px; border: 1px solid ${accentColor}44;"></div>
           
-          <!-- Corner Accents -->
-          <div style="position: absolute; top: 15px; left: 15px; width: 48px; height: 48px; border-top: 3px solid ${accentColor}; border-left: 3px solid ${accentColor}; box-shadow: -2px -2px 10px ${accentColor}44;"></div>
-          <div style="position: absolute; top: 15px; right: 15px; width: 48px; height: 48px; border-top: 3px solid ${accentColor}; border-right: 3px solid ${accentColor}; box-shadow: 2px -2px 10px ${accentColor}44;"></div>
-          <div style="position: absolute; bottom: 15px; left: 15px; width: 48px; height: 48px; border-bottom: 3px solid ${accentColor}; border-left: 3px solid ${accentColor}; box-shadow: -2px 2px 10px ${accentColor}44;"></div>
-          <div style="position: absolute; bottom: 15px; right: 15px; width: 48px; height: 48px; border-bottom: 3px solid ${accentColor}; border-right: 3px solid ${accentColor}; box-shadow: 2px 2px 10px ${accentColor}44;"></div>
+          <!-- Corner Accents SVG Simulated -->
+           <div style="position: absolute; top: 15px; left: 15px; width: 48px; height: 48px; border-top: 3px solid ${accentColor}; border-left: 3px solid ${accentColor}; box-shadow: -2px -2px 10px ${accentColor}44;"></div>
+           <div style="position: absolute; top: 15px; right: 15px; width: 48px; height: 48px; border-top: 3px solid ${accentColor}; border-right: 3px solid ${accentColor}; box-shadow: 2px -2px 10px ${accentColor}44;"></div>
+           <div style="position: absolute; bottom: 15px; left: 15px; width: 48px; height: 48px; border-bottom: 3px solid ${accentColor}; border-left: 3px solid ${accentColor}; box-shadow: -2px 2px 10px ${accentColor}44;"></div>
+           <div style="position: absolute; bottom: 15px; right: 15px; width: 48px; height: 48px; border-bottom: 3px solid ${accentColor}; border-right: 3px solid ${accentColor}; box-shadow: 2px 2px 10px ${accentColor}44;"></div>
         </div>
 
         <!-- Premium Header -->
         <div style="padding-top: 32px; padding-bottom: 16px; text-align: center; position: relative; z-index: 10;">
-          <h2 style="font-size: 32px; font-weight: bold; letter-spacing: 0.4em; color: rgba(255,255,255,0.9); margin-bottom: 8px; text-transform: uppercase; font-family: 'Cinzel', serif; text-shadow: 0 4px 10px rgba(0,0,0,0.5);">MENU</h2>
+          <div style="display: flex; justify-content: center; margin-bottom: 16px;">
+             <div style="padding: 8px; border: 1px dashed #374151; border-radius: 8px; background: rgba(0,0,0,0.4);">
+                <img src="/live_logo_actual.jpg" style="height: 120px; width: auto; display: block; filter: brightness(1.2) contrast(1.1) saturate(1.1);" />
+             </div>
+          </div>
           <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 8px;">
             <div style="height: 1px; width: 64px; background: linear-gradient(to right, transparent, #06b6d4, transparent);"></div>
-            <span style="font-size: 9px; letter-spacing: 0.25em; color: #22d3ee; text-transform: uppercase; font-weight: bold; font-family: 'Orbitron', sans-serif; text-shadow: 0 0 5px rgba(34,211,238,0.8);">LIVE BAR</span>
+            <span style="font-size: 9px; letter-spacing: 0.25em; color: white; text-transform: uppercase; font-weight: bold; font-family: 'Orbitron', sans-serif; text-shadow: 0 0 5px rgba(34,211,238,0.8);">EAT . DRINK . CODE . REPEAT</span>
             <div style="height: 1px; width: 64px; background: linear-gradient(to left, transparent, #d946ef, transparent);"></div>
           </div>
         </div>
@@ -375,7 +459,24 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                 ${category.icon ? `<span style="font-size: 16px;">${escapeHtml(category.icon)}</span>` : ""}
                 <h3 style="font-size: 12px; font-weight: bold; letter-spacing: 0.15em; text-transform: uppercase; color: #00f0ff;">${escapeHtml(category.title)}</h3>
               </div>
-              <div style="display: flex; flex-direction: column; gap: 1px;">
+              ${category.items[0]?.sizes ? `
+                <div style="display: flex; justify-content: flex-end; gap: 16px; padding: 0 16px 8px; border-bottom: 1px solid rgba(31,41,55,1);">
+                  ${category.items[0].sizes.length === 4 ? `
+                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 50px;">30ml</span>
+                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 50px;">60ml</span>
+                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 50px;">90ml</span>
+                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 50px;">180ml</span>
+                  ` : `
+                    ${category.items[0].sizes.map((_, i) => `<span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right;">Size ${i + 1}</span>`).join("")}
+                  `}
+                </div>
+              ` : category.items[0]?.halfPrice ? `
+                 <div style="display: flex; justify-content: flex-end; gap: 12px; padding: 0 16px 8px; border-bottom: 1px solid rgba(31,41,55,1);">
+                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">Half</span>
+                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">Full</span>
+                 </div>
+              ` : ""}
+              <div style="display: flex; flex-direction: column; gap: 1px; margin-top: 4px;">
                 ${category.items.map((item, idx) => `
                   <div style="padding: 8px 10px; ${idx % 2 === 0 ? "background: rgba(255,255,255,0.02);" : ""}">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
@@ -385,19 +486,13 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                       </div>
                       <div style="flex-shrink: 0; text-align: right;">
                         ${item.sizes ? `
-                          <div style="display: flex; gap: 8px; justify-content: flex-end;">
-                            ${item.sizes.map(size => `<span style="font-size: 11px; font-weight: 500; color: #fbbf24; min-width: 40px; text-align: right;">${escapeHtml(size)}</span>`).join("")}
+                          <div style="display: flex; gap: 16px; justify-content: flex-end;">
+                            ${item.sizes.map(size => `<span style="font-size: 11px; font-weight: 500; color: #fbbf24; min-width: 40px; text-align: right; width: 50px;">${escapeHtml(size)}</span>`).join("")}
                           </div>
                         ` : item.halfPrice && item.fullPrice ? `
-                          <div style="display: flex; gap: 12px; align-items: center;">
-                            <div style="text-align: right;">
-                              <span style="font-size: 8px; color: #6b7280; display: block; text-transform: uppercase; letter-spacing: 0.1em;">Half</span>
-                              <span style="font-size: 11px; font-weight: 500; color: #fbbf24;">${escapeHtml(item.halfPrice)}</span>
-                            </div>
-                            <div style="text-align: right;">
-                              <span style="font-size: 8px; color: #6b7280; display: block; text-transform: uppercase; letter-spacing: 0.1em;">Full</span>
-                              <span style="font-size: 11px; font-weight: 500; color: #fbbf24;">${escapeHtml(item.fullPrice)}</span>
-                            </div>
+                          <div style="display: flex; gap: 12px; align-items: center; justify-content: flex-end;">
+                            <span style="font-size: 11px; font-weight: 500; color: #fbbf24; min-width: 40px; text-align: right;">${escapeHtml(item.halfPrice)}</span>
+                            <span style="font-size: 11px; font-weight: 500; color: #fbbf24; min-width: 40px; text-align: right;">${escapeHtml(item.fullPrice)}</span>
                           </div>
                         ` : `
                           <span style="font-size: 13px; font-weight: 600; color: #fbbf24;">${escapeHtml(item.price)}</span>
