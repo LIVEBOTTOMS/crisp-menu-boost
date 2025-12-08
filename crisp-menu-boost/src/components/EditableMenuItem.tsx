@@ -199,7 +199,7 @@ export const EditableMenuItem = ({
                 {item.sizes!.map((size, i) => (
                   <div key={i} className="flex flex-col items-end group/price">
                     <span className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5 opacity-60">
-                      {i === 0 ? '30ml' : i === 1 ? '60ml' : i === 2 ? '90ml' : 'Bottle'}
+                      {i === 0 ? '30ml' : i === 1 ? '60ml' : i === 2 ? '90ml' : '180ml'}
                     </span>
                     <span className="tracking-wide text-base group-hover:text-white transition-colors">{size}</span>
                   </div>

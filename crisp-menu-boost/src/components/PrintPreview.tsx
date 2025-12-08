@@ -70,15 +70,38 @@ const MenuItemRow = ({ item, isEven }: { item: MenuItem; isEven: boolean }) => {
   );
 };
 
-const CategoryBlock = ({ category, index }: { category: MenuCategoryType; index: number }) => {
+const CategoryBlock = ({
+  category,
+  index,
+  accentColor = "#00f0ff",
+  dietIcon = null
+}: {
+  category: MenuCategoryType;
+  index: number;
+  accentColor?: string;
+  dietIcon?: "veg" | "non-veg" | null;
+}) => {
   return (
     <div className="mb-6">
-      {/* Category Header */}
-      <div className="flex items-center gap-3 mb-3 pb-2 border-b border-gray-700/50">
+      {/* Category Header with Holographic Gradient */}
+      <div className="flex items-center gap-3 mb-3 pb-2 relative">
+        <div
+          className="absolute bottom-0 left-0 right-0 h-[1px]"
+          style={{ background: `linear-gradient(90deg, transparent, ${accentColor}88, transparent)` }}
+        />
+
         {category.icon && <span className="text-lg">{category.icon}</span>}
-        <h3 className="text-[13px] font-bold tracking-[0.2em] uppercase text-cyan-400">
+
+        <h3 className="text-[13px] font-bold tracking-[0.2em] uppercase" style={{ color: accentColor }}>
           {category.title}
         </h3>
+
+        {/* Veg/Non-Veg Indicator */}
+        {dietIcon && (
+          <div className={`ml-auto border border-current p-[2px] ${dietIcon === "veg" ? "text-green-500" : "text-red-500"}`}>
+            <div className={`w-2 h-2 rounded-full ${dietIcon === "veg" ? "bg-green-500" : "bg-red-500"}`} />
+          </div>
+        )}
       </div>
 
       {/* Size Headers for drinks */}
@@ -200,13 +223,17 @@ const PrintablePage = ({
         </div>
       </div>
 
-      {/* Section Title */}
+      {/* Section Title with Neon Glow */}
       <div className="mb-6 px-8 relative">
         <div className="absolute top-1/2 left-8 right-8 h-[1px] bg-gray-800 -z-10" />
         <div className="text-center">
           <span
-            className="inline-block px-6 py-1.5 bg-[#0a0a0f] text-xl font-bold tracking-[0.2em] uppercase border-y border-gray-800"
-            style={{ color: accentColor, fontFamily: "'Orbitron', sans-serif" }}
+            className="inline-block px-8 py-2 bg-[#0a0a0f] text-2xl font-bold tracking-[0.25em] uppercase border-y border-gray-800"
+            style={{
+              color: accentColor,
+              fontFamily: "'Orbitron', sans-serif",
+              textShadow: `0 0 10px ${accentColor}66`
+            }}
           >
             {section.title}
           </span>
@@ -216,11 +243,26 @@ const PrintablePage = ({
       {/* Content */}
       <div className="flex-1 px-8 pb-8">
         <div className="max-w-md mx-auto">
-          {section.categories.map((category, index) => (
-            <CategoryBlock key={category.title} category={category} index={index} />
-          ))}
+          {section.categories.map((category, index) => {
+            // Auto-detect Veg/Non-Veg for Food Pages
+            const isVeg = section.title.includes("VEG") && !section.title.includes("NON");
+            const isNonVeg = section.title.includes("NON-VEG") || section.title.includes("MEAT") || section.title.includes("CHICKEN");
+            // Only show icons for Food pages (Indices 0-4 roughly, or just logic check)
+            const showDietIcon = isVeg || isNonVeg;
+
+            return (
+              <CategoryBlock
+                key={category.title}
+                category={category}
+                index={index}
+                accentColor={accentColor}
+                dietIcon={showDietIcon ? (isVeg ? "veg" : "non-veg") : null}
+              />
+            );
+          })}
         </div>
       </div>
+
 
       {/* Footer */}
       <div className="pb-6 text-center relative z-10">
@@ -404,6 +446,11 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
     const page = pages[index];
     const accentColor = page.variant === "cyan" ? "#00f0ff" : page.variant === "magenta" ? "#ff00ff" : "#ffd700";
 
+    // Auto-detect Veg/Non-Veg for PDF generation
+    const isVeg = page.section.title.includes("VEG") && !page.section.title.includes("NON");
+    const isNonVeg = page.section.title.includes("NON-VEG") || page.section.title.includes("MEAT") || page.section.title.includes("CHICKEN");
+    const showDietIcon = isVeg || isNonVeg;
+
     const pageElement = document.createElement("div");
     // A5 Dimensions: 148mm x 210mm (~560px x 794px at 96dpi)
     pageElement.innerHTML = `
@@ -445,7 +492,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
         <!-- Section Title -->
         <div style="margin-bottom: 24px; padding-left: 32px; padding-right: 32px; position: relative; text-align: center;">
              <div style="position: absolute; top: 50%; left: 32px; right: 32px; height: 1px; background-color: #1f2937; z-index: 0;"></div>
-             <span style="display: inline-block; padding: 6px 24px; background-color: #0a0a0f; font-size: 20px; font-weight: bold; letter-spacing: 0.2em; text-transform: uppercase; border-top: 1px solid #1f2937; border-bottom: 1px solid #1f2937; color: ${accentColor}; font-family: 'Orbitron', sans-serif; position: relative; z-index: 1;">
+             <span style="display: inline-block; padding: 6px 24px; background-color: #0a0a0f; font-size: 20px; font-weight: bold; letter-spacing: 0.2em; text-transform: uppercase; border-top: 1px solid #1f2937; border-bottom: 1px solid #1f2937; color: ${accentColor}; font-family: 'Orbitron', sans-serif; position: relative; z-index: 1; text-shadow: 0 0 10px ${accentColor}66;">
                ${escapeHtml(page.section.title)}
              </span>
         </div>
@@ -455,9 +502,15 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
           <div style="max-width: 440px; margin: 0 auto;">
           ${page.section.categories.map((category, catIdx) => `
             <div style="margin-bottom: 20px;">
-              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid rgba(55,65,81,0.5);">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding-bottom: 4px; position: relative;">
+                <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, ${accentColor}88, transparent);"></div>
                 ${category.icon ? `<span style="font-size: 16px;">${escapeHtml(category.icon)}</span>` : ""}
-                <h3 style="font-size: 12px; font-weight: bold; letter-spacing: 0.15em; text-transform: uppercase; color: #00f0ff;">${escapeHtml(category.title)}</h3>
+                <h3 style="font-size: 12px; font-weight: bold; letter-spacing: 0.15em; text-transform: uppercase; color: ${accentColor};">${escapeHtml(category.title)}</h3>
+                ${showDietIcon ? `
+                  <div style="margin-left: auto; border: 1px solid ${isVeg ? "#22c55e" : "#ef4444"}; padding: 2px; width: 12px; height: 12px; display: flex; align-items: center; justify-content: center; border-radius: 2px;">
+                     <div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${isVeg ? "#22c55e" : "#ef4444"};"></div>
+                  </div>
+                ` : ""}
               </div>
               ${category.items[0]?.sizes ? `
                 <div style="display: flex; justify-content: flex-end; gap: 16px; padding: 0 16px 8px; border-bottom: 1px solid rgba(31,41,55,1);">
