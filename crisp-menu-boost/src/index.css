@@ -81,7 +81,10 @@
     font-family: 'Cormorant Garamond', serif;
   }
 
-  h1, h2, h3, .heading {
+  h1,
+  h2,
+  h3,
+  .heading {
     font-family: 'Cinzel', serif;
     letter-spacing: 0.15em;
   }
@@ -96,6 +99,7 @@
 }
 
 @layer utilities {
+
   /* Elegant gold text effects */
   .text-shimmer {
     background: linear-gradient(90deg, hsl(var(--gold-dark)), hsl(var(--gold-light)), hsl(var(--gold)));
@@ -138,7 +142,7 @@
   /* Premium border styles */
   .border-elegant {
     border: 1px solid hsl(var(--gold) / 0.3);
-    box-shadow: 
+    box-shadow:
       inset 0 0 0 1px hsl(var(--gold) / 0.1),
       0 4px 20px hsl(var(--background) / 0.5);
   }
@@ -163,7 +167,7 @@
   }
 
   .pattern-lines {
-    background-image: 
+    background-image:
       linear-gradient(90deg, hsl(var(--gold) / 0.05) 1px, transparent 1px),
       linear-gradient(hsl(var(--gold) / 0.05) 1px, transparent 1px);
     background-size: 40px 40px;
@@ -175,8 +179,15 @@
   }
 
   @keyframes pulse-glow {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.85; }
+
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.85;
+    }
   }
 
   .animate-slide-up {
@@ -188,6 +199,7 @@
       opacity: 0;
       transform: translateY(30px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
@@ -199,8 +211,13 @@
   }
 
   @keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
   }
 
   /* Print styles */
@@ -208,15 +225,66 @@
     .no-print {
       display: none !important;
     }
-    
+
     body {
       background: white !important;
       color: black !important;
     }
-    
+
     .print-border {
       border: 2px solid #b8860b !important;
       padding: 1rem !important;
+    }
+  }
+
+  /* Neon glow header */
+  .header-neon {
+    font-family: 'Cinzel', serif;
+    font-size: 2.5rem;
+    color: hsl(var(--gold));
+    text-shadow:
+      0 0 5px hsl(var(--gold) / 0.8),
+      0 0 10px hsl(var(--gold) / 0.6),
+      0 0 20px hsl(var(--gold) / 0.4);
+    animation: neon-pulse 2s ease-in-out infinite;
+  }
+
+  /* Holographic gradient divider */
+  .divider-holo {
+    height: 2px;
+    margin: 1rem 0;
+    background: var(--gradient-gold);
+    opacity: 0.7;
+  }
+
+  /* Veg / Non-veg indicators */
+  .veg-indicator::before,
+  .nonveg-indicator::before {
+    display: inline-block;
+    margin-right: 0.3rem;
+    font-weight: bold;
+  }
+
+  .veg-indicator::before {
+    content: "🌱";
+    color: hsl(120, 70%, 50%);
+  }
+
+  .nonveg-indicator::before {
+    content: "🥩";
+    color: hsl(0, 70%, 50%);
+  }
+
+  /* Neon pulse animation */
+  @keyframes neon-pulse {
+
+    0%,
+    100% {
+      text-shadow: 0 0 5px hsl(var(--gold) / 0.8), 0 0 10px hsl(var(--gold) / 0.6), 0 0 20px hsl(var(--gold) / 0.4);
+    }
+
+    50% {
+      text-shadow: 0 0 10px hsl(var(--gold) / 1), 0 0 20px hsl(var(--gold) / 0.8), 0 0 30px hsl(var(--gold) / 0.6);
     }
   }
 }
