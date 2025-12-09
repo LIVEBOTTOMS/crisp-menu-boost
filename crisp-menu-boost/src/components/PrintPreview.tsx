@@ -319,7 +319,7 @@ const PrintablePage = ({
             <img
               src={`/live_main_logo.jpg?v=${Date.now()}`}
               alt="LIVE - Bar & Kitchen"
-              className="h-20 w-auto"
+              className="h-14 w-auto"
               style={{ filter: "brightness(1.1) contrast(1.05)" }}
             />
           </div>
@@ -339,11 +339,11 @@ const PrintablePage = ({
       </div>
 
       {/* Section Title - Always at Top */}
-      <div className="mb-4 px-12 relative flex-shrink-0">
+      <div className="mt-6 mb-4 px-12 relative flex-shrink-0">
         <div className="absolute top-1/2 left-12 right-12 h-[1px] bg-gray-800/50 -z-10" />
         <div className="text-center">
           <span
-            className="inline-block px-10 py-2 bg-[#0a0a0f] text-2xl font-bold tracking-[0.3em] uppercase"
+            className="inline-block px-10 py-2 bg-[#0a0a0f] text-xl font-bold tracking-[0.3em] uppercase"
             style={{
               color: accentColor,
               fontFamily: "'Orbitron', sans-serif",
@@ -671,7 +671,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
           <div style="display: flex; align-items: center; justify-content: center; gap: 24px;">
             <div style="flex: 1; max-width: 120px; height: 1px; background: linear-gradient(90deg, transparent, ${accentColor}60);"></div>
             <div style="display: flex; flex-direction: column; align-items: center;">
-              <img src="/live_main_logo.jpg" alt="LIVE - Bar & Kitchen" style="height: 80px; width: auto; display: block; filter: brightness(1.1) contrast(1.05);" />
+              <img src="/live_main_logo.jpg" alt="LIVE - Bar & Kitchen" style="height: 56px; width: auto; display: block; filter: brightness(1.1) contrast(1.05);" />
             </div>
             <div style="flex: 1; max-width: 120px; height: 1px; background: linear-gradient(-90deg, transparent, ${accentColor}60);"></div>
           </div>
@@ -683,9 +683,9 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
         </div>
 
         <!-- Section Title -->
-        <div style="margin-bottom: 16px; padding-left: 48px; padding-right: 48px; position: relative; text-align: center;">
+        <div style="margin-top: 24px; margin-bottom: 16px; padding-left: 48px; padding-right: 48px; position: relative; text-align: center;">
           <div style="position: absolute; top: 50%; left: 48px; right: 48px; height: 1px; background-color: rgba(31,41,55,0.5); z-index: 0;"></div>
-          <span style="display: inline-block; padding: 8px 40px; background-color: #0a0a0f; font-size: 24px; font-weight: bold; letter-spacing: 0.3em; text-transform: uppercase; border-top: 1px solid ${accentColor}30; border-bottom: 1px solid ${accentColor}30; color: ${accentColor}; font-family: 'Orbitron', sans-serif; position: relative; z-index: 1; text-shadow: 0 0 20px ${accentColor}40;">
+          <span style="display: inline-block; padding: 8px 40px; background-color: #0a0a0f; font-size: 20px; font-weight: bold; letter-spacing: 0.3em; text-transform: uppercase; border-top: 1px solid ${accentColor}30; border-bottom: 1px solid ${accentColor}30; color: ${accentColor}; font-family: 'Orbitron', sans-serif; position: relative; z-index: 1; text-shadow: 0 0 20px ${accentColor}40;">
             ${escapeHtml(page.section.title)}
           </span>
         </div>
