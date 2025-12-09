@@ -152,108 +152,93 @@ const PrintablePage = ({
   return (
     <div
       ref={pageRef}
-      className="bg-[#0a0a0f] w-[794px] min-h-[1123px] relative flex flex-col overflow-hidden"
+      className="bg-[#0a0a0f] w-[559px] min-h-[794px] relative flex flex-col overflow-hidden"
       style={{
         fontFamily: "'Rajdhani', sans-serif",
-        backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px)",
-        backgroundSize: "40px 40px"
+        backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px)",
+        backgroundSize: "30px 30px"
       }}
     >
-      {/* World-Class Boundary System - A4 Optimized */}
+      {/* World-Class Boundary System - A5 Optimized */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Outer Frame */}
-        <div className="absolute inset-[12px] border border-gray-800/60" />
-
-        {/* Inner Frame with Accent Glow */}
-        <div
-          className="absolute inset-[20px] border-2"
-          style={{
-            borderColor: `${accentColor}40`,
-            boxShadow: `inset 0 0 30px ${accentColor}10`
-          }}
-        />
-
-        {/* Corner Accents - Premium Tech Style */}
-        <div className="absolute top-[20px] left-[20px] w-20 h-20">
-          <div className="absolute top-0 left-0 w-full h-[3px]" style={{ background: `linear-gradient(90deg, ${accentColor}, transparent)` }} />
-          <div className="absolute top-0 left-0 h-full w-[3px]" style={{ background: `linear-gradient(180deg, ${accentColor}, transparent)` }} />
-          <div className="absolute top-[10px] left-[10px] w-3 h-3 rounded-full" style={{ backgroundColor: accentColor, boxShadow: `0 0 10px ${accentColor}` }} />
+        {/* Outer Frame with tech corners */}
+        <div className="absolute inset-[8px] border border-gray-800/80">
+          {/* Tech notches */}
+          <div className="absolute top-1/4 left-[-1px] w-[3px] h-8 bg-gray-800" />
+          <div className="absolute bottom-1/4 right-[-1px] w-[3px] h-8 bg-gray-800" />
         </div>
 
-        <div className="absolute top-[20px] right-[20px] w-20 h-20">
-          <div className="absolute top-0 right-0 w-full h-[3px]" style={{ background: `linear-gradient(-90deg, ${accentColor}, transparent)` }} />
-          <div className="absolute top-0 right-0 h-full w-[3px]" style={{ background: `linear-gradient(180deg, ${accentColor}, transparent)` }} />
-          <div className="absolute top-[10px] right-[10px] w-3 h-3 rounded-full" style={{ backgroundColor: accentColor, boxShadow: `0 0 10px ${accentColor}` }} />
-        </div>
+        {/* Inner Frame with Accent */}
+        <div className="absolute inset-[15px] border border-opacity-30" style={{ borderColor: accentColor }} />
 
-        <div className="absolute bottom-[20px] left-[20px] w-20 h-20">
-          <div className="absolute bottom-0 left-0 w-full h-[3px]" style={{ background: `linear-gradient(90deg, ${accentColor}, transparent)` }} />
-          <div className="absolute bottom-0 left-0 h-full w-[3px]" style={{ background: `linear-gradient(0deg, ${accentColor}, transparent)` }} />
-          <div className="absolute bottom-[10px] left-[10px] w-3 h-3 rounded-full" style={{ backgroundColor: accentColor, boxShadow: `0 0 10px ${accentColor}` }} />
-        </div>
+        {/* corner SVG Circuits */}
+        <svg className="absolute top-[15px] left-[15px] w-24 h-24 opacity-60" viewBox="0 0 100 100" style={{ color: accentColor }}>
+          <path fill="none" stroke="currentColor" strokeWidth="1" d="M 0,0 L 40,0 L 45,5 L 45,20 M 0,0 L 0,40 L 5,45 L 20,45" />
+          <circle cx="45" cy="20" r="2" fill="currentColor" />
+          <circle cx="20" cy="45" r="2" fill="currentColor" />
+          <rect x="2" y="2" width="10" height="10" fill="currentColor" opacity="0.5" />
+        </svg>
 
-        <div className="absolute bottom-[20px] right-[20px] w-20 h-20">
-          <div className="absolute bottom-0 right-0 w-full h-[3px]" style={{ background: `linear-gradient(-90deg, ${accentColor}, transparent)` }} />
-          <div className="absolute bottom-0 right-0 h-full w-[3px]" style={{ background: `linear-gradient(0deg, ${accentColor}, transparent)` }} />
-          <div className="absolute bottom-[10px] right-[10px] w-3 h-3 rounded-full" style={{ backgroundColor: accentColor, boxShadow: `0 0 10px ${accentColor}` }} />
-        </div>
+        <svg className="absolute top-[15px] right-[15px] w-24 h-24 opacity-60" viewBox="0 0 100 100" style={{ color: accentColor, transform: "scaleX(-1)" }}>
+          <path fill="none" stroke="currentColor" strokeWidth="1" d="M 0,0 L 40,0 L 45,5 L 45,20 M 0,0 L 0,40 L 5,45 L 20,45" />
+          <circle cx="45" cy="20" r="2" fill="currentColor" />
+          <circle cx="20" cy="45" r="2" fill="currentColor" />
+          <rect x="2" y="2" width="10" height="10" fill="currentColor" opacity="0.5" />
+        </svg>
 
-        {/* Side Circuit Lines */}
-        <div className="absolute top-1/2 left-[20px] w-[40px] h-[2px] -translate-y-1/2" style={{ background: `linear-gradient(90deg, ${accentColor}80, transparent)` }} />
-        <div className="absolute top-1/2 right-[20px] w-[40px] h-[2px] -translate-y-1/2" style={{ background: `linear-gradient(-90deg, ${accentColor}80, transparent)` }} />
+        <svg className="absolute bottom-[15px] left-[15px] w-24 h-24 opacity-60" viewBox="0 0 100 100" style={{ color: accentColor, transform: "scaleY(-1)" }}>
+          <path fill="none" stroke="currentColor" strokeWidth="1" d="M 0,0 L 40,0 L 45,5 L 45,20 M 0,0 L 0,40 L 5,45 L 20,45" />
+          <circle cx="45" cy="20" r="2" fill="currentColor" />
+          <circle cx="20" cy="45" r="2" fill="currentColor" />
+          <rect x="2" y="2" width="10" height="10" fill="currentColor" opacity="0.5" />
+        </svg>
+
+        <svg className="absolute bottom-[15px] right-[15px] w-24 h-24 opacity-60" viewBox="0 0 100 100" style={{ color: accentColor, transform: "rotate(180deg)" }}>
+          <path fill="none" stroke="currentColor" strokeWidth="1" d="M 0,0 L 40,0 L 45,5 L 45,20 M 0,0 L 0,40 L 5,45 L 20,45" />
+          <circle cx="45" cy="20" r="2" fill="currentColor" />
+          <circle cx="20" cy="45" r="2" fill="currentColor" />
+          <rect x="2" y="2" width="10" height="10" fill="currentColor" opacity="0.5" />
+        </svg>
       </div>
 
-      {/* ENHANCED HEADER - Compact & Premium */}
-      <div className="pt-6 pb-3 text-center relative z-10 flex-shrink-0">
-        <div className="flex items-center justify-center gap-6">
-          {/* Left Decorative Line */}
-          <div className="flex-1 max-w-[120px] h-[1px]" style={{ background: `linear-gradient(90deg, transparent, ${accentColor}60)` }} />
-
-          {/* Logo Section */}
-          <div className="flex flex-col items-center">
-            <h1
-              className="text-5xl font-black tracking-[0.3em] mb-1"
-              style={{
-                fontFamily: "'Orbitron', sans-serif",
-                background: `linear-gradient(135deg, #00f0ff, #ff00ff, #ffd700)`,
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                textShadow: "0 0 30px rgba(0,240,255,0.3)"
-              }}
-            >
+      {/* Premium Header with New Logo - ENHANCED BRIGHTNESS */}
+      <div className="pt-8 pb-4 text-center relative z-10">
+        <div className="flex justify-center mb-4">
+          <div className="relative inline-block px-12 py-5 border-2 border-amber-500/40 rounded-lg bg-black/60 shadow-[0_0_30px_rgba(251,191,36,0.1)]">
+            <h1 className="font-orbitron text-6xl font-black tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-[#FDE68A] via-[#F59E0B] to-[#D97706] drop-shadow-[0_0_25px_rgba(245,158,11,0.5)] leading-tight">
               LIVE
             </h1>
-            <p className="text-[9px] tracking-[0.4em] uppercase text-gray-400 font-medium">
-              Bar & Kitchen • Pune
-            </p>
-          </div>
+            {/* Corner Accents */}
+            <div className="absolute -top-1.5 -left-1.5 w-4 h-4 border-t-2 border-l-2 border-[#FBBF24]" />
+            <div className="absolute -top-1.5 -right-1.5 w-4 h-4 border-t-2 border-r-2 border-[#FBBF24]" />
+            <div className="absolute -bottom-1.5 -left-1.5 w-4 h-4 border-b-2 border-l-2 border-[#FBBF24]" />
+            <div className="absolute -bottom-1.5 -right-1.5 w-4 h-4 border-b-2 border-r-2 border-[#FBBF24]" />
 
-          {/* Right Decorative Line */}
-          <div className="flex-1 max-w-[120px] h-[1px]" style={{ background: `linear-gradient(-90deg, transparent, ${accentColor}60)` }} />
+            {/* Circuit lines */}
+            <div className="absolute top-1/2 left-0 w-3 h-[2px] -ml-3 bg-[#FBBF24]/50" />
+            <div className="absolute top-1/2 right-0 w-3 h-[2px] -mr-3 bg-[#FBBF24]/50" />
+          </div>
         </div>
 
-        {/* Tagline */}
-        <div className="flex items-center justify-center gap-3 mt-2">
-          <div className="w-12 h-[1px] bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
-          <span className="text-[8px] tracking-[0.3em] uppercase text-cyan-400/80 font-semibold" style={{ fontFamily: "'Orbitron', sans-serif" }}>
-            Eat • Drink • Code • Repeat
+        <div className="flex items-center justify-center gap-3 mb-2">
+          <div className="h-[1px] w-16 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
+          <span className="text-[10px] tracking-[0.25em] uppercase font-bold text-white drop-shadow-md" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+            EAT . DRINK . CODE . REPEAT
           </span>
-          <div className="w-12 h-[1px] bg-gradient-to-l from-transparent via-magenta-500/50 to-transparent" />
+          <div className="h-[1px] w-16 bg-gradient-to-l from-transparent via-magenta-500 to-transparent" />
         </div>
       </div>
 
-      {/* Section Title - Always at Top */}
-      <div className="mb-4 px-12 relative flex-shrink-0">
-        <div className="absolute top-1/2 left-12 right-12 h-[1px] bg-gray-800/50 -z-10" />
+      {/* Section Title with Neon Glow */}
+      <div className="mb-6 px-8 relative">
+        <div className="absolute top-1/2 left-8 right-8 h-[1px] bg-gray-800 -z-10" />
         <div className="text-center">
           <span
-            className="inline-block px-10 py-2 bg-[#0a0a0f] text-2xl font-bold tracking-[0.3em] uppercase"
+            className="inline-block px-8 py-2 bg-[#0a0a0f] text-2xl font-bold tracking-[0.25em] uppercase border-y border-gray-800"
             style={{
               color: accentColor,
               fontFamily: "'Orbitron', sans-serif",
-              textShadow: `0 0 20px ${accentColor}40`,
-              borderTop: `1px solid ${accentColor}30`,
-              borderBottom: `1px solid ${accentColor}30`
+              textShadow: `0 0 10px ${accentColor}66`
             }}
           >
             {section.title}
@@ -261,12 +246,14 @@ const PrintablePage = ({
         </div>
       </div>
 
-      {/* Content Area - Expanded for A4 */}
-      <div className="flex-1 px-12 pb-6 overflow-hidden">
-        <div className="max-w-2xl mx-auto h-full">
+      {/* Content */}
+      <div className="flex-1 px-8 pb-8">
+        <div className="max-w-md mx-auto">
           {section.categories.map((category, index) => {
+            // Auto-detect Veg/Non-Veg for Food Pages
             const isVeg = section.title.includes("VEG") && !section.title.includes("NON");
             const isNonVeg = section.title.includes("NON-VEG") || section.title.includes("MEAT") || section.title.includes("CHICKEN");
+            // Only show icons for Food pages (Indices 0-4 roughly, or just logic check)
             const showDietIcon = isVeg || isNonVeg;
 
             return (
@@ -282,34 +269,21 @@ const PrintablePage = ({
         </div>
       </div>
 
-      {/* ENHANCED FOOTER - Premium & Informative */}
-      <div className="py-4 px-12 relative z-10 flex-shrink-0 border-t border-gray-800/30">
-        <div className="flex justify-between items-center">
-          {/* Left - Location */}
-          <div className="text-left flex-1">
-            <p className="text-[9px] tracking-[0.15em] text-gray-500 uppercase font-medium">Live Bar & Kitchen</p>
-            <p className="text-[8px] text-gray-600">Pune, Maharashtra</p>
-          </div>
 
-          {/* Center - Page Number */}
-          <div className="text-center flex-shrink-0 px-6">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-[1px]" style={{ background: `linear-gradient(90deg, transparent, ${accentColor}50)` }} />
-              <div className="flex flex-col items-center">
-                <p className="text-[7px] uppercase tracking-widest mb-0.5" style={{ color: accentColor }}>Page</p>
-                <p className="text-lg font-bold text-white" style={{ fontFamily: "'Orbitron', sans-serif" }}>
-                  {String(pageNumber).padStart(2, '0')}
-                  <span className="text-gray-600 text-xs ml-1">/ {String(totalPages).padStart(2, '0')}</span>
-                </p>
-              </div>
-              <div className="w-8 h-[1px]" style={{ background: `linear-gradient(-90deg, transparent, ${accentColor}50)` }} />
-            </div>
+      {/* Footer */}
+      <div className="pb-6 text-center relative z-10">
+        <div className="flex justify-between items-end px-12">
+          <div className="text-left">
+            <p className="text-[8px] tracking-[0.15em] text-gray-600 uppercase">PUNE</p>
           </div>
-
-          {/* Right - Contact */}
-          <div className="text-right flex-1">
-            <p className="text-[9px] tracking-[0.15em] text-gray-500 uppercase font-medium">Premium Dining</p>
-            <p className="text-[8px] text-gray-600">www.livebar.in</p>
+          <div className="text-center">
+            <p className="text-[8px] text-gray-500 mb-0.5" style={{ color: accentColor }}>page</p>
+            <p className="text-[12px] font-bold text-white" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+              0{pageNumber} <span className="text-gray-600 text-[9px]">/ 0{totalPages}</span>
+            </p>
+          </div>
+          <div className="text-right">
+            <p className="text-[8px] tracking-[0.15em] text-gray-600 uppercase">DINING</p>
           </div>
         </div>
       </div>
@@ -323,105 +297,254 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
   const [isExporting, setIsExporting] = useState(false);
   const pageRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Optimized A4 page layout - 8 pages total with consolidated content
+  // Smart grouping for A5 pages (more pages to ensure no cutoff)
+  // Smart grouping for A5 pages with automatic splitting for large sections
+  // Smart grouping for A5 pages with automatic splitting for large sections
   const pages = [
-    // Page 1: ALL APPETIZERS (Veg + Non-Veg)
+    // Page 1: Veg Snacks Part 1 (9 Items)
     {
       section: {
-        title: "ARTISAN APPETIZERS",
-        categories: [
-          menuData.snacksAndStarters.categories[0], // VEG
-          menuData.snacksAndStarters.categories[1]  // NON-VEG
-        ]
+        title: "APPETIZERS (VEG)",
+        categories: [{
+          ...menuData.snacksAndStarters.categories[0],
+          items: menuData.snacksAndStarters.categories[0].items.slice(0, 9)
+        }]
       },
       variant: "cyan" as const,
-      key: "appetizers-all"
+      key: "snacks-veg-1"
     },
-    // Page 2: CURRIES & MAINS
+    // Page 2: Veg Snacks Part 2 (Remainder)
     {
       section: {
-        title: "SIGNATURE MAINS",
+        title: "APPETIZERS (VEG) - CONT.",
+        categories: [{
+          ...menuData.snacksAndStarters.categories[0],
+          title: "VEG (CONTINUED)",
+          items: menuData.snacksAndStarters.categories[0].items.slice(9)
+        }]
+      },
+      variant: "cyan" as const,
+      key: "snacks-veg-2"
+    },
+    // Page 3: Non-Veg Snacks Part 1 (10 Items)
+    {
+      section: {
+        title: "APPETIZERS (NON-VEG)",
+        categories: [{
+          ...menuData.snacksAndStarters.categories[1],
+          items: menuData.snacksAndStarters.categories[1].items.slice(0, 10)
+        }]
+      },
+      variant: "cyan" as const,
+      key: "snacks-nonveg-1"
+    },
+    // Page 4: Non-Veg Snacks Part 2 (Remainder)
+    {
+      section: {
+        title: "APPETIZERS (NON-VEG) - CONT.",
+        categories: [{
+          ...menuData.snacksAndStarters.categories[1],
+          title: "NON-VEG (CONTINUED)",
+          items: menuData.snacksAndStarters.categories[1].items.slice(10)
+        }]
+      },
+      variant: "cyan" as const,
+      key: "snacks-nonveg-2"
+    },
+    // Page 5: Curries (9 Items - Safe)
+    {
+      section: {
+        title: "SIGNATURE CURRIES",
+        categories: [menuData.foodMenu.categories[0], menuData.foodMenu.categories[1]]
+      },
+      variant: "magenta" as const,
+      key: "food-curries"
+    },
+    // Page 6: Mains Part 1 (10 Items)
+    {
+      section: {
+        title: "VEGETARIAN MAINS",
+        categories: [{
+          ...menuData.foodMenu.categories[3],
+          items: menuData.foodMenu.categories[3].items.slice(0, 10)
+        }]
+      },
+      variant: "magenta" as const,
+      key: "food-mains-1"
+    },
+    // Page 7: Mains Part 2 (Remainder + Thalis)
+    {
+      section: {
+        title: "MAINS & THALIS",
         categories: [
-          menuData.foodMenu.categories[0], // Handi & Firepot
-          menuData.foodMenu.categories[1], // Mutton
-          menuData.foodMenu.categories[2]  // Thalis
+          {
+            ...menuData.foodMenu.categories[3],
+            title: "VEG MAINS (CONTINUED)",
+            items: menuData.foodMenu.categories[3].items.slice(10)
+          },
+          menuData.foodMenu.categories[2]
         ]
       },
       variant: "magenta" as const,
-      key: "food-mains"
+      key: "food-mains-2"
     },
-    // Page 3: VEG MAINS & SIDES
+    // Page 8: Gourmet Sides (6 Items - Safe)
     {
       section: {
-        title: "VEGETARIAN & SIDES",
+        title: "GOURMET SIDES",
         categories: [
-          menuData.foodMenu.categories[3],    // Veg Chef's Mains
-          menuData.sideItems.categories[1],   // Bar Bites
-          menuData.sideItems.categories[2]    // Rice
+          menuData.sideItems.categories[1],      // Bar Bites
+          menuData.sideItems.categories[2]       // Rice
         ]
       },
       variant: "magenta" as const,
-      key: "veg-sides"
+      key: "food-sides"
     },
-    // Page 4: BEERS & COOLERS
+    // Page 9: Beers Part 1 (Large - 7 Items)
     {
       section: {
-        title: "CRAFT BREWS & COOLERS",
+        title: "CRAFT BREWS (LARGE)",
         categories: [
-          menuData.beveragesMenu.categories[0], // Large Beers
-          menuData.beveragesMenu.categories[1], // Pints
-          menuData.beveragesMenu.categories[2]  // Breezers
+          menuData.beveragesMenu.categories[0]   // Large (7 items)
         ]
       },
       variant: "cyan" as const,
-      key: "beers-coolers"
+      key: "drinks-beers-large"
     },
-    // Page 5: VODKAS, RUMS & SPIRITS
+    // Page 10: Beers Part 2 (Pints - 8 Items)
     {
       section: {
-        title: "SPIRITS COLLECTION",
+        title: "CRAFT BREWS (PINTS)",
         categories: [
-          menuData.beveragesMenu.categories[8], // Premium Vodkas
-          menuData.beveragesMenu.categories[3], // Crystal Vodkas
-          menuData.beveragesMenu.categories[4], // Rums
-          menuData.beveragesMenu.categories[10] // Gin & Brandy
+          menuData.beveragesMenu.categories[1]   // Pints (8 items)
         ]
       },
       variant: "cyan" as const,
-      key: "spirits"
+      key: "drinks-beers-small"
     },
-    // Page 6: WHISKIES (Indian + World)
+    // Page 11: Coolers & Premium Vodkas (9 Items)
     {
       section: {
-        title: "WHISKY COLLECTION",
+        title: "COOLERS & VODKAS",
         categories: [
-          menuData.beveragesMenu.categories[5], // Indian Reserves
-          menuData.beveragesMenu.categories[6]  // World Whiskies
+          menuData.beveragesMenu.categories[2], // Breezers (4)
+          menuData.beveragesMenu.categories[8], // Premium Vodkas (5)
         ]
       },
-      variant: "gold" as const,
-      key: "whiskies"
+      variant: "cyan" as const,
+      key: "drinks-vodkas-1"
     },
-    // Page 7: CELEBRATION BOTTLES & WINES
+    // Page 12: Crystal Vodkas (4 Items) - Very Spacious
     {
       section: {
-        title: "PREMIUM SELECTION",
+        title: "CRYSTAL VODKAS",
         categories: [
-          menuData.beveragesMenu.categories[7],  // Celebration Bottles
-          menuData.beveragesMenu.categories[9],  // Wines
-          menuData.beveragesMenu.categories[11]  // Liqueurs
+          menuData.beveragesMenu.categories[3], // Crystal Vodkas (4)
         ]
       },
-      variant: "gold" as const,
-      key: "premium"
+      variant: "cyan" as const,
+      key: "drinks-vodkas-2"
     },
-    // Page 8: REFRESHMENTS
+    // Page 13: Rums (6 Items)
+    {
+      section: {
+        title: "AGED RUMS",
+        categories: [
+          menuData.beveragesMenu.categories[4]  // Rums (6)
+        ]
+      },
+      variant: "cyan" as const,
+      key: "drinks-rums"
+    },
+    // Page 14: Gin & Liqueurs (7 Items)
+    {
+      section: {
+        title: "GIN & LIQUEURS",
+        categories: [
+          menuData.beveragesMenu.categories[10], // Gin & Brandy (4)
+          menuData.beveragesMenu.categories[11], // Premium Liqueurs (3)
+        ]
+      },
+      variant: "cyan" as const,
+      key: "drinks-gin-liqueurs"
+    },
+    // Page 15: Indian Reserves Part 1 (7 Items)
+    {
+      section: {
+        title: "INDIAN RESERVES",
+        categories: [{
+          ...menuData.beveragesMenu.categories[5],
+          items: menuData.beveragesMenu.categories[5].items.slice(0, 7)
+        }]
+      },
+      variant: "gold" as const,
+      key: "drinks-indian-whisky-1"
+    },
+    // Page 16: Indian Reserves Part 2 (6 Items)
+    {
+      section: {
+        title: "INDIAN RESERVES - CONT.",
+        categories: [{
+          ...menuData.beveragesMenu.categories[5],
+          title: "INDIAN WHISKY (CONTINUED)",
+          items: menuData.beveragesMenu.categories[5].items.slice(7)
+        }]
+      },
+      variant: "gold" as const,
+      key: "drinks-indian-whisky-2"
+    },
+    // Page 17: World Whiskies Part 1 (8 Items)
+    {
+      section: {
+        title: "WORLD COLLECTION",
+        categories: [{
+          ...menuData.beveragesMenu.categories[6],
+          items: menuData.beveragesMenu.categories[6].items.slice(0, 8)
+        }]
+      },
+      variant: "gold" as const,
+      key: "drinks-world-whisky-1"
+    },
+    // Page 18: World Whiskies Part 2 (8 Items)
+    {
+      section: {
+        title: "WORLD COLLECTION - CONT.",
+        categories: [{
+          ...menuData.beveragesMenu.categories[6],
+          title: "WORLD WHISKY (CONTINUED)",
+          items: menuData.beveragesMenu.categories[6].items.slice(8)
+        }]
+      },
+      variant: "gold" as const,
+      key: "drinks-world-whisky-2"
+    },
+    // Page 19: Celebration Bottles (9 Items)
+    {
+      section: {
+        title: "CELEBRATION BOTTLES",
+        categories: [menuData.beveragesMenu.categories[7]]
+      },
+      variant: "gold" as const,
+      key: "drinks-bottles"
+    },
+    // Page 20: Wines (10 Items - Safe)
+    {
+      section: {
+        title: "FINE WINES COLLECTION",
+        categories: [
+          menuData.beveragesMenu.categories[9], // Wines
+        ]
+      },
+      variant: "magenta" as const,
+      key: "drinks-wines"
+    },
+    // Page 21: Refreshments (11 Items)
     {
       section: {
         title: "REFRESHMENTS",
         categories: [
-          menuData.sideItems.categories[0],       // Water/Soda
-          menuData.beveragesMenu.categories[12]   // Soft Drinks
+          menuData.sideItems.categories[0],      // Water/Soda
+          menuData.beveragesMenu.categories[12], // Soft Drinks
         ]
       },
       variant: "cyan" as const,
@@ -446,69 +569,62 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
     const showDietIcon = isVeg || isNonVeg;
 
     const pageElement = document.createElement("div");
-    // A4 Dimensions: 210mm x 297mm (~794px x 1123px at 96dpi)
+    // A5 Dimensions: 148mm x 210mm (~560px x 794px at 96dpi)
     pageElement.innerHTML = `
-      <div style="font-family: 'Rajdhani', sans-serif; background: #0a0a0f; background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px); background-size: 40px 40px; width: 794px; min-height: 1123px; position: relative; display: flex; flex-direction: column; overflow: hidden;">
+      <div style="font-family: 'Rajdhani', sans-serif; background: #0a0a0f; background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px); background-size: 30px 30px; width: 559px; min-height: 794px; position: relative; display: flex; flex-direction: column; overflow: hidden;">
         
-        <!-- World-Class Boundary System A4 -->
+        <!-- World-Class Boundary System -->
         <div style="position: absolute; inset: 0; pointer-events: none;">
-          <div style="position: absolute; inset: 12px; border: 1px solid rgba(55,65,81,0.6);"></div>
-          <div style="position: absolute; inset: 20px; border: 2px solid ${accentColor}40; box-shadow: inset 0 0 30px ${accentColor}10;"></div>
-          
-          <!-- Corner Accents -->
-          <div style="position: absolute; top: 20px; left: 20px; width: 80px; height: 80px;">
-            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, ${accentColor}, transparent);"></div>
-            <div style="position: absolute; top: 0; left: 0; height: 100%; width: 3px; background: linear-gradient(180deg, ${accentColor}, transparent);"></div>
-            <div style="position: absolute; top: 10px; left: 10px; width: 12px; height: 12px; border-radius: 50%; background-color: ${accentColor}; box-shadow: 0 0 10px ${accentColor};"></div>
-          </div>
-          <div style="position: absolute; top: 20px; right: 20px; width: 80px; height: 80px;">
-            <div style="position: absolute; top: 0; right: 0; width: 100%; height: 3px; background: linear-gradient(-90deg, ${accentColor}, transparent);"></div>
-            <div style="position: absolute; top: 0; right: 0; height: 100%; width: 3px; background: linear-gradient(180deg, ${accentColor}, transparent);"></div>
-            <div style="position: absolute; top: 10px; right: 10px; width: 12px; height: 12px; border-radius: 50%; background-color: ${accentColor}; box-shadow: 0 0 10px ${accentColor};"></div>
-          </div>
-          <div style="position: absolute; bottom: 20px; left: 20px; width: 80px; height: 80px;">
-            <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, ${accentColor}, transparent);"></div>
-            <div style="position: absolute; bottom: 0; left: 0; height: 100%; width: 3px; background: linear-gradient(0deg, ${accentColor}, transparent);"></div>
-            <div style="position: absolute; bottom: 10px; left: 10px; width: 12px; height: 12px; border-radius: 50%; background-color: ${accentColor}; box-shadow: 0 0 10px ${accentColor};"></div>
-          </div>
-          <div style="position: absolute; bottom: 20px; right: 20px; width: 80px; height: 80px;">
-            <div style="position: absolute; bottom: 0; right: 0; width: 100%; height: 3px; background: linear-gradient(-90deg, ${accentColor}, transparent);"></div>
-            <div style="position: absolute; bottom: 0; right: 0; height: 100%; width: 3px; background: linear-gradient(0deg, ${accentColor}, transparent);"></div>
-            <div style="position: absolute; bottom: 10px; right: 10px; width: 12px; height: 12px; border-radius: 50%; background-color: ${accentColor}; box-shadow: 0 0 10px ${accentColor};"></div>
+          <!-- Outer Frame -->
+          <div style="position: absolute; inset: 8px; border: 1px solid rgba(55,65,81,0.8);">
+            <!-- Tech notches -->
+            <div style="position: absolute; top: 25%; left: -1px; width: 3px; height: 32px; background: #1f2937;"></div>
+            <div style="position: absolute; bottom: 25%; right: -1px; width: 3px; height: 32px; background: #1f2937;"></div>
           </div>
           
-          <div style="position: absolute; top: 50%; left: 20px; width: 40px; height: 2px; transform: translateY(-50%); background: linear-gradient(90deg, ${accentColor}80, transparent);"></div>
-          <div style="position: absolute; top: 50%; right: 20px; width: 40px; height: 2px; transform: translateY(-50%); background: linear-gradient(-90deg, ${accentColor}80, transparent);"></div>
+          <!-- Inner Frame with Accent -->
+          <div style="position: absolute; inset: 15px; border: 1px solid ${accentColor}44;"></div>
+          
+          <!-- Corner Accents SVG Simulated -->
+           <div style="position: absolute; top: 15px; left: 15px; width: 48px; height: 48px; border-top: 3px solid ${accentColor}; border-left: 3px solid ${accentColor}; box-shadow: -2px -2px 10px ${accentColor}44;"></div>
+           <div style="position: absolute; top: 15px; right: 15px; width: 48px; height: 48px; border-top: 3px solid ${accentColor}; border-right: 3px solid ${accentColor}; box-shadow: 2px -2px 10px ${accentColor}44;"></div>
+           <div style="position: absolute; bottom: 15px; left: 15px; width: 48px; height: 48px; border-bottom: 3px solid ${accentColor}; border-left: 3px solid ${accentColor}; box-shadow: -2px 2px 10px ${accentColor}44;"></div>
+           <div style="position: absolute; bottom: 15px; right: 15px; width: 48px; height: 48px; border-bottom: 3px solid ${accentColor}; border-right: 3px solid ${accentColor}; box-shadow: 2px 2px 10px ${accentColor}44;"></div>
         </div>
 
-        <!-- Enhanced Header -->
-        <div style="padding-top: 24px; padding-bottom: 12px; text-align: center; position: relative; z-index: 10;">
-          <div style="display: flex; align-items: center; justify-content: center; gap: 24px;">
-            <div style="flex: 1; max-width: 120px; height: 1px; background: linear-gradient(90deg, transparent, ${accentColor}60);"></div>
-            <div style="display: flex; flex-direction: column; align-items: center;">
-              <h1 style="font-size: 48px; font-family: 'Orbitron', sans-serif; font-weight: 900; letter-spacing: 0.3em; margin: 0 0 4px 0; background: linear-gradient(135deg, #00f0ff, #ff00ff, #ffd700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(0,240,255,0.3);">LIVE</h1>
-              <p style="font-size: 9px; letter-spacing: 0.4em; text-transform: uppercase; color: #9ca3af; font-weight: 500; margin: 0;">Bar & Kitchen • Pune</p>
-            </div>
-            <div style="flex: 1; max-width: 120px; height: 1px; background: linear-gradient(-90deg, transparent, ${accentColor}60);"></div>
+        <!-- Premium Header -->
+        <div style="padding-top: 32px; padding-bottom: 16px; text-align: center; position: relative; z-index: 10;">
+          <div style="display: flex; justify-content: center; margin-bottom: 16px;">
+             <div style="display: inline-block; padding: 20px 48px; position: relative; border: 2px solid rgba(245, 158, 11, 0.4); border-radius: 8px; background: rgba(0,0,0,0.6); box-shadow: 0 0 30px rgba(251, 191, 36, 0.1);">
+                <h1 style="font-family: 'Orbitron', 'sans-serif'; font-size: 60px; line-height: 1; font-weight: 900; letter-spacing: 0.2em; color: #f59e0b; background: -webkit-linear-gradient(0deg, #fde68a, #f59e0b, #d97706); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 25px rgba(245, 158, 11, 0.5)); margin: 0;">LIVE</h1>
+                <!-- Corner Accents -->
+                <div style="position: absolute; top: -6px; left: -6px; width: 16px; height: 16px; border-top: 2px solid #fbbf24; border-left: 2px solid #fbbf24;"></div>
+                <div style="position: absolute; top: -6px; right: -6px; width: 16px; height: 16px; border-top: 2px solid #fbbf24; border-right: 2px solid #fbbf24;"></div>
+                <div style="position: absolute; bottom: -6px; left: -6px; width: 16px; height: 16px; border-bottom: 2px solid #fbbf24; border-left: 2px solid #fbbf24;"></div>
+                <div style="position: absolute; bottom: -6px; right: -6px; width: 16px; height: 16px; border-bottom: 2px solid #fbbf24; border-right: 2px solid #fbbf24;"></div>
+                <!-- Circuit lines -->
+                <div style="position: absolute; top: 50%; left: -12px; width: 12px; height: 2px; background: rgba(251, 191, 36, 0.5);"></div>
+                <div style="position: absolute; top: 50%; right: -12px; width: 12px; height: 2px; background: rgba(251, 191, 36, 0.5);"></div>
+             </div>
           </div>
-          <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 8px;">
-            <div style="width: 48px; height: 1px; background: linear-gradient(to right, transparent, rgba(6,182,212,0.5), transparent);"></div>
-            <span style="font-size: 8px; letter-spacing: 0.3em; color: rgba(34,211,238,0.8); text-transform: uppercase; font-weight: 600; font-family: 'Orbitron', sans-serif;">Eat • Drink • Code • Repeat</span>
-            <div style="width: 48px; height: 1px; background: linear-gradient(to left, transparent, rgba(217,70,239,0.5), transparent);"></div>
+          <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 8px;">
+            <div style="height: 1px; width: 64px; background: linear-gradient(to right, transparent, #06b6d4, transparent);"></div>
+            <span style="font-size: 9px; letter-spacing: 0.25em; color: white; text-transform: uppercase; font-weight: bold; font-family: 'Orbitron', sans-serif; text-shadow: 0 0 5px rgba(34,211,238,0.8);">EAT . DRINK . CODE . REPEAT</span>
+            <div style="height: 1px; width: 64px; background: linear-gradient(to left, transparent, #d946ef, transparent);"></div>
           </div>
         </div>
 
         <!-- Section Title -->
-        <div style="margin-bottom: 16px; padding-left: 48px; padding-right: 48px; position: relative; text-align: center;">
-          <div style="position: absolute; top: 50%; left: 48px; right: 48px; height: 1px; background-color: rgba(31,41,55,0.5); z-index: 0;"></div>
-          <span style="display: inline-block; padding: 8px 40px; background-color: #0a0a0f; font-size: 24px; font-weight: bold; letter-spacing: 0.3em; text-transform: uppercase; border-top: 1px solid ${accentColor}30; border-bottom: 1px solid ${accentColor}30; color: ${accentColor}; font-family: 'Orbitron', sans-serif; position: relative; z-index: 1; text-shadow: 0 0 20px ${accentColor}40;">
-            ${escapeHtml(page.section.title)}
-          </span>
+        <div style="margin-bottom: 24px; padding-left: 32px; padding-right: 32px; position: relative; text-align: center;">
+             <div style="position: absolute; top: 50%; left: 32px; right: 32px; height: 1px; background-color: #1f2937; z-index: 0;"></div>
+             <span style="display: inline-block; padding: 6px 24px; background-color: #0a0a0f; font-size: 20px; font-weight: bold; letter-spacing: 0.2em; text-transform: uppercase; border-top: 1px solid #1f2937; border-bottom: 1px solid #1f2937; color: ${accentColor}; font-family: 'Orbitron', sans-serif; position: relative; z-index: 1; text-shadow: 0 0 10px ${accentColor}66;">
+               ${escapeHtml(page.section.title)}
+             </span>
         </div>
 
         <!-- Content -->
-        <div style="flex: 1; padding-left: 48px; padding-right: 48px; padding-bottom: 24px; overflow: hidden;">
-          <div style="max-width: 672px; margin: 0 auto;">
+        <div style="flex: 1; padding-left: 32px; padding-right: 32px; padding-bottom: 32px;">
+          <div style="max-width: 440px; margin: 0 auto;">
           ${page.section.categories.map((category, catIdx) => `
             <div style="margin-bottom: 20px;">
               <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding-bottom: 4px; position: relative;">
@@ -540,24 +656,24 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
               ` : ""}
               <div style="display: flex; flex-direction: column; gap: 1px; margin-top: 4px;">
                 ${category.items.map((item, idx) => `
-                  <div style="padding: 10px 12px; ${idx % 2 === 0 ? "background: rgba(255,255,255,0.02);" : ""}">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
+                  <div style="padding: 8px 10px; ${idx % 2 === 0 ? "background: rgba(255,255,255,0.02);" : ""}">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
                       <div style="flex: 1;">
-                        <h4 style="font-size: 14px; font-weight: 600; color: white; letter-spacing: 0.05em; text-transform: uppercase;">${escapeHtml(item.name)}</h4>
-                        ${item.description ? `<p style="font-size: 10px; color: #9ca3af; margin-top: 3px; font-style: italic; line-height: 1.5;">${escapeHtml(item.description)}</p>` : ""}
+                        <h4 style="font-size: 13px; font-weight: 600; color: white; letter-spacing: 0.05em; text-transform: uppercase;">${escapeHtml(item.name)}</h4>
+                        ${item.description ? `<p style="font-size: 9px; color: #9ca3af; margin-top: 2px; font-style: italic; line-height: 1.4;">${escapeHtml(item.description)}</p>` : ""}
                       </div>
                       <div style="flex-shrink: 0; text-align: right;">
                         ${item.sizes ? `
                           <div style="display: flex; gap: 16px; justify-content: flex-end;">
-                            ${item.sizes.map(size => `<span style="font-size: 12px; font-weight: 500; color: #fbbf24; min-width: 40px; text-align: right; width: 50px;">${escapeHtml(size)}</span>`).join("")}
+                            ${item.sizes.map(size => `<span style="font-size: 11px; font-weight: 500; color: #fbbf24; min-width: 40px; text-align: right; width: 50px;">${escapeHtml(size)}</span>`).join("")}
                           </div>
                         ` : item.halfPrice && item.fullPrice ? `
                           <div style="display: flex; gap: 12px; align-items: center; justify-content: flex-end;">
-                            <span style="font-size: 12px; font-weight: 500; color: #fbbf24; min-width: 40px; text-align: right;">${escapeHtml(item.halfPrice)}</span>
-                            <span style="font-size: 12px; font-weight: 500; color: #fbbf24; min-width: 40px; text-align: right;">${escapeHtml(item.fullPrice)}</span>
+                            <span style="font-size: 11px; font-weight: 500; color: #fbbf24; min-width: 40px; text-align: right;">${escapeHtml(item.halfPrice)}</span>
+                            <span style="font-size: 11px; font-weight: 500; color: #fbbf24; min-width: 40px; text-align: right;">${escapeHtml(item.fullPrice)}</span>
                           </div>
                         ` : `
-                          <span style="font-size: 14px; font-weight: 600; color: #fbbf24;">${escapeHtml(item.price)}</span>
+                          <span style="font-size: 13px; font-weight: 600; color: #fbbf24;">${escapeHtml(item.price)}</span>
                         `}
                       </div>
                     </div>
@@ -569,26 +685,20 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
           </div>
         </div>
 
-        <!-- Enhanced Footer -->
-        <div style="padding: 16px 48px; position: relative; z-index: 10; border-top: 1px solid rgba(55,65,81,0.3);">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div style="text-align: left; flex: 1;">
-              <p style="font-size: 9px; letter-spacing: 0.15em; color: #6b7280; text-transform: uppercase; font-weight: 500; margin: 0 0 2px 0;">Live Bar & Kitchen</p>
-              <p style="font-size: 8px; color: #4b5563; margin: 0;">Pune, Maharashtra</p>
+        <!-- Footer -->
+        <div style="padding-bottom: 24px; padding-left: 48px; padding-right: 48px; position: relative; z-index: 10;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+            <div style="text-align: left;">
+              <p style="font-size: 8px; letter-spacing: 0.15em; color: #4b5563; text-transform: uppercase; margin: 0;">PUNE</p>
             </div>
-            <div style="text-align: center; flex-shrink: 0; padding: 0 24px;">
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <div style="width: 32px; height: 1px; background: linear-gradient(90deg, transparent, ${accentColor}50);"></div>
-                <div style="display: flex; flex-direction: column; align-items: center;">
-                  <p style="font-size: 7px; text-transform: uppercase; letter-spacing: 0.15em; color: ${accentColor}; margin: 0 0 2px 0;">Page</p>
-                  <p style="font-size: 18px; font-weight: bold; color: white; font-family: 'Orbitron', sans-serif; margin: 0;">${String(index + 1).padStart(2, '0')}<span style="font-size: 12px; color: #4b5563; margin-left: 4px;">/ ${String(pages.length).padStart(2, '0')}</span></p>
-                </div>
-                <div style="width: 32px; height: 1px; background: linear-gradient(-90deg, transparent, ${accentColor}50);"></div>
-              </div>
+            <div style="text-align: center;">
+               <p style="font-size: 8px; color: ${accentColor}; margin-bottom: 2px; margin: 0;">page</p>
+               <p style="font-size: 12px; font-weight: bold; color: white; font-family: 'Orbitron', sans-serif; margin: 0;">
+                 0${index + 1} <span style="font-size: 10px; color: #4b5563;">/ 0${pages.length}</span>
+               </p>
             </div>
-            <div style="text-align: right; flex: 1;">
-              <p style="font-size: 9px; letter-spacing: 0.15em; color: #6b7280; text-transform: uppercase; font-weight: 500; margin: 0 0 2px 0;">Premium Dining</p>
-              <p style="font-size: 8px; color: #4b5563; margin: 0;">www.livebar.in</p>
+            <div style="text-align: right;">
+              <p style="font-size: 8px; letter-spacing: 0.15em; color: #4b5563; text-transform: uppercase; margin: 0;">DINING</p>
             </div>
           </div>
         </div>
@@ -614,8 +724,8 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
         backgroundColor: "#0a0a0f",
         useCORS: true,
         logging: false,
-        width: 794, // A4 width
-        height: 1123, // A4 height
+        width: 559, // A5 width
+        height: 794, // A5 height
       });
       document.body.removeChild(tempDiv);
       return canvas;
