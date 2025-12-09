@@ -30,39 +30,39 @@ const MenuItemRow = ({ item, isEven }: { item: MenuItem; isEven: boolean }) => {
 
   return (
     <div className={`py-3 px-4 ${isEven ? "bg-white/[0.02]" : ""}`}>
-      <div className="flex justify-between items-start gap-4">
-        <div className="flex-1">
-          <h4 className="text-[15px] font-semibold text-white tracking-wide uppercase">
+      <div className="flex justify-between items-start gap-2">
+        <div className="flex-1 min-w-0">
+          <h4 className="text-[14px] font-semibold text-white tracking-wide uppercase truncate">
             {item.name}
           </h4>
           {item.description && (
-            <p className="text-[11px] text-gray-400 mt-1 italic leading-relaxed">
+            <p className="text-[10px] text-gray-400 mt-1 italic leading-relaxed truncate">
               {item.description}
             </p>
           )}
         </div>
-        <div className="flex-shrink-0 text-right">
+        <div className="flex-shrink-0 text-right ml-2">
           {hasSizes ? (
-            <div className="flex gap-4">
+            <div className="flex gap-2">
               {item.sizes!.map((size, i) => (
-                <span key={i} className="text-[13px] font-medium text-amber-400 min-w-[50px] text-center">
+                <span key={i} className="text-[11px] font-medium text-amber-400 min-w-[32px] text-right">
                   {size}
                 </span>
               ))}
             </div>
           ) : hasHalfFull ? (
-            <div className="flex gap-4 items-center">
+            <div className="flex gap-3 items-center">
               <div className="text-center">
-                <span className="text-[9px] text-gray-500 block uppercase tracking-wider">Half</span>
-                <span className="text-[13px] font-medium text-amber-400">{item.halfPrice}</span>
+                <span className="text-[8px] text-gray-500 block uppercase tracking-wider">Half</span>
+                <span className="text-[11px] font-medium text-amber-400">{item.halfPrice}</span>
               </div>
               <div className="text-center">
-                <span className="text-[9px] text-gray-500 block uppercase tracking-wider">Full</span>
-                <span className="text-[13px] font-medium text-amber-400">{item.fullPrice}</span>
+                <span className="text-[8px] text-gray-500 block uppercase tracking-wider">Full</span>
+                <span className="text-[11px] font-medium text-amber-400">{item.fullPrice}</span>
               </div>
             </div>
           ) : (
-            <span className="text-[14px] font-semibold text-amber-400">{item.price}</span>
+            <span className="text-[12px] font-semibold text-amber-400">{item.price}</span>
           )}
         </div>
       </div>
@@ -106,17 +106,17 @@ const CategoryBlock = ({
 
       {/* Size Headers for drinks */}
       {category.items[0]?.sizes && (
-        <div className="flex justify-end gap-4 px-4 pb-2 border-b border-gray-800">
+        <div className="flex justify-end gap-2 px-4 pb-2 border-b border-gray-800">
           {category.items[0].sizes.length === 4 ? (
             <>
-              <span className="text-[9px] text-gray-400 min-w-[50px] text-center uppercase tracking-wider font-semibold">30ml</span>
-              <span className="text-[9px] text-gray-400 min-w-[50px] text-center uppercase tracking-wider font-semibold">60ml</span>
-              <span className="text-[9px] text-gray-400 min-w-[50px] text-center uppercase tracking-wider font-semibold">90ml</span>
-              <span className="text-[9px] text-gray-400 min-w-[50px] text-center uppercase tracking-wider font-semibold">180ml</span>
+              <span className="text-[8px] text-gray-400 min-w-[32px] text-right uppercase tracking-wider font-semibold">30ml</span>
+              <span className="text-[8px] text-gray-400 min-w-[32px] text-right uppercase tracking-wider font-semibold">60ml</span>
+              <span className="text-[8px] text-gray-400 min-w-[32px] text-right uppercase tracking-wider font-semibold">90ml</span>
+              <span className="text-[8px] text-gray-400 min-w-[32px] text-right uppercase tracking-wider font-semibold">180ml</span>
             </>
           ) : (
             category.items[0].sizes.map((_, i) => (
-              <span key={i} className="text-[9px] text-gray-500 min-w-[50px] text-center uppercase tracking-wider">
+              <span key={i} className="text-[8px] text-gray-500 min-w-[32px] text-right uppercase tracking-wider">
                 Size {i + 1}
               </span>
             ))
@@ -137,6 +137,102 @@ const CategoryBlock = ({
 // A4 dimensions at 96dpi: 794px x 1123px
 const A4_WIDTH = 794;
 const A4_HEIGHT = 1123;
+
+// Cover Page Component
+const CoverPage = ({ pageRef }: { pageRef: React.RefObject<HTMLDivElement> }) => {
+  return (
+    <div
+      ref={pageRef}
+      className="bg-[#0a0a0f] relative flex flex-col items-center justify-center overflow-hidden"
+      style={{
+        fontFamily: "'Rajdhani', sans-serif",
+        width: `${A4_WIDTH}px`,
+        minHeight: `${A4_HEIGHT}px`,
+        background: "radial-gradient(ellipse at center, #0f0f18 0%, #0a0a0f 70%)"
+      }}
+    >
+      {/* Rain Effect Overlay */}
+      <div className="absolute inset-0 opacity-20 pointer-events-none"
+        style={{
+          backgroundImage: "linear-gradient(180deg, transparent 0%, rgba(0,240,255,0.03) 50%, transparent 100%)",
+          backgroundSize: "3px 20px",
+          animation: "rain 0.5s linear infinite"
+        }}
+      />
+
+      {/* Elegant Boundary System */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Outer Frame */}
+        <div className="absolute inset-[12px] border border-gray-800/60" />
+        
+        {/* Inner Frame with Gradient */}
+        <div className="absolute inset-[20px] border border-opacity-30" style={{ borderColor: "#00f0ff" }} />
+
+        {/* Corner Accents - Larger for cover */}
+        <div className="absolute top-[20px] left-[20px] w-24 h-24 border-l-2 border-t-2" style={{ borderColor: "#00f0ff" }} />
+        <div className="absolute top-[20px] right-[20px] w-24 h-24 border-r-2 border-t-2" style={{ borderColor: "#ff00ff" }} />
+        <div className="absolute bottom-[20px] left-[20px] w-24 h-24 border-l-2 border-b-2" style={{ borderColor: "#ff00ff" }} />
+        <div className="absolute bottom-[20px] right-[20px] w-24 h-24 border-r-2 border-b-2" style={{ borderColor: "#00f0ff" }} />
+      </div>
+
+      {/* Logo */}
+      <div className="relative z-10 mb-8">
+        <img
+          src="/live_logo_actual.jpg"
+          alt="LIVE"
+          className="h-56 w-auto object-contain"
+          style={{ 
+            filter: "brightness(1.2) contrast(1.1) saturate(1.2)",
+            boxShadow: "0 0 60px rgba(0,240,255,0.3), 0 0 120px rgba(255,0,255,0.2)"
+          }}
+        />
+      </div>
+
+      {/* Tagline */}
+      <div className="relative z-10 flex items-center justify-center gap-4 mb-12">
+        <div className="h-[1px] w-24 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
+        <span 
+          className="text-xl tracking-[0.3em] uppercase font-bold text-white/90"
+          style={{ fontFamily: "'Orbitron', sans-serif", textShadow: "0 0 20px rgba(0,240,255,0.5)" }}
+        >
+          EAT . DRINK . CODE . REPEAT
+        </span>
+        <div className="h-[1px] w-24 bg-gradient-to-l from-transparent via-magenta-500 to-transparent" />
+      </div>
+
+      {/* Decorative Utensils & Binary */}
+      <div className="relative z-10 flex flex-col items-center opacity-60">
+        <div className="flex gap-3 text-3xl text-white/80">
+          <span>🍴</span>
+          <span>🥄</span>
+        </div>
+        <div className="mt-4 text-[10px] text-cyan-400/60 tracking-widest font-mono">
+          00110101001111010110110011
+        </div>
+        <div className="text-[10px] text-magenta-400/60 tracking-widest font-mono">
+          01010101101101010111111011
+        </div>
+      </div>
+
+      {/* Menu Text at Bottom */}
+      <div className="absolute bottom-16 left-0 right-0 text-center z-10">
+        <span 
+          className="text-5xl font-bold tracking-[0.5em] uppercase"
+          style={{ 
+            fontFamily: "'Orbitron', sans-serif",
+            background: "linear-gradient(90deg, #00f0ff, #ff00ff, #00f0ff)",
+            backgroundSize: "200% 100%",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            textShadow: "0 0 40px rgba(0,240,255,0.3)"
+          }}
+        >
+          MENU
+        </span>
+      </div>
+    </div>
+  );
+};
 
 const PrintablePage = ({
   section,
@@ -264,7 +360,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
   const pageRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Smart grouping for A4 pages - Consolidated for fewer pages
-  const pages = [
+  const menuPages = [
     // Page 1: All Appetizers (Veg + Non-Veg)
     {
       section: {
@@ -377,6 +473,12 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
     },
   ];
 
+  // Pages array with cover page first
+  const pages = [
+    { type: "cover" as const, key: "cover" },
+    ...menuPages.map(p => ({ type: "menu" as const, ...p }))
+  ];
+
   const capturePageAtIndex = async (index: number): Promise<HTMLCanvasElement | null> => {
     // First make sure the page is visible for capture
     const tempDiv = document.createElement("div");
@@ -386,6 +488,72 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
     document.body.appendChild(tempDiv);
 
     const page = pages[index];
+    
+    // Handle cover page separately
+    if (page.type === "cover") {
+      const pageElement = document.createElement("div");
+      pageElement.innerHTML = `
+        <div style="font-family: 'Rajdhani', sans-serif; background: radial-gradient(ellipse at center, #0f0f18 0%, #0a0a0f 70%); width: ${A4_WIDTH}px; min-height: ${A4_HEIGHT}px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden;">
+          
+          <!-- Elegant Boundary System -->
+          <div style="position: absolute; inset: 0; pointer-events: none;">
+            <div style="position: absolute; inset: 12px; border: 1px solid rgba(55,65,81,0.6);"></div>
+            <div style="position: absolute; inset: 20px; border: 1px solid rgba(0,240,255,0.3);"></div>
+            <div style="position: absolute; top: 20px; left: 20px; width: 96px; height: 96px; border-left: 2px solid #00f0ff; border-top: 2px solid #00f0ff;"></div>
+            <div style="position: absolute; top: 20px; right: 20px; width: 96px; height: 96px; border-right: 2px solid #ff00ff; border-top: 2px solid #ff00ff;"></div>
+            <div style="position: absolute; bottom: 20px; left: 20px; width: 96px; height: 96px; border-left: 2px solid #ff00ff; border-bottom: 2px solid #ff00ff;"></div>
+            <div style="position: absolute; bottom: 20px; right: 20px; width: 96px; height: 96px; border-right: 2px solid #00f0ff; border-bottom: 2px solid #00f0ff;"></div>
+          </div>
+
+          <!-- Logo -->
+          <div style="margin-bottom: 32px; position: relative; z-index: 10;">
+            <img src="/live_logo_actual.jpg" style="height: 224px; width: auto; display: block; filter: brightness(1.2) contrast(1.1) saturate(1.2); box-shadow: 0 0 60px rgba(0,240,255,0.3), 0 0 120px rgba(255,0,255,0.2);" />
+          </div>
+
+          <!-- Tagline -->
+          <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 48px; position: relative; z-index: 10;">
+            <div style="height: 1px; width: 96px; background: linear-gradient(to right, transparent, #06b6d4, transparent);"></div>
+            <span style="font-size: 20px; letter-spacing: 0.3em; color: rgba(255,255,255,0.9); text-transform: uppercase; font-weight: bold; font-family: 'Orbitron', sans-serif; text-shadow: 0 0 20px rgba(0,240,255,0.5);">EAT . DRINK . CODE . REPEAT</span>
+            <div style="height: 1px; width: 96px; background: linear-gradient(to left, transparent, #d946ef, transparent);"></div>
+          </div>
+
+          <!-- Decorative Utensils & Binary -->
+          <div style="display: flex; flex-direction: column; align-items: center; opacity: 0.6; position: relative; z-index: 10;">
+            <div style="display: flex; gap: 12px; font-size: 30px; color: rgba(255,255,255,0.8);">
+              <span>🍴</span>
+              <span>🥄</span>
+            </div>
+            <div style="margin-top: 16px; font-size: 10px; color: rgba(6,182,212,0.6); letter-spacing: 0.2em; font-family: monospace;">00110101001111010110110011</div>
+            <div style="font-size: 10px; color: rgba(217,70,239,0.6); letter-spacing: 0.2em; font-family: monospace;">01010101101101010111111011</div>
+          </div>
+
+          <!-- Menu Text at Bottom -->
+          <div style="position: absolute; bottom: 64px; left: 0; right: 0; text-align: center; z-index: 10;">
+            <span style="font-size: 48px; font-weight: bold; letter-spacing: 0.5em; text-transform: uppercase; font-family: 'Orbitron', sans-serif; background: linear-gradient(90deg, #00f0ff, #ff00ff, #00f0ff); background-size: 200% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">MENU</span>
+          </div>
+        </div>
+      `;
+      tempDiv.appendChild(pageElement);
+
+      try {
+        const canvas = await html2canvas(pageElement.firstElementChild as HTMLElement, {
+          scale: 2,
+          backgroundColor: "#0a0a0f",
+          useCORS: true,
+          logging: false,
+          width: A4_WIDTH,
+          height: A4_HEIGHT,
+        });
+        document.body.removeChild(tempDiv);
+        return canvas;
+      } catch (error) {
+        console.error("Canvas capture error:", error);
+        document.body.removeChild(tempDiv);
+        return null;
+      }
+    }
+
+    // Menu page handling
     const accentColor = page.variant === "cyan" ? "#00f0ff" : page.variant === "magenta" ? "#ff00ff" : "#ffd700";
 
     // Auto-detect Veg/Non-Veg for PDF generation
@@ -437,8 +605,8 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
         </div>
 
         <!-- Content - Two Column Layout for A4 -->
-        <div style="flex: 1; padding-left: 40px; padding-right: 40px; padding-bottom: 20px;">
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <div style="flex: 1; padding-left: 32px; padding-right: 32px; padding-bottom: 20px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
           ${page.section.categories.map((category, catIdx) => `
             <div style="margin-bottom: 16px; break-inside: avoid;">
               <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px; padding-bottom: 3px; position: relative;">
@@ -447,42 +615,42 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                 <h3 style="font-size: 11px; font-weight: bold; letter-spacing: 0.12em; text-transform: uppercase; color: ${accentColor}; margin: 0;">${escapeHtml(category.title)}</h3>
               </div>
               ${category.items[0]?.sizes ? `
-                <div style="display: flex; justify-content: flex-end; gap: 12px; padding: 0 8px 6px; border-bottom: 1px solid rgba(31,41,55,0.8);">
+                <div style="display: flex; justify-content: flex-end; gap: 6px; padding: 0 6px 6px; border-bottom: 1px solid rgba(31,41,55,0.8);">
                   ${category.items[0].sizes.length === 4 ? `
-                    <span style="font-size: 8px; color: #9ca3af; text-align: right; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; width: 36px;">30ml</span>
-                    <span style="font-size: 8px; color: #9ca3af; text-align: right; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; width: 36px;">60ml</span>
-                    <span style="font-size: 8px; color: #9ca3af; text-align: right; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; width: 36px;">90ml</span>
-                    <span style="font-size: 8px; color: #9ca3af; text-align: right; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; width: 36px;">180ml</span>
+                    <span style="font-size: 7px; color: #9ca3af; text-align: right; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; width: 30px;">30ml</span>
+                    <span style="font-size: 7px; color: #9ca3af; text-align: right; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; width: 30px;">60ml</span>
+                    <span style="font-size: 7px; color: #9ca3af; text-align: right; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; width: 30px;">90ml</span>
+                    <span style="font-size: 7px; color: #9ca3af; text-align: right; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; width: 30px;">180ml</span>
                   ` : `
-                    ${category.items[0].sizes.map((_, i) => `<span style="font-size: 8px; color: #9ca3af; text-align: right; width: 36px;">Size ${i + 1}</span>`).join("")}
+                    ${category.items[0].sizes.map((_, i) => `<span style="font-size: 7px; color: #9ca3af; text-align: right; width: 30px;">Size ${i + 1}</span>`).join("")}
                   `}
                 </div>
               ` : category.items[0]?.halfPrice ? `
-                <div style="display: flex; justify-content: flex-end; gap: 10px; padding: 0 8px 6px; border-bottom: 1px solid rgba(31,41,55,0.8);">
-                  <span style="font-size: 8px; color: #9ca3af; text-align: right; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;">Half</span>
-                  <span style="font-size: 8px; color: #9ca3af; text-align: right; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;">Full</span>
+                <div style="display: flex; justify-content: flex-end; gap: 8px; padding: 0 6px 6px; border-bottom: 1px solid rgba(31,41,55,0.8);">
+                  <span style="font-size: 7px; color: #9ca3af; text-align: right; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">Half</span>
+                  <span style="font-size: 7px; color: #9ca3af; text-align: right; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">Full</span>
                 </div>
               ` : ""}
               <div style="display: flex; flex-direction: column; margin-top: 3px;">
                 ${category.items.map((item, idx) => `
-                  <div style="padding: 5px 8px; ${idx % 2 === 0 ? "background: rgba(255,255,255,0.015);" : ""}">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
-                      <div style="flex: 1; min-width: 0;">
-                        <h4 style="font-size: 11px; font-weight: 600; color: white; letter-spacing: 0.03em; text-transform: uppercase; margin: 0; line-height: 1.3;">${escapeHtml(item.name)}</h4>
-                        ${item.description ? `<p style="font-size: 8px; color: #9ca3af; margin: 2px 0 0 0; font-style: italic; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(item.description)}</p>` : ""}
+                  <div style="padding: 4px 6px; ${idx % 2 === 0 ? "background: rgba(255,255,255,0.015);" : ""}">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 4px;">
+                      <div style="flex: 1; min-width: 0; max-width: 65%;">
+                        <h4 style="font-size: 10px; font-weight: 600; color: white; letter-spacing: 0.02em; text-transform: uppercase; margin: 0; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(item.name)}</h4>
+                        ${item.description ? `<p style="font-size: 7px; color: #9ca3af; margin: 1px 0 0 0; font-style: italic; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(item.description)}</p>` : ""}
                       </div>
                       <div style="flex-shrink: 0; text-align: right;">
                         ${item.sizes ? `
-                          <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                            ${item.sizes.map(size => `<span style="font-size: 10px; font-weight: 500; color: #fbbf24; width: 36px; text-align: right;">${escapeHtml(size)}</span>`).join("")}
+                          <div style="display: flex; gap: 6px; justify-content: flex-end;">
+                            ${item.sizes.map(size => `<span style="font-size: 9px; font-weight: 500; color: #fbbf24; width: 30px; text-align: right;">${escapeHtml(size)}</span>`).join("")}
                           </div>
                         ` : item.halfPrice && item.fullPrice ? `
-                          <div style="display: flex; gap: 10px; align-items: center; justify-content: flex-end;">
-                            <span style="font-size: 10px; font-weight: 500; color: #fbbf24;">${escapeHtml(item.halfPrice)}</span>
-                            <span style="font-size: 10px; font-weight: 500; color: #fbbf24;">${escapeHtml(item.fullPrice)}</span>
+                          <div style="display: flex; gap: 8px; align-items: center; justify-content: flex-end;">
+                            <span style="font-size: 9px; font-weight: 500; color: #fbbf24;">${escapeHtml(item.halfPrice)}</span>
+                            <span style="font-size: 9px; font-weight: 500; color: #fbbf24;">${escapeHtml(item.fullPrice)}</span>
                           </div>
                         ` : `
-                          <span style="font-size: 11px; font-weight: 600; color: #fbbf24;">${escapeHtml(item.price)}</span>
+                          <span style="font-size: 10px; font-weight: 600; color: #fbbf24;">${escapeHtml(item.price)}</span>
                         `}
                       </div>
                     </div>
@@ -659,11 +827,14 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
         return;
       }
 
+      const currentPageData = pages[currentPage];
+      const pageTitle = currentPageData.type === "cover" ? "Cover" : currentPageData.section.title;
+      
       printWindow.document.write(`
         <!DOCTYPE html>
         <html>
           <head>
-            <title>Menu - ${pages[currentPage].section.title}</title>
+            <title>Menu - ${pageTitle}</title>
             <style>
               @media print {
                 body { margin: 0; padding: 0; }
@@ -686,13 +857,18 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
     }
   };
 
+  const getCurrentPageTitle = () => {
+    const currentPageData = pages[currentPage];
+    return currentPageData.type === "cover" ? "Cover Page" : currentPageData.section.title;
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-5xl h-[90vh] bg-background border-border p-0 flex flex-col">
         <DialogHeader className="p-4 border-b border-border flex-shrink-0">
           <div className="flex items-center justify-between">
             <DialogTitle className="font-orbitron text-foreground">
-              Print Preview - {pages[currentPage].section.title}
+              Print Preview - {getCurrentPageTitle()}
             </DialogTitle>
             <Button variant="ghost" size="icon" onClick={onClose}>
               <X className="w-4 h-4" />
@@ -704,14 +880,18 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
         <div className="flex-1 overflow-auto p-4 bg-muted/30">
           <div className="flex justify-center">
             <div className="shadow-2xl transform scale-[0.5] origin-top">
-              <PrintablePage
-                section={pages[currentPage].section}
-                pageRef={{ current: null }}
-                variant={pages[currentPage].variant}
-                pageNumber={currentPage + 1}
-                totalPages={pages.length}
-                isFirstPage={pages[currentPage].isFirstPage}
-              />
+              {pages[currentPage].type === "cover" ? (
+                <CoverPage pageRef={{ current: null }} />
+              ) : (
+                <PrintablePage
+                  section={pages[currentPage].section}
+                  pageRef={{ current: null }}
+                  variant={pages[currentPage].variant}
+                  pageNumber={currentPage + 1}
+                  totalPages={pages.length}
+                  isFirstPage={pages[currentPage].isFirstPage}
+                />
+              )}
             </div>
           </div>
         </div>
