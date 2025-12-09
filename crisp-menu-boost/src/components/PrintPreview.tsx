@@ -181,9 +181,9 @@ const CoverPage = ({
       <div className="relative z-10 flex flex-col items-center">
         <div className="relative mb-8">
           <img
-            src={`/live_header_logo.png?v=${Date.now()}`}
+            src={`/live_main_logo.jpg?v=${Date.now()}`}
             alt="LIVE - Bar & Kitchen"
-            className="relative w-[400px] h-auto drop-shadow-2xl"
+            className="relative w-[500px] h-auto drop-shadow-2xl"
             style={{ filter: "brightness(1.1) contrast(1.1)" }}
           />
         </div>
@@ -317,9 +317,9 @@ const PrintablePage = ({
           {/* Logo Section */}
           <div className="flex flex-col items-center">
             <img
-              src={`/live_header_logo.png?v=${Date.now()}`}
+              src={`/live_main_logo.jpg?v=${Date.now()}`}
               alt="LIVE - Bar & Kitchen"
-              className="h-16 w-auto"
+              className="h-20 w-auto"
               style={{ filter: "brightness(1.1) contrast(1.05)" }}
             />
           </div>
@@ -585,7 +585,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
           <!-- Logo Section -->
           <div style="position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;">
             <div style="position: relative; margin-bottom: 32px;">
-              <img src="/live_header_logo.png" alt="LIVE - Bar & Kitchen" style="width: 400px; height: auto; display: block; filter: brightness(1.1) contrast(1.1);" />
+              <img src="/live_main_logo.jpg" alt="LIVE - Bar & Kitchen" style="width: 500px; height: auto; display: block; filter: brightness(1.1) contrast(1.1);" />
             </div>
 
             <!-- Divider -->
@@ -671,7 +671,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
           <div style="display: flex; align-items: center; justify-content: center; gap: 24px;">
             <div style="flex: 1; max-width: 120px; height: 1px; background: linear-gradient(90deg, transparent, ${accentColor}60);"></div>
             <div style="display: flex; flex-direction: column; align-items: center;">
-              <img src="/live_header_logo.png" alt="LIVE - Bar & Kitchen" style="height: 64px; width: auto; display: block; filter: brightness(1.1) contrast(1.05);" />
+              <img src="/live_main_logo.jpg" alt="LIVE - Bar & Kitchen" style="height: 80px; width: auto; display: block; filter: brightness(1.1) contrast(1.05);" />
             </div>
             <div style="flex: 1; max-width: 120px; height: 1px; background: linear-gradient(-90deg, transparent, ${accentColor}60);"></div>
           </div>
