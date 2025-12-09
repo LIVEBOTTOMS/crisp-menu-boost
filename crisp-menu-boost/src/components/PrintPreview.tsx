@@ -562,8 +562,87 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
     const showDietIcon = isVeg || isNonVeg;
 
     const pageElement = document.createElement("div");
-    // A4 Dimensions: 210mm x 297mm (~794px x 1123px at 96dpi)
-    pageElement.innerHTML = `
+
+    // Check if this is the cover page
+    if ((page as any).isCover) {
+      // Cover Page HTML
+      pageElement.innerHTML = `
+        <div style="font-family: 'Rajdhani', sans-serif; background: #0a0a0f; background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px); background-size: 40px 40px; width: 794px; min-height: 1123px; position: relative; display: flex; flex-direction: column; overflow: hidden; align-items: center; justify-content: center;">
+          
+          <!-- Enhanced Border Frame -->
+          <div style="position: absolute; inset: 0; pointer-events: none;">
+            <div style="position: absolute; inset: 12px; border: 2px solid ${accentColor}60; box-shadow: inset 0 0 50px ${accentColor}15;"></div>
+            
+            <!-- Corner Accents -->
+            <div style="position: absolute; top: 12px; left: 12px; width: 128px; height: 128px;">
+              <div style="position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, ${accentColor}, transparent);"></div>
+              <div style="position: absolute; top: 0; left: 0; height: 100%; width: 4px; background: linear-gradient(180deg, ${accentColor}, transparent);"></div>
+            </div>
+            <div style="position: absolute; top: 12px; right: 12px; width: 128px; height: 128px;">
+              <div style="position: absolute; top: 0; right: 0; width: 100%; height: 4px; background: linear-gradient(-90deg, ${accentColor}, transparent);"></div>
+              <div style="position: absolute; top: 0; right: 0; height: 100%; width: 4px; background: linear-gradient(180deg, ${accentColor}, transparent);"></div>
+            </div>
+            <div style="position: absolute; bottom: 12px; left: 12px; width: 128px; height: 128px;">
+              <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, ${accentColor}, transparent);"></div>
+              <div style="position: absolute; bottom: 0; left: 0; height: 100%; width: 4px; background: linear-gradient(0deg, ${accentColor}, transparent);"></div>
+            </div>
+            <div style="position: absolute; bottom: 12px; right: 12px; width: 128px; height: 128px;">
+              <div style="position: absolute; bottom: 0; right: 0; width: 100%; height: 4px; background: linear-gradient(-90deg, ${accentColor}, transparent);"></div>
+              <div style="position: absolute; bottom: 0; right: 0; height: 100%; width: 4px; background: linear-gradient(0deg, ${accentColor}, transparent);"></div>
+            </div>
+          </div>
+
+          <!-- Logo Section -->
+          <div style="position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;">
+            <div style="position: relative; margin-bottom: 48px;">
+              <img src="/live_cover_logo.jpg" alt="LIVE - Bar & Kitchen" style="width: 600px; height: auto; display: block; filter: brightness(1.1) contrast(1.1);" />
+            </div>
+
+            <!-- Divider -->
+            <div style="display: flex; align-items: center; gap: 24px; margin-bottom: 32px;">
+              <div style="width: 128px; height: 2px; background: linear-gradient(90deg, transparent, ${accentColor}, transparent);"></div>
+              <div style="width: 16px; height: 16px; transform: rotate(45deg); background-color: ${accentColor}; box-shadow: 0 0 20px ${accentColor};"></div>
+              <div style="width: 128px; height: 2px; background: linear-gradient(-90deg, transparent, ${accentColor}, transparent);"></div>
+            </div>
+
+            <!-- Restaurant Info -->
+            <div style="text-align: center;">
+              <h2 style="font-size: 32px; font-weight: bold; letter-spacing: 0.3em; color: white; text-transform: uppercase; font-family: 'Cinzel', serif; margin: 0 0 24px 0;">
+                Bar & Kitchen
+              </h2>
+              
+              <div style="margin-bottom: 24px;">
+                <p style="font-size: 16px; letter-spacing: 0.2em; color: #d1d5db; text-transform: uppercase; font-weight: 500; margin: 0 0 8px 0;">
+                  Premium Dining & Spirits
+                </p>
+                <p style="font-size: 14px; letter-spacing: 0.15em; color: #9ca3af; margin: 0;">
+                  Pune, Maharashtra
+                </p>
+              </div>
+
+              <!-- Contact Information -->
+              <div style="padding-top: 24px; border-top: 1px solid rgba(55, 65, 81, 0.5);">
+                <p style="font-size: 14px; color: #22d3ee; letter-spacing: 0.1em; font-family: 'Orbitron', sans-serif; margin: 0 0 12px 0;">
+                  www.livebar.in
+                </p>
+                <p style="font-size: 12px; color: #6b7280; letter-spacing: 0.05em; margin: 0;">
+                  Reservations: +91 XXXX XXXXXX
+                </p>
+              </div>
+
+              <!-- Year -->
+              <div style="padding-top: 32px;">
+                <p style="font-size: 12px; letter-spacing: 0.25em; color: #4b5563; text-transform: uppercase; margin: 0;">
+                  Menu • ${new Date().getFullYear()}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    } else {
+      // A4 Dimensions: 210mm x 297mm (~794px x 1123px at 96dpi)
+      pageElement.innerHTML = `
       <div style="font-family: 'Rajdhani', sans-serif; background: #0a0a0f; background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px); background-size: 40px 40px; width: 794px; min-height: 1123px; position: relative; display: flex; flex-direction: column; overflow: hidden;">
         
         <!-- World-Class Boundary System A4 -->
@@ -710,6 +789,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
         </div>
       </div>
     `;
+    }
     tempDiv.appendChild(pageElement);
 
     // Wait for images to load explicitly to ensure they are captured
