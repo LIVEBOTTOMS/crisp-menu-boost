@@ -179,12 +179,11 @@ const CoverPage = ({
 
       {/* Logo Section */}
       <div className="relative z-10 flex flex-col items-center">
-        <div className="relative mb-12">
-          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 via-magenta-500/20 to-cyan-500/20 blur-3xl animate-pulse" />
+        <div className="relative mb-8">
           <img
-            src="/live_cover_logo.jpg"
+            src={`/live_header_logo.png?v=${Date.now()}`}
             alt="LIVE - Bar & Kitchen"
-            className="relative w-[600px] h-auto drop-shadow-2xl"
+            className="relative w-[400px] h-auto drop-shadow-2xl"
             style={{ filter: "brightness(1.1) contrast(1.1)" }}
           />
         </div>
@@ -318,7 +317,7 @@ const PrintablePage = ({
           {/* Logo Section */}
           <div className="flex flex-col items-center">
             <img
-              src="/live_header_logo.png"
+              src={`/live_header_logo.png?v=${Date.now()}`}
               alt="LIVE - Bar & Kitchen"
               className="h-16 w-auto"
               style={{ filter: "brightness(1.1) contrast(1.05)" }}
@@ -585,8 +584,8 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
 
           <!-- Logo Section -->
           <div style="position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;">
-            <div style="position: relative; margin-bottom: 48px;">
-              <img src="/live_cover_logo.jpg" alt="LIVE - Bar & Kitchen" style="width: 600px; height: auto; display: block; filter: brightness(1.1) contrast(1.1);" />
+            <div style="position: relative; margin-bottom: 32px;">
+              <img src="/live_header_logo.png" alt="LIVE - Bar & Kitchen" style="width: 400px; height: auto; display: block; filter: brightness(1.1) contrast(1.1);" />
             </div>
 
             <!-- Divider -->
