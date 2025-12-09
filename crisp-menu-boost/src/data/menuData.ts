@@ -6,6 +6,8 @@ export interface MenuItem {
   fullPrice?: string;
   sizes?: string[];
   image?: string;
+  isChefSpecial?: boolean;
+  isBestSeller?: boolean;
 }
 
 export interface MenuCategory {
@@ -32,14 +34,14 @@ export const snacksAndStarters: MenuSection = {
         { name: "Veg Crispie", price: "₹150", description: "Crunchy vegetable fritters with house-made green chutney" },
         { name: "Paneer Pakoda", price: "₹194", description: "Cottage cheese cubes in spiced gram flour coating" },
         { name: "Veg Cutlet", price: "₹180", description: "Hand-pressed mixed vegetable patties, herb-crusted" },
-        { name: "Cheese Pakoda", price: "₹213", description: "Melting cheese encased in crispy golden batter" },
+        { name: "Cheese Pakoda", price: "₹213", description: "Melting cheese encased in crispy golden batter", isBestSeller: true },
         { name: "Cheese Balls", price: "₹200", description: "Creamy cheese spheres with a crunchy breadcrumb shell" },
         { name: "French Fries", price: "₹160", description: "Hand-cut potatoes, twice-fried for extra crispiness" },
         { name: "Corn Crisipie", price: "₹140", description: "Sweet corn kernels flash-fried with aromatic spices" },
         { name: "Matki Fry", price: "₹150", description: "Sprouted moth beans sautéed with fresh herbs" },
-        { name: "Kaju Masala Fry", price: "₹309", description: "Premium cashews tossed in aromatic spices" },
+        { name: "Kaju Masala Fry", price: "₹309", description: "Premium cashews tossed in aromatic spices", isChefSpecial: true },
         { name: "Onion Rings", price: "₹173", description: "Crispy beer-battered onion rings with tangy dip" },
-        { name: "Cheese Nachos", price: "₹290", description: "Tortilla chips loaded with melted cheese & jalapeños" },
+        { name: "Cheese Nachos", price: "₹290", description: "Tortilla chips loaded with melted cheese & jalapeños", isBestSeller: true },
         { name: "Peri Peri Fries", price: "₹212", description: "Spicy peri-peri seasoned crispy fries" },
         { name: "Cheese French Fries", price: "₹241", description: "Golden fries smothered in melted cheese sauce" },
       ],
@@ -55,7 +57,7 @@ export const snacksAndStarters: MenuSection = {
         { name: "Chicken Tikka", price: "₹280", description: "Boneless chunks in saffron-kissed tikka marinade" },
         { name: "Chicken Kabab", price: "₹260", description: "Hand-ground seekh kababs with fresh mint" },
         { name: "Chicken Chatpata", price: "₹240", description: "Tangy spiced chicken bites with tamarind drizzle" },
-        { name: "Chicken Rara", price: "₹250", description: "Keema-coated chicken in rich tomato gravy" },
+        { name: "Chicken Rara", price: "₹250", description: "Keema-coated chicken in rich tomato gravy", isBestSeller: true },
         { name: "Chicken Khara", price: "₹240", description: "Dry-rubbed with crushed peppercorns & whole spices" },
         { name: "Chicken Tawa", price: "₹280", description: "Griddle-seared with bell peppers & onions" },
         { name: "Paneer 65", price: "₹220", description: "Cottage cheese in fiery Hyderabadi-style batter" },
@@ -65,7 +67,7 @@ export const snacksAndStarters: MenuSection = {
         { name: "Chicken Nachos", price: "₹309", description: "Loaded nachos with spiced chicken & cheese" },
         { name: "Chicken Nuggets", price: "₹338", description: "Crispy breaded chicken bites with dipping sauce" },
         { name: "Fish Finger", price: "₹357", description: "Tender fish strips in golden breadcrumb coating" },
-        { name: "Chicken 65", price: "₹452", description: "Spicy South Indian-style fried chicken" },
+        { name: "Chicken 65", price: "₹452", description: "Spicy South Indian-style fried chicken", isBestSeller: true },
       ],
     },
   ],
@@ -86,7 +88,7 @@ export const foodMenu: MenuSection = {
           description: "Rustic preparation with black stone flower & wild spices"
         },
         { name: "Slow-Cooked Butter Chicken Handi", halfPrice: "₹529", fullPrice: "₹899", description: "Velvety tomato-cream gravy with charred chicken" },
-        { name: "Royal Murgh Musallam Handi", halfPrice: "₹579", fullPrice: "₹949", description: "Whole chicken stuffed with aromatic rice & eggs" },
+        { name: "Royal Murgh Musallam Handi", halfPrice: "₹579", fullPrice: "₹949", description: "Whole chicken stuffed with aromatic rice & eggs", isChefSpecial: true },
       ],
     },
     {
@@ -198,7 +200,7 @@ export const beveragesMenu: MenuSection = {
       title: "Aged & Spiced Rums",
       icon: "🥃",
       items: [
-        { name: "Old Monk", sizes: ["₹169", "₹289", "₹399", "₹749"], description: "Legendary 7-year aged dark rum with vanilla notes" },
+        { name: "Old Monk", sizes: ["₹169", "₹289", "₹399", "₹749"], description: "Legendary 7-year aged dark rum with vanilla, oak & caramelized sugar notes", isBestSeller: true },
         { name: "Bacardi White", sizes: ["₹183", "₹319", "₹469", "₹899"], description: "Light & crisp, perfect for cocktails" },
         { name: "Bacardi Black", sizes: ["₹199", "₹349", "₹499", "₹949"], description: "Rich molasses flavor with oak undertones" },
         { name: "Bacardi Lemon", sizes: ["₹209", "₹369", "₹529", "₹979"], description: "Zesty citrus twist on classic rum" },
@@ -238,12 +240,12 @@ export const beveragesMenu: MenuSection = {
         { name: "100 Pipers", sizes: ["₹299", "₹598", "₹897", "₹1,794"], description: "Smooth Scotch with fruity notes" },
         { name: "Jameson Irish Whiskey", sizes: ["₹449", "₹898", "₹1,347", "₹2,694"], description: "Triple-distilled with signature Irish smoothness" },
         { name: "Johnnie Walker Red Label", sizes: ["₹429", "₹858", "₹1,287", "₹2,574"], description: "Bold & vibrant with cinnamon spice" },
-        { name: "Johnnie Walker Black Label", sizes: ["₹599", "₹1,198", "₹1,797", "₹3,594"], description: "12-year aged premium Scotch" },
-        { name: "Chivas Regal", sizes: ["₹649", "₹1,298", "₹1,947", "₹3,894"], description: "Luxury Scotch with honey & vanilla" },
-        { name: "Jack Daniel's", sizes: ["₹549", "₹1,098", "₹1,647", "₹3,294"], description: "Tennessee whiskey, charcoal mellowed" },
+        { name: "Johnnie Walker Black Label", sizes: ["₹599", "₹1,198", "₹1,797", "₹3,594"], description: "12-year aged blend with notes of dark fruit, vanilla & signature Islay smokiness", isChefSpecial: true },
+        { name: "Chivas Regal", sizes: ["₹649", "₹1,298", "₹1,947", "₹3,894"], description: "Luxury 12-year Scotch with wild honey, vanilla & subtle hazelnut finish", isChefSpecial: true },
+        { name: "Jack Daniel's", sizes: ["₹549", "₹1,098", "₹1,647", "₹3,294"], description: "Tennessee whiskey mellowed drop by drop through 10 feet of sugar maple charcoal", isBestSeller: true },
         { name: "Jim Beam Bourbon", sizes: ["₹449", "₹898", "₹1,347", "₹2,694"], description: "Kentucky straight bourbon whiskey" },
         { name: "Monkey Shoulder", sizes: ["₹499", "₹998", "₹1,497", "₹2,994"], description: "Triple malt Scotch whisky" },
-        { name: "Glenfiddich 12Y", sizes: ["₹899", "₹1,798", "₹2,697", "₹5,394"], description: "Single malt Speyside excellence" },
+        { name: "Glenfiddich 12Y", sizes: ["₹899", "₹1,798", "₹2,697", "₹5,394"], description: "Single malt with fresh pear, subtle oak & butterscotch. The world's most awarded single malt", isChefSpecial: true },
         { name: "Talisker 10Y", sizes: ["₹849", "₹1,698", "₹2,547", "₹5,094"], description: "Isle of Skye single malt" },
       ],
     },

@@ -29,12 +29,39 @@ const MenuItemRow = ({ item, isEven }: { item: MenuItem; isEven: boolean }) => {
   const hasHalfFull = item.halfPrice && item.fullPrice;
 
   return (
-    <div className={`py-3 px-4 ${isEven ? "bg-white/[0.02]" : ""}`}>
+    <div className={`py-2 px-4 ${isEven ? "bg-white/[0.02]" : ""}`}>
       <div className="flex justify-between items-start gap-4">
         <div className="flex-1">
-          <h4 className="text-[15px] font-semibold text-white tracking-wide uppercase">
-            {item.name}
-          </h4>
+          <div className="flex items-center gap-2 flex-wrap">
+            <h4 className="text-[15px] font-semibold text-white tracking-wide uppercase">
+              {item.name}
+            </h4>
+            {item.isChefSpecial && (
+              <span
+                className="px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider rounded"
+                style={{
+                  background: "linear-gradient(135deg, #ff00ff, #ff6b9d)",
+                  color: "#fff",
+                  boxShadow: "0 0 8px rgba(255,0,255,0.5)"
+                }}
+              >
+                ⭐ Chef's Special
+              </span>
+            )}
+            {item.isBestSeller && (
+              <span
+                className="px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider rounded"
+                style={{
+                  background: "linear-gradient(135deg, #00f0ff, #0077ff)",
+                  color: "#000",
+                  fontWeight: "800",
+                  boxShadow: "0 0 8px rgba(0,240,255,0.5)"
+                }}
+              >
+                🔥 Best Seller
+              </span>
+            )}
+          </div>
           {item.description && (
             <p className="text-[11px] text-gray-400 mt-1 italic leading-relaxed">
               {item.description}
@@ -82,7 +109,7 @@ const CategoryBlock = ({
   dietIcon?: "veg" | "non-veg" | null;
 }) => {
   return (
-    <div className="mb-6">
+    <div className="mb-4">
       {/* Category Header with Holographic Gradient */}
       <div className="flex items-center gap-3 mb-3 pb-2 relative">
         <div
@@ -238,7 +265,8 @@ const PrintablePage = ({
   variant,
   pageNumber,
   totalPages,
-  isCover = false
+  isCover = false,
+  isBackCover = false
 }: {
   section: MenuSectionType;
   pageRef: React.RefObject<HTMLDivElement>;
@@ -246,12 +274,103 @@ const PrintablePage = ({
   pageNumber: number;
   totalPages: number;
   isCover?: boolean;
+  isBackCover?: boolean;
 }) => {
   const accentColor = variant === "cyan" ? "#00f0ff" : variant === "magenta" ? "#ff00ff" : "#ffd700";
 
   // Render cover page
   if (isCover) {
     return <CoverPage pageRef={pageRef} variant={variant} />;
+  }
+
+  // Render back cover page
+  if (isBackCover) {
+    return (
+      <div
+        ref={pageRef}
+        className="bg-[#0a0a0f] w-[794px] min-h-[1123px] relative flex flex-col overflow-hidden items-center justify-center"
+        style={{
+          fontFamily: "'Rajdhani', sans-serif",
+          backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px)",
+          backgroundSize: "40px 40px"
+        }}
+      >
+        {/* Border Frame */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-3 border-2" style={{ borderColor: `${accentColor}60`, boxShadow: `inset 0 0 50px ${accentColor}15` }} />
+          {/* Corners */}
+          <div className="absolute top-3 left-3 w-32 h-32">
+            <div className="absolute top-0 left-0 w-full h-1" style={{ background: `linear-gradient(90deg, ${accentColor}, transparent)` }} />
+            <div className="absolute top-0 left-0 h-full w-1" style={{ background: `linear-gradient(180deg, ${accentColor}, transparent)` }} />
+          </div>
+          <div className="absolute top-3 right-3 w-32 h-32">
+            <div className="absolute top-0 right-0 w-full h-1" style={{ background: `linear-gradient(-90deg, ${accentColor}, transparent)` }} />
+            <div className="absolute top-0 right-0 h-full w-1" style={{ background: `linear-gradient(180deg, ${accentColor}, transparent)` }} />
+          </div>
+          <div className="absolute bottom-3 left-3 w-32 h-32">
+            <div className="absolute bottom-0 left-0 w-full h-1" style={{ background: `linear-gradient(90deg, ${accentColor}, transparent)` }} />
+            <div className="absolute bottom-0 left-0 h-full w-1" style={{ background: `linear-gradient(0deg, ${accentColor}, transparent)` }} />
+          </div>
+          <div className="absolute bottom-3 right-3 w-32 h-32">
+            <div className="absolute bottom-0 right-0 w-full h-1" style={{ background: `linear-gradient(-90deg, ${accentColor}, transparent)` }} />
+            <div className="absolute bottom-0 right-0 h-full w-1" style={{ background: `linear-gradient(0deg, ${accentColor}, transparent)` }} />
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 flex flex-col items-center max-w-[650px] px-12 text-center">
+          {/* Story */}
+          <div className="mb-10">
+            <h2
+              className="text-3xl font-bold tracking-[0.2em] mb-6"
+              style={{
+                fontFamily: "'Cinzel', serif",
+                background: `linear-gradient(135deg, ${accentColor}, #fff)`,
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent"
+              }}
+            >
+              OUR STORY
+            </h2>
+            <div className="relative p-6 rounded-lg border border-white/5 bg-black/40">
+              <p className="text-gray-200 text-sm leading-8 tracking-wide font-light italic" style={{ fontFamily: "'Playfair Display', serif" }}>
+                "Food is the universal language that connects us all. It transcends borders, cultures, and differences, bringing us together around a shared table. At LIVE, we believe in the power of this connection. Every dish we serve is a chapter in our story, crafted with passion, tradition, and a touch of innovation. We invite you to savor the moment, share the joy, and create memories that linger long after the last bite."
+              </p>
+            </div>
+          </div>
+
+          {/* Location & Hours */}
+          <div className="w-full flex gap-8 mb-8">
+            <div className="flex-1 p-4 border border-gray-800/50 rounded bg-gray-900/20">
+              <h3 className="text-sm font-bold tracking-[0.2em] mb-2" style={{ color: accentColor, fontFamily: "'Orbitron', sans-serif" }}>📍 LOCATION</h3>
+              <p className="text-gray-400 text-xs leading-relaxed">Opp Pune Bakery, Wakad<br />Pune, Maharashtra</p>
+            </div>
+            <div className="flex-1 p-4 border border-gray-800/50 rounded bg-gray-900/20">
+              <h3 className="text-sm font-bold tracking-[0.2em] mb-2" style={{ color: accentColor, fontFamily: "'Orbitron', sans-serif" }}>🕐 HOURS</h3>
+              <p className="text-gray-400 text-xs">Mon - Sun: 11:00 AM - 12:00 AM</p>
+            </div>
+          </div>
+
+          {/* Contact */}
+          <div className="w-full mb-8">
+            <div className="pb-4 border-b border-gray-700/50 mb-4">
+              <h3 className="text-lg font-bold tracking-[0.2em] mb-2" style={{ color: accentColor, fontFamily: "'Orbitron', sans-serif" }}>RESERVATIONS</h3>
+              <p className="text-xl text-white font-light tracking-wider mb-1">+91 7507066880</p>
+              <p className="text-cyan-400 text-sm font-semibold tracking-wide" style={{ fontFamily: "'Orbitron', sans-serif" }}>www.livebar.in</p>
+            </div>
+            <div>
+              <p className="text-gray-300 text-sm mb-2">Follow our journey</p>
+              <h3 className="text-xl font-bold tracking-[0.2em]" style={{ color: accentColor, fontFamily: "'Orbitron', sans-serif" }}>@livebar.pune</h3>
+            </div>
+          </div>
+
+          {/* Tagline */}
+          <div className="mt-4">
+            <p className="text-[10px] tracking-[0.4em] text-cyan-400/60 font-semibold uppercase">Eat • Drink • Code • Repeat</p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -533,6 +652,16 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       variant: "cyan" as const,
       key: "refreshments"
     },
+    // Page 9: BACK COVER
+    {
+      section: {
+        title: "BACK COVER",
+        categories: []
+      },
+      variant: "cyan" as const,
+      key: "back-cover",
+      isBackCover: true
+    },
   ];
 
   const capturePageAtIndex = async (index: number): Promise<HTMLCanvasElement | null> => {
@@ -626,6 +755,82 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                   Menu • ${new Date().getFullYear()}
                 </p>
               </div>
+            </div>
+          </div>
+        </div>
+      `;
+    } else if ((page as any).isBackCover) {
+      // Back Cover Page HTML
+      pageElement.innerHTML = `
+        <div style="font-family: 'Rajdhani', sans-serif; background: #0a0a0f; background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px); background-size: 40px 40px; width: 794px; min-height: 1123px; position: relative; display: flex; flex-direction: column; overflow: hidden; align-items: center; justify-content: center;">
+          
+          <!-- Border Frame -->
+          <div style="position: absolute; inset: 0; pointer-events: none;">
+            <div style="position: absolute; inset: 12px; border: 2px solid ${accentColor}60; box-shadow: inset 0 0 50px ${accentColor}15;"></div>
+            <!-- Corners -->
+            <div style="position: absolute; top: 12px; left: 12px; width: 128px; height: 128px;">
+               <div style="position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, ${accentColor}, transparent);"></div>
+               <div style="position: absolute; top: 0; left: 0; height: 100%; width: 4px; background: linear-gradient(180deg, ${accentColor}, transparent);"></div>
+            </div>
+            <div style="position: absolute; top: 12px; right: 12px; width: 128px; height: 128px;">
+               <div style="position: absolute; top: 0; right: 0; width: 100%; height: 4px; background: linear-gradient(-90deg, ${accentColor}, transparent);"></div>
+               <div style="position: absolute; top: 0; right: 0; height: 100%; width: 4px; background: linear-gradient(180deg, ${accentColor}, transparent);"></div>
+            </div>
+            <div style="position: absolute; bottom: 12px; left: 12px; width: 128px; height: 128px;">
+               <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, ${accentColor}, transparent);"></div>
+               <div style="position: absolute; bottom: 0; left: 0; height: 100%; width: 4px; background: linear-gradient(0deg, ${accentColor}, transparent);"></div>
+            </div>
+            <div style="position: absolute; bottom: 12px; right: 12px; width: 128px; height: 128px;">
+               <div style="position: absolute; bottom: 0; right: 0; width: 100%; height: 4px; background: linear-gradient(-90deg, ${accentColor}, transparent);"></div>
+               <div style="position: absolute; bottom: 0; right: 0; height: 100%; width: 4px; background: linear-gradient(0deg, ${accentColor}, transparent);"></div>
+            </div>
+          </div>
+
+          <!-- Content -->
+          <div style="position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; max-width: 650px; padding: 0 48px; text-align: center;">
+            
+            <!-- Story -->
+            <div style="margin-bottom: 40px;">
+              <h2 style="font-size: 30px; font-weight: bold; letter-spacing: 0.2em; margin-bottom: 24px; font-family: 'Cinzel', serif; background: linear-gradient(135deg, ${accentColor}, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; color: ${accentColor};">
+                OUR STORY
+              </h2>
+              <div style="position: relative; padding: 24px 32px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.4);">
+                <p style="color: #e2e8f0; font-size: 14px; line-height: 2; letter-spacing: 0.05em; font-weight: 300; font-style: italic; font-family: 'Playfair Display', serif;">
+                  "Food is the universal language that connects us all. It transcends borders, cultures, and differences, bringing us together around a shared table. At LIVE, we believe in the power of this connection. Every dish we serve is a chapter in our story, crafted with passion, tradition, and a touch of innovation. We invite you to savor the moment, share the joy, and create memories that linger long after the last bite. Here's to good food, great company, and the beautiful tapestry of life woven one meal at a time."
+                </p>
+              </div>
+            </div>
+
+            <!-- Location & Hours Grid -->
+            <div style="width: 100%; display: flex; gap: 32px; margin-bottom: 32px;">
+              <!-- Location -->
+              <div style="flex: 1; padding: 16px; border: 1px solid rgba(31,41,55,0.5); border-radius: 4px; background: rgba(17,24,39,0.2);">
+                <h3 style="font-size: 14px; font-weight: bold; letter-spacing: 0.2em; margin-bottom: 8px; color: ${accentColor}; font-family: 'Orbitron', sans-serif;">📍 LOCATION</h3>
+                <p style="color: #9ca3af; font-size: 12px; line-height: 1.6;">Opp Pune Bakery, Wakad<br/>Pune, Maharashtra</p>
+              </div>
+              <!-- Hours -->
+              <div style="flex: 1; padding: 16px; border: 1px solid rgba(31,41,55,0.5); border-radius: 4px; background: rgba(17,24,39,0.2);">
+                <h3 style="font-size: 14px; font-weight: bold; letter-spacing: 0.2em; margin-bottom: 8px; color: ${accentColor}; font-family: 'Orbitron', sans-serif;">🕐 HOURS</h3>
+                <p style="color: #9ca3af; font-size: 12px;">Mon - Sun: 11:00 AM - 12:00 AM</p>
+              </div>
+            </div>
+
+            <!-- Contact & Social -->
+            <div style="width: 100%; margin-bottom: 32px;">
+               <div style="padding-bottom: 16px; border-bottom: 1px solid rgba(55,65,81,0.5); margin-bottom: 16px;">
+                 <h3 style="font-size: 18px; font-weight: bold; letter-spacing: 0.2em; margin-bottom: 8px; color: ${accentColor}; font-family: 'Orbitron', sans-serif;">RESERVATIONS</h3>
+                 <p style="font-size: 20px; color: white; font-weight: 300; letter-spacing: 0.1em; margin-bottom: 4px;">+91 7507066880</p>
+                 <p style="color: #22d3ee; font-size: 14px; font-weight: 600; letter-spacing: 0.05em; font-family: 'Orbitron', sans-serif;">www.livebar.in</p>
+               </div>
+               <div>
+                 <p style="color: #d1d5db; font-size: 14px; margin-bottom: 8px;">Follow our journey</p>
+                 <h3 style="font-size: 20px; font-weight: bold; letter-spacing: 0.2em; color: ${accentColor}; font-family: 'Orbitron', sans-serif;">@livebar.pune</h3>
+               </div>
+            </div>
+
+            <!-- Tagline -->
+            <div style="margin-top: 16px;">
+               <p style="font-size: 10px; letter-spacing: 0.4em; color: rgba(34,211,238,0.6); font-weight: 600; text-transform: uppercase;">Eat • Drink • Code • Repeat</p>
             </div>
           </div>
         </div>
@@ -984,6 +1189,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                 pageNumber={currentPage + 1}
                 totalPages={pages.length}
                 isCover={(pages[currentPage] as any).isCover}
+                isBackCover={(pages[currentPage] as any).isBackCover}
               />
             </div>
           </div>
