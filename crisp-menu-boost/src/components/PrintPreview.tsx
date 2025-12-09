@@ -134,20 +134,126 @@ const CategoryBlock = ({
   );
 };
 
+// Cover Page Component
+const CoverPage = ({
+  pageRef,
+  variant
+}: {
+  pageRef: React.RefObject<HTMLDivElement>;
+  variant: "cyan" | "magenta" | "gold";
+}) => {
+  const accentColor = variant === "cyan" ? "#00f0ff" : variant === "magenta" ? "#ff00ff" : "#ffd700";
+
+  return (
+    <div
+      ref={pageRef}
+      className="bg-[#0a0a0f] w-[794px] min-h-[1123px] relative flex flex-col overflow-hidden items-center justify-center"
+      style={{
+        fontFamily: "'Rajdhani', sans-serif",
+        backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px)",
+        backgroundSize: "40px 40px"
+      }}
+    >
+      {/* Enhanced Border Frame */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-[12px] border-2" style={{ borderColor: `${accentColor}60`, boxShadow: `inset 0 0 50px ${accentColor}15` }} />
+
+        {/* Animated Corner Accents */}
+        <div className="absolute top-[12px] left-[12px] w-32 h-32">
+          <div className="absolute top-0 left-0 w-full h-1" style={{ background: `linear-gradient(90deg, ${accentColor}, transparent)` }} />
+          <div className="absolute top-0 left-0 h-full w-1" style={{ background: `linear-gradient(180deg, ${accentColor}, transparent)` }} />
+        </div>
+        <div className="absolute top-[12px] right-[12px] w-32 h-32">
+          <div className="absolute top-0 right-0 w-full h-1" style={{ background: `linear-gradient(-90deg, ${accentColor}, transparent)` }} />
+          <div className="absolute top-0 right-0 h-full w-1" style={{ background: `linear-gradient(180deg, ${accentColor}, transparent)` }} />
+        </div>
+        <div className="absolute bottom-[12px] left-[12px] w-32 h-32">
+          <div className="absolute bottom-0 left-0 w-full h-1" style={{ background: `linear-gradient(90deg, ${accentColor}, transparent)` }} />
+          <div className="absolute bottom-0 left-0 h-full w-1" style={{ background: `linear-gradient(0deg, ${accentColor}, transparent)` }} />
+        </div>
+        <div className="absolute bottom-[12px] right-[12px] w-32 h-32">
+          <div className="absolute bottom-0 right-0 w-full h-1" style={{ background: `linear-gradient(-90deg, ${accentColor}, transparent)` }} />
+          <div className="absolute bottom-0 right-0 h-full w-1" style={{ background: `linear-gradient(0deg, ${accentColor}, transparent)` }} />
+        </div>
+      </div>
+
+      {/* Logo Section */}
+      <div className="relative z-10 flex flex-col items-center">
+        <div className="relative mb-12">
+          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 via-magenta-500/20 to-cyan-500/20 blur-3xl animate-pulse" />
+          <img
+            src="/live_cover_logo.jpg"
+            alt="LIVE - Bar & Kitchen"
+            className="relative w-[600px] h-auto drop-shadow-2xl"
+            style={{ filter: "brightness(1.1) contrast(1.1)" }}
+          />
+        </div>
+
+        {/* Divider */}
+        <div className="flex items-center gap-6 mb-8">
+          <div className="w-32 h-[2px]" style={{ background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)` }} />
+          <div className="w-4 h-4 rotate-45" style={{ backgroundColor: accentColor, boxShadow: `0 0 20px ${accentColor}` }} />
+          <div className="w-32 h-[2px]" style={{ background: `linear-gradient(-90deg, transparent, ${accentColor}, transparent)` }} />
+        </div>
+
+        {/* Restaurant Info */}
+        <div className="text-center space-y-6">
+          <h2 className="text-3xl font-bold tracking-[0.3em] text-white uppercase" style={{ fontFamily: "'Cinzel', serif" }}>
+            Bar & Kitchen
+          </h2>
+
+          <div className="space-y-2">
+            <p className="text-base tracking-[0.2em] text-gray-300 uppercase font-medium">
+              Premium Dining & Spirits
+            </p>
+            <p className="text-sm tracking-[0.15em] text-gray-400">
+              Pune, Maharashtra
+            </p>
+          </div>
+
+          {/* Contact Information */}
+          <div className="pt-6 space-y-3 border-t border-gray-700/50">
+            <p className="text-sm text-cyan-400 tracking-wider" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+              www.livebar.in
+            </p>
+            <p className="text-xs text-gray-500 tracking-wide">
+              Reservations: +91 XXXX XXXXXX
+            </p>
+          </div>
+
+          {/* QR Code Placeholder (Optional) */}
+          <div className="pt-8">
+            <p className="text-xs tracking-[0.25em] text-gray-600 uppercase">
+              Menu • {new Date().getFullYear()}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const PrintablePage = ({
   section,
   pageRef,
   variant,
   pageNumber,
-  totalPages
+  totalPages,
+  isCover = false
 }: {
   section: MenuSectionType;
   pageRef: React.RefObject<HTMLDivElement>;
   variant: "cyan" | "magenta" | "gold";
   pageNumber: number;
   totalPages: number;
+  isCover?: boolean;
 }) => {
   const accentColor = variant === "cyan" ? "#00f0ff" : variant === "magenta" ? "#ff00ff" : "#ffd700";
+
+  // Render cover page
+  if (isCover) {
+    return <CoverPage pageRef={pageRef} variant={variant} />;
+  }
 
   return (
     <div
@@ -323,8 +429,18 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
   const [isExporting, setIsExporting] = useState(false);
   const pageRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Optimized A4 page layout - 8 pages total with consolidated content
+  // Optimized A4 page layout - 9 pages total (1 cover + 8 menu pages)
   const pages = [
+    // Page 0: COVER PAGE
+    {
+      section: {
+        title: "COVER",
+        categories: []
+      },
+      variant: "cyan" as const,
+      key: "cover",
+      isCover: true
+    },
     // Page 1: ALL APPETIZERS (Veg + Non-Veg)
     {
       section: {
@@ -798,6 +914,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                 variant={pages[currentPage].variant}
                 pageNumber={currentPage + 1}
                 totalPages={pages.length}
+                isCover={(pages[currentPage] as any).isCover}
               />
             </div>
           </div>
