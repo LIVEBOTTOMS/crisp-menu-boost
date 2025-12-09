@@ -207,7 +207,7 @@ const CoverPage = ({
               Premium Dining & Spirits
             </p>
             <p className="text-sm tracking-[0.15em] text-gray-400">
-              Pune, Maharashtra
+              Opp Pune Bakery, Wakad, Pune
             </p>
           </div>
 
@@ -217,7 +217,7 @@ const CoverPage = ({
               www.livebar.in
             </p>
             <p className="text-xs text-gray-500 tracking-wide">
-              Reservations: +91 XXXX XXXXXX
+              Reservations: +91 7507066880
             </p>
           </div>
 
@@ -616,7 +616,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                   Premium Dining & Spirits
                 </p>
                 <p style="font-size: 14px; letter-spacing: 0.15em; color: #9ca3af; margin: 0;">
-                  Pune, Maharashtra
+                  Opp Pune Bakery, Wakad, Pune
                 </p>
               </div>
 
@@ -626,7 +626,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                   www.livebar.in
                 </p>
                 <p style="font-size: 12px; color: #6b7280; letter-spacing: 0.05em; margin: 0;">
-                  Reservations: +91 XXXX XXXXXX
+                  Reservations: +91 7507066880
                 </p>
               </div>
 
