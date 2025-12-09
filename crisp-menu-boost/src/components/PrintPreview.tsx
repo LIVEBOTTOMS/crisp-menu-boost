@@ -317,21 +317,12 @@ const PrintablePage = ({
 
           {/* Logo Section */}
           <div className="flex flex-col items-center">
-            <h1
-              className="text-5xl font-black tracking-[0.3em] mb-1"
-              style={{
-                fontFamily: "'Orbitron', sans-serif",
-                background: `linear-gradient(135deg, #00f0ff, #ff00ff, #ffd700)`,
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                textShadow: "0 0 30px rgba(0,240,255,0.3)"
-              }}
-            >
-              LIVE
-            </h1>
-            <p className="text-[9px] tracking-[0.4em] uppercase text-gray-400 font-medium">
-              Bar & Kitchen • Pune
-            </p>
+            <img
+              src="/live_header_logo.png"
+              alt="LIVE - Bar & Kitchen"
+              className="h-16 w-auto"
+              style={{ filter: "brightness(1.1) contrast(1.05)" }}
+            />
           </div>
 
           {/* Right Decorative Line */}
@@ -681,8 +672,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
           <div style="display: flex; align-items: center; justify-content: center; gap: 24px;">
             <div style="flex: 1; max-width: 120px; height: 1px; background: linear-gradient(90deg, transparent, ${accentColor}60);"></div>
             <div style="display: flex; flex-direction: column; align-items: center;">
-              <h1 style="font-size: 48px; font-family: 'Orbitron', sans-serif; font-weight: 900; letter-spacing: 0.3em; margin: 0 0 4px 0; background: linear-gradient(135deg, #00f0ff, #ff00ff, #ffd700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(0,240,255,0.3);">LIVE</h1>
-              <p style="font-size: 9px; letter-spacing: 0.4em; text-transform: uppercase; color: #9ca3af; font-weight: 500; margin: 0;">Bar & Kitchen • Pune</p>
+              <img src="/live_header_logo.png" alt="LIVE - Bar & Kitchen" style="height: 64px; width: auto; display: block; filter: brightness(1.1) contrast(1.05);" />
             </div>
             <div style="flex: 1; max-width: 120px; height: 1px; background: linear-gradient(-90deg, transparent, ${accentColor}60);"></div>
           </div>
