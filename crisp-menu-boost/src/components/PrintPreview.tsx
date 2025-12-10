@@ -266,7 +266,7 @@ const CoverPage = ({
           {/* Contact Information */}
           <div className="pt-6 space-y-3 border-t border-gray-700/50">
             <p className="text-sm text-cyan-400 tracking-wider" style={{ fontFamily: "'Orbitron', sans-serif" }}>
-              www.livebar.in
+              www.thelive.bar
             </p>
             <p className="text-xs text-gray-500 tracking-wide">
               Reservations: +91 7507066880
@@ -384,7 +384,7 @@ const PrintablePage = ({
             <div className="pb-4 border-b border-gray-700/50 mb-4">
               <h3 className="text-lg font-bold tracking-[0.2em] mb-2" style={{ color: accentColor, fontFamily: "'Orbitron', sans-serif" }}>RESERVATIONS</h3>
               <p className="text-xl text-white font-light tracking-wider mb-1">+91 7507066880</p>
-              <p className="text-cyan-400 text-sm font-semibold tracking-wide" style={{ fontFamily: "'Orbitron', sans-serif" }}>www.livebar.in</p>
+              <p className="text-cyan-400 text-sm font-semibold tracking-wide" style={{ fontFamily: "'Orbitron', sans-serif" }}>www.thelive.bar</p>
             </div>
             <div>
               <p className="text-gray-300 text-sm mb-2">Follow our journey</p>
@@ -537,6 +537,21 @@ const PrintablePage = ({
         </div>
       )}
 
+      {/* Daily Offers Banner */}
+      <div className="px-12 py-2 relative z-10">
+        <div
+          className="text-center py-2 px-4 rounded-full mx-auto max-w-fit"
+          style={{
+            background: "linear-gradient(135deg, rgba(0,240,255,0.15), rgba(255,0,255,0.15))",
+            border: "1px solid rgba(0,240,255,0.3)"
+          }}
+        >
+          <p className="text-[10px] tracking-[0.15em] uppercase font-medium" style={{ color: "#22d3ee" }}>
+            ✨ Check with the <span style={{ color: "#fff", fontWeight: "bold" }}>LIVE</span> team for daily offers ✨
+          </p>
+        </div>
+      </div>
+
       {/* ENHANCED FOOTER - Premium & Informative */}
       <div className="py-4 px-12 relative z-10 flex-shrink-0 border-t border-gray-800/30">
         <div className="flex justify-between items-center">
@@ -564,7 +579,7 @@ const PrintablePage = ({
           {/* Right - Contact */}
           <div className="text-right flex-1">
             <p className="text-[9px] tracking-[0.15em] text-gray-500 uppercase font-medium">Premium Dining</p>
-            <p className="text-[8px] text-gray-600">www.livebar.in</p>
+            <p className="text-[8px] text-gray-600">www.thelive.bar</p>
           </div>
         </div>
       </div>
@@ -795,7 +810,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
               <!-- Contact Information -->
               <div style="padding-top: 24px; border-top: 1px solid rgba(55, 65, 81, 0.5);">
                 <p style="font-size: 14px; color: #22d3ee; letter-spacing: 0.1em; font-family: 'Orbitron', sans-serif; margin: 0 0 12px 0;">
-                  www.livebar.in
+                  www.thelive.bar
                 </p>
                 <p style="font-size: 12px; color: #6b7280; letter-spacing: 0.05em; margin: 0;">
                   Reservations: +91 7507066880
@@ -873,7 +888,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                <div style="padding-bottom: 16px; border-bottom: 1px solid rgba(55,65,81,0.5); margin-bottom: 16px;">
                  <h3 style="font-size: 18px; font-weight: bold; letter-spacing: 0.2em; margin-bottom: 8px; color: ${accentColor}; font-family: 'Orbitron', sans-serif;">RESERVATIONS</h3>
                  <p style="font-size: 20px; color: white; font-weight: 300; letter-spacing: 0.1em; margin-bottom: 4px;">+91 7507066880</p>
-                 <p style="color: #22d3ee; font-size: 14px; font-weight: 600; letter-spacing: 0.05em; font-family: 'Orbitron', sans-serif;">www.livebar.in</p>
+                 <p style="color: #22d3ee; font-size: 14px; font-weight: 600; letter-spacing: 0.05em; font-family: 'Orbitron', sans-serif;">www.thelive.bar</p>
                </div>
                <div>
                  <p style="color: #d1d5db; font-size: 14px; margin-bottom: 8px;">Follow our journey</p>
@@ -985,8 +1000,14 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                   <div style="padding: 10px 12px; ${idx % 2 === 0 ? "background: rgba(255,255,255,0.02);" : ""}">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
                       <div style="flex: 1;">
-                        <h4 style="font-size: 14px; font-weight: 600; color: white; letter-spacing: 0.05em; text-transform: uppercase;">${escapeHtml(item.name)}</h4>
-                        ${item.description ? `<p style="font-size: 10px; color: #9ca3af; margin-top: 3px; font-style: italic; line-height: 1.5;">${escapeHtml(item.description)}</p>` : ""}
+                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                          <h4 style="font-size: 14px; font-weight: 600; color: white; letter-spacing: 0.05em; text-transform: uppercase;">${escapeHtml(item.name)}</h4>
+                          ${item.isChefSpecial ? `<span style="padding: 2px 8px; font-size: 8px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 4px; background: linear-gradient(135deg, #ff00ff, #ff6b9d); color: #fff; box-shadow: 0 0 8px rgba(255,0,255,0.5);">⭐ Chef's Special</span>` : ''}
+                          ${item.isBestSeller ? `<span style="padding: 2px 8px; font-size: 8px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 4px; background: linear-gradient(135deg, #00f0ff, #0077ff); color: #000; box-shadow: 0 0 8px rgba(0,240,255,0.5);">🔥 Best Seller</span>` : ''}
+                          ${item.isPremium ? `<span style="padding: 2px 8px; font-size: 8px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 4px; background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; box-shadow: 0 0 8px rgba(255,215,0,0.5);">✨ Premium</span>` : ''}
+                          ${item.isTopShelf ? `<span style="padding: 2px 8px; font-size: 8px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 4px; background: linear-gradient(135deg, #9333ea, #7c3aed); color: #fff; box-shadow: 0 0 8px rgba(147,51,234,0.5);">🏆 Top Shelf</span>` : ''}
+                        </div>
+                        ${item.description ? `<p style="font-size: 10px; color: #9ca3af; margin-top: 3px; font-style: italic; line-height: 1.5;">${escapeHtml(item.description)}</p>` : ''}
                       </div>
                       <div style="flex-shrink: 0; text-align: right;">
                         ${item.sizes ? `
@@ -1020,6 +1041,15 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
         </div>
         ` : ''}
 
+        <!-- Daily Offers Banner -->
+        <div style="padding: 0 48px 8px; text-align: center; position: relative; z-index: 10;">
+          <div style="display: inline-block; padding: 8px 24px; border-radius: 50px; background: linear-gradient(135deg, rgba(0,240,255,0.15), rgba(255,0,255,0.15)); border: 1px solid rgba(0,240,255,0.3);">
+            <p style="font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 500; color: #22d3ee; margin: 0;">
+              ✨ Check with the <span style="color: #fff; font-weight: bold;">LIVE</span> team for daily offers ✨
+            </p>
+          </div>
+        </div>
+
         <!-- Enhanced Footer -->
         <div style="padding: 16px 48px; position: relative; z-index: 10; border-top: 1px solid rgba(55,65,81,0.3);">
           <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -1039,7 +1069,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
             </div>
             <div style="text-align: right; flex: 1;">
               <p style="font-size: 9px; letter-spacing: 0.15em; color: #6b7280; text-transform: uppercase; font-weight: 500; margin: 0 0 2px 0;">Premium Dining</p>
-              <p style="font-size: 8px; color: #4b5563; margin: 0;">www.livebar.in</p>
+              <p style="font-size: 8px; color: #4b5563; margin: 0;">www.thelive.bar</p>
             </div>
           </div>
         </div>
