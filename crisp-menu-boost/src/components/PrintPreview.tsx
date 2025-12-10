@@ -1040,7 +1040,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
               ` : ""}
               <div style="display: flex; flex-direction: column; gap: 1px; margin-top: 4px;">
                 ${category.items.map((origItem, idx) => {
-        const item = getPromoItem(origItem);
+        const item = getPromoItem(origItem, overridePercent);
         return `
                   <div style="padding: 10px 12px; ${idx % 2 === 0 ? "background: rgba(255,255,255,0.02);" : ""}">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
