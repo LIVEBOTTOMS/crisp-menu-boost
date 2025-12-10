@@ -597,7 +597,6 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
 
   // Promotional pricing state
   const [promoPercent, setPromoPercent] = useState<string>("");
-  const [isPromoMode, setIsPromoMode] = useState(false);
   const [showPromoDialog, setShowPromoDialog] = useState(false);
 
   // Helper function to adjust price string by percentage
@@ -611,16 +610,14 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
   };
 
   // Get adjusted item with promotional pricing
-  const getPromoItem = (item: MenuItem): MenuItem => {
-    if (!isPromoMode || !promoPercent) return item;
-    const percent = parseFloat(promoPercent);
-    if (isNaN(percent)) return item;
+  const getPromoItem = (item: MenuItem, overridePercent?: number): MenuItem => {
+    if (overridePercent === undefined) return item;
     return {
       ...item,
-      price: adjustPrice(item.price, percent),
-      halfPrice: adjustPrice(item.halfPrice, percent),
-      fullPrice: adjustPrice(item.fullPrice, percent),
-      sizes: item.sizes?.map(s => adjustPrice(s, percent))
+      price: adjustPrice(item.price, overridePercent),
+      halfPrice: adjustPrice(item.halfPrice, overridePercent),
+      fullPrice: adjustPrice(item.fullPrice, overridePercent),
+      sizes: item.sizes?.map(s => adjustPrice(s, overridePercent))
     };
   };
 
@@ -763,7 +760,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
     },
   ];
 
-  const capturePageAtIndex = async (index: number): Promise<HTMLCanvasElement | null> => {
+  const capturePageAtIndex = async (index: number, overridePercent?: number): Promise<HTMLCanvasElement | null> => {
     // First make sure the page is visible for capture
     const tempDiv = document.createElement("div");
     tempDiv.style.position = "absolute";
@@ -786,7 +783,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       // Cover Page HTML
       pageElement.innerHTML = `
         <div style="font-family: 'Rajdhani', sans-serif; background: #0a0a0f; background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px); background-size: 40px 40px; width: 794px; min-height: 1123px; position: relative; display: flex; flex-direction: column; overflow: hidden; align-items: center; justify-content: center;">
-          ${isPromoMode ? `
+          ${overridePercent !== undefined ? `
             <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 80px; font-weight: 900; color: rgba(255,255,255,0.05); white-space: nowrap; pointer-events: none; z-index: 0; text-transform: uppercase; border: 4px solid rgba(255,255,255,0.05); padding: 20px 40px; text-align: center;">
               PROMOTIONAL<br>PRICING
             </div>
@@ -867,7 +864,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       // Back Cover Page HTML
       pageElement.innerHTML = `
         <div style="font-family: 'Rajdhani', sans-serif; background: #0a0a0f; background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px); background-size: 40px 40px; width: 794px; min-height: 1123px; position: relative; display: flex; flex-direction: column; overflow: hidden; align-items: center; justify-content: space-between;">
-          ${isPromoMode ? `
+          ${overridePercent !== undefined ? `
             <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 80px; font-weight: 900; color: rgba(255,255,255,0.05); white-space: nowrap; pointer-events: none; z-index: 0; text-transform: uppercase; border: 4px solid rgba(255,255,255,0.05); padding: 20px 40px; text-align: center;">
               PROMOTIONAL<br>PRICING
             </div>
@@ -948,7 +945,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       // A4 Dimensions: 210mm x 297mm (~794px x 1123px at 96dpi)
       pageElement.innerHTML = `
       <div style="font-family: 'Rajdhani', sans-serif; background: #0a0a0f; background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px); background-size: 40px 40px; width: 794px; min-height: 1123px; position: relative; display: flex; flex-direction: column; overflow: hidden;">
-        ${isPromoMode ? `
+        ${overridePercent !== undefined ? `
           <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 80px; font-weight: 900; color: rgba(255,255,255,0.05); white-space: nowrap; pointer-events: none; z-index: 0; text-transform: uppercase; border: 4px solid rgba(255,255,255,0.05); padding: 20px 40px; text-align: center;">
             PROMOTIONAL<br>PRICING
           </div>
@@ -1196,7 +1193,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
     }
   };
 
-  const downloadAsPDF = async (allPages: boolean) => {
+  const downloadAsPDF = async (allPages: boolean, overridePercent?: number) => {
     setIsExporting(true);
     try {
       const pdf = new jsPDF({
@@ -1220,7 +1217,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
         // Wait a bit to ensure browser doesn't freeze and DOM is ready
         await new Promise(resolve => setTimeout(resolve, 200));
 
-        const canvas = await capturePageAtIndex(pageIndex);
+        const canvas = await capturePageAtIndex(pageIndex, overridePercent);
         if (canvas) {
           if (pagesAdded > 0) pdf.addPage();
 
@@ -1460,18 +1457,15 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
             </Button>
             <Button
               onClick={() => {
-                if (!promoPercent || isNaN(parseFloat(promoPercent))) {
+                const percent = parseFloat(promoPercent);
+                if (!promoPercent || isNaN(percent)) {
                   toast.error("Please enter a valid percentage");
                   return;
                 }
-                setIsPromoMode(true);
-                // Wait for state to update then download
-                setTimeout(() => {
-                  downloadAsPDF(true).then(() => {
-                    setIsPromoMode(false);
-                    setShowPromoDialog(false);
-                  });
-                }, 100);
+
+                downloadAsPDF(true, percent).then(() => {
+                  setShowPromoDialog(false);
+                });
               }}
               disabled={!promoPercent || isExporting}
               className="bg-purple-600 hover:bg-purple-700 text-white"
