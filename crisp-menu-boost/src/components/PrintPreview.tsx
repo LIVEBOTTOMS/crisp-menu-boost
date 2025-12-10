@@ -266,7 +266,8 @@ const PrintablePage = ({
   pageNumber,
   totalPages,
   isCover = false,
-  isBackCover = false
+  isBackCover = false,
+  proverb
 }: {
   section: MenuSectionType;
   pageRef: React.RefObject<HTMLDivElement>;
@@ -275,6 +276,7 @@ const PrintablePage = ({
   totalPages: number;
   isCover?: boolean;
   isBackCover?: boolean;
+  proverb?: string;
 }) => {
   const accentColor = variant === "cyan" ? "#00f0ff" : variant === "magenta" ? "#ff00ff" : "#ffd700";
 
@@ -360,7 +362,7 @@ const PrintablePage = ({
             </div>
             <div>
               <p className="text-gray-300 text-sm mb-2">Follow our journey</p>
-              <h3 className="text-xl font-bold tracking-[0.2em]" style={{ color: accentColor, fontFamily: "'Orbitron', sans-serif" }}>@livebar.pune</h3>
+              <h3 className="text-xl font-bold tracking-[0.2em]" style={{ color: accentColor, fontFamily: "'Orbitron', sans-serif" }}>live.lounge15</h3>
             </div>
           </div>
 
@@ -497,6 +499,18 @@ const PrintablePage = ({
         </div>
       </div>
 
+      {/* Proverb Section */}
+      {proverb && (
+        <div className="px-12 py-2 text-center relative z-10">
+          <p
+            className="text-sm italic text-gray-300 tracking-wide"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+          >
+            "{proverb}"
+          </p>
+        </div>
+      )}
+
       {/* ENHANCED FOOTER - Premium & Informative */}
       <div className="py-4 px-12 relative z-10 flex-shrink-0 border-t border-gray-800/30">
         <div className="flex justify-between items-center">
@@ -586,7 +600,8 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
         ]
       },
       variant: "magenta" as const,
-      key: "veg-sides"
+      key: "veg-sides",
+      proverb: "Good food is the foundation of genuine happiness."
     },
     // Page 4: BEERS & COOLERS
     {
@@ -615,17 +630,28 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       variant: "cyan" as const,
       key: "spirits"
     },
-    // Page 6: WHISKIES (Indian + World)
+    // Page 6: INDIAN WHISKIES
     {
       section: {
-        title: "WHISKY COLLECTION",
+        title: "INDIAN WHISKY RESERVES",
         categories: [
-          menuData.beveragesMenu.categories[5], // Indian Reserves
+          menuData.beveragesMenu.categories[5]  // Indian Reserves
+        ]
+      },
+      variant: "gold" as const,
+      key: "indian-whiskies"
+    },
+    // Page 7: WORLD WHISKIES
+    {
+      section: {
+        title: "WORLD WHISKY COLLECTION",
+        categories: [
           menuData.beveragesMenu.categories[6]  // World Whiskies
         ]
       },
       variant: "gold" as const,
-      key: "whiskies"
+      key: "world-whiskies",
+      proverb: "Too much of anything is bad, but too much good whisky is barely enough."
     },
     // Page 7: CELEBRATION BOTTLES & WINES
     {
@@ -650,7 +676,8 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
         ]
       },
       variant: "cyan" as const,
-      key: "refreshments"
+      key: "refreshments",
+      proverb: "Life is too short to drink anything but the best."
     },
     // Page 9: BACK COVER
     {
@@ -824,7 +851,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                </div>
                <div>
                  <p style="color: #d1d5db; font-size: 14px; margin-bottom: 8px;">Follow our journey</p>
-                 <h3 style="font-size: 20px; font-weight: bold; letter-spacing: 0.2em; color: ${accentColor}; font-family: 'Orbitron', sans-serif;">@livebar.pune</h3>
+                 <h3 style="font-size: 20px; font-weight: bold; letter-spacing: 0.2em; color: ${accentColor}; font-family: 'Orbitron', sans-serif;">live.lounge15</h3>
                </div>
             </div>
 
@@ -957,6 +984,15 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
           `).join("")}
           </div>
         </div>
+
+        <!-- Proverb -->
+        ${(page as any).proverb ? `
+        <div style="padding: 0 48px 8px; text-align: center; position: relative; z-index: 10;">
+          <p style="font-size: 14px; font-style: italic; color: #d1d5db; font-family: 'Playfair Display', serif; letter-spacing: 0.02em;">
+            "${(page as any).proverb}"
+          </p>
+        </div>
+        ` : ''}
 
         <!-- Enhanced Footer -->
         <div style="padding: 16px 48px; position: relative; z-index: 10; border-top: 1px solid rgba(55,65,81,0.3);">
@@ -1190,6 +1226,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                 totalPages={pages.length}
                 isCover={(pages[currentPage] as any).isCover}
                 isBackCover={(pages[currentPage] as any).isBackCover}
+                proverb={(pages[currentPage] as any).proverb}
               />
             </div>
           </div>
