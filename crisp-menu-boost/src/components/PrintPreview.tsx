@@ -1305,185 +1305,187 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl h-[90vh] bg-background border-border p-0 flex flex-col">
-        <DialogHeader className="p-4 border-b border-border flex-shrink-0">
-          <div className="flex items-center justify-between">
-            <DialogTitle className="font-orbitron text-foreground">
-              Print Preview - {pages[currentPage].section.title}
-            </DialogTitle>
-            <Button variant="ghost" size="icon" onClick={onClose}>
-              <X className="w-4 h-4" />
-            </Button>
-          </div>
-        </DialogHeader>
-
-        {/* Preview Area */}
-        <div className="flex-1 overflow-auto p-4 bg-muted/30">
-          <div className="flex justify-center">
-            <div className="shadow-2xl transform scale-[0.65] origin-top">
-              <PrintablePage
-                section={pages[currentPage].section}
-                pageRef={{ current: null }}
-                variant={pages[currentPage].variant}
-                pageNumber={currentPage + 1}
-                totalPages={pages.length}
-                isCover={(pages[currentPage] as any).isCover}
-                isBackCover={(pages[currentPage] as any).isBackCover}
-                proverb={(pages[currentPage] as any).proverb}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Navigation & Actions */}
-        <div className="p-4 border-t border-border flex-shrink-0">
-          <div className="flex items-center justify-between gap-4 flex-wrap">
-            {/* Page Navigation */}
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage(p => Math.max(0, p - 1))}
-                disabled={currentPage === 0}
-              >
-                <ChevronLeft className="w-4 h-4" />
+    <>
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="max-w-5xl h-[90vh] bg-background border-border p-0 flex flex-col">
+          <DialogHeader className="p-4 border-b border-border flex-shrink-0">
+            <div className="flex items-center justify-between">
+              <DialogTitle className="font-orbitron text-foreground">
+                Print Preview - {pages[currentPage].section.title}
+              </DialogTitle>
+              <Button variant="ghost" size="icon" onClick={onClose}>
+                <X className="w-4 h-4" />
               </Button>
-              <div className="flex gap-1">
-                {pages.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setCurrentPage(i)}
-                    className={`w-2 h-2 rounded-full transition-colors ${currentPage === i ? "bg-primary" : "bg-muted"
-                      }`}
-                  />
-                ))}
+            </div>
+          </DialogHeader>
+
+          {/* Preview Area */}
+          <div className="flex-1 overflow-auto p-4 bg-muted/30">
+            <div className="flex justify-center">
+              <div className="shadow-2xl transform scale-[0.65] origin-top">
+                <PrintablePage
+                  section={pages[currentPage].section}
+                  pageRef={{ current: null }}
+                  variant={pages[currentPage].variant}
+                  pageNumber={currentPage + 1}
+                  totalPages={pages.length}
+                  isCover={(pages[currentPage] as any).isCover}
+                  isBackCover={(pages[currentPage] as any).isBackCover}
+                  proverb={(pages[currentPage] as any).proverb}
+                />
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage(p => Math.min(pages.length - 1, p + 1))}
-                disabled={currentPage === pages.length - 1}
-              >
-                <ChevronRight className="w-4 h-4" />
-              </Button>
             </div>
+          </div>
 
-            {/* Export Actions */}
-            <div className="flex items-center gap-2">
-              <div className="flex gap-1 border-r border-border pr-2 mr-2">
+          {/* Navigation & Actions */}
+          <div className="p-4 border-t border-border flex-shrink-0">
+            <div className="flex items-center justify-between gap-4 flex-wrap">
+              {/* Page Navigation */}
+              <div className="flex items-center gap-2">
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={handlePrint}
-                  disabled={isExporting}
+                  onClick={() => setCurrentPage(p => Math.max(0, p - 1))}
+                  disabled={currentPage === 0}
                 >
-                  <Printer className="w-4 h-4 mr-2" />
-                  Print
+                  <ChevronLeft className="w-4 h-4" />
+                </Button>
+                <div className="flex gap-1">
+                  {pages.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setCurrentPage(i)}
+                      className={`w-2 h-2 rounded-full transition-colors ${currentPage === i ? "bg-primary" : "bg-muted"
+                        }`}
+                    />
+                  ))}
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(p => Math.min(pages.length - 1, p + 1))}
+                  disabled={currentPage === pages.length - 1}
+                >
+                  <ChevronRight className="w-4 h-4" />
                 </Button>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => downloadCurrentAsImage("png")}
-                disabled={isExporting}
-              >
-                <FileImage className="w-4 h-4 mr-2" />
-                Current PNG
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => downloadAsPDF(false)}
-                disabled={isExporting}
-              >
-                <FileText className="w-4 h-4 mr-2" />
-                Current PDF
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowPromoDialog(true)}
-                disabled={isExporting}
-                className="border-purple-500 text-purple-400 hover:bg-purple-500/10"
-              >
-                <div className="w-4 h-4 mr-2">🏷️</div>
-                Promo PDF
-              </Button>
-              <Button
-                onClick={() => downloadAsPDF(true)}
-                disabled={isExporting}
-                className="bg-primary hover:bg-primary/90 min-w-[120px]"
-              >
-                {isExporting ? (
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
-                ) : (
-                  <Download className="w-4 h-4 mr-2" />
-                )}
-                Export Full PDF
-              </Button>
+
+              {/* Export Actions */}
+              <div className="flex items-center gap-2">
+                <div className="flex gap-1 border-r border-border pr-2 mr-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handlePrint}
+                    disabled={isExporting}
+                  >
+                    <Printer className="w-4 h-4 mr-2" />
+                    Print
+                  </Button>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => downloadCurrentAsImage("png")}
+                  disabled={isExporting}
+                >
+                  <FileImage className="w-4 h-4 mr-2" />
+                  Current PNG
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => downloadAsPDF(false)}
+                  disabled={isExporting}
+                >
+                  <FileText className="w-4 h-4 mr-2" />
+                  Current PDF
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowPromoDialog(true)}
+                  disabled={isExporting}
+                  className="border-purple-500 text-purple-400 hover:bg-purple-500/10"
+                >
+                  <div className="w-4 h-4 mr-2">🏷️</div>
+                  Promo PDF
+                </Button>
+                <Button
+                  onClick={() => downloadAsPDF(true)}
+                  disabled={isExporting}
+                  className="bg-primary hover:bg-primary/90 min-w-[120px]"
+                >
+                  {isExporting ? (
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+                  ) : (
+                    <Download className="w-4 h-4 mr-2" />
+                  )}
+                  Export Full PDF
+                </Button>
+              </div>
             </div>
           </div>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
 
-    {/* Promotional Pricing Dialog */ }
-  <Dialog open={showPromoDialog} onOpenChange={setShowPromoDialog}>
-    <DialogContent className="sm:max-w-[425px] bg-slate-900 border-gray-800 text-white">
-      <DialogHeader>
-        <DialogTitle>Create Promotional Menu</DialogTitle>
-        <p className="text-sm text-gray-400">
-          Create a temporary PDF with adjusted prices. The original menu remains unchanged.
-        </p>
-      </DialogHeader>
-      <div className="grid gap-4 py-4">
-        <div className="grid gap-2">
-          <Label htmlFor="percent">Price Adjustment Percentage (%)</Label>
-          <Input
-            id="percent"
-            placeholder="e.g. 10 for +10%, -5 for -5%"
-            value={promoPercent}
-            onChange={(e) => setPromoPercent(e.target.value)}
-            className="bg-slate-800 border-slate-700 text-white"
-          />
-        </div>
-      </div>
-      <div className="flex justify-end gap-3">
-        <Button
-          variant="ghost"
-          onClick={() => setShowPromoDialog(false)}
-          className="text-gray-400 hover:text-white"
-        >
-          Cancel
-        </Button>
-        <Button
-          onClick={() => {
-            if (!promoPercent || isNaN(parseFloat(promoPercent))) {
-              toast.error("Please enter a valid percentage");
-              return;
-            }
-            setIsPromoMode(true);
-            // Wait for state to update then download
-            setTimeout(() => {
-              downloadAsPDF(true).then(() => {
-                setIsPromoMode(false);
-                setShowPromoDialog(false);
-              });
-            }, 100);
-          }}
-          disabled={!promoPercent || isExporting}
-          className="bg-purple-600 hover:bg-purple-700 text-white"
-        >
-          {isExporting ? (
-            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
-          ) : (
-            <Download className="w-4 h-4 mr-2" />
-          )}
-          Generate Promo PDF
-        </Button>
-      </div>
-    </DialogContent>
-  </Dialog>
+      {/* Promotional Pricing Dialog */}
+      <Dialog open={showPromoDialog} onOpenChange={setShowPromoDialog}>
+        <DialogContent className="sm:max-w-[425px] bg-slate-900 border-gray-800 text-white">
+          <DialogHeader>
+            <DialogTitle>Create Promotional Menu</DialogTitle>
+            <p className="text-sm text-gray-400">
+              Create a temporary PDF with adjusted prices. The original menu remains unchanged.
+            </p>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="percent">Price Adjustment Percentage (%)</Label>
+              <Input
+                id="percent"
+                placeholder="e.g. 10 for +10%, -5 for -5%"
+                value={promoPercent}
+                onChange={(e) => setPromoPercent(e.target.value)}
+                className="bg-slate-800 border-slate-700 text-white"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-3">
+            <Button
+              variant="ghost"
+              onClick={() => setShowPromoDialog(false)}
+              className="text-gray-400 hover:text-white"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                if (!promoPercent || isNaN(parseFloat(promoPercent))) {
+                  toast.error("Please enter a valid percentage");
+                  return;
+                }
+                setIsPromoMode(true);
+                // Wait for state to update then download
+                setTimeout(() => {
+                  downloadAsPDF(true).then(() => {
+                    setIsPromoMode(false);
+                    setShowPromoDialog(false);
+                  });
+                }, 100);
+              }}
+              disabled={!promoPercent || isExporting}
+              className="bg-purple-600 hover:bg-purple-700 text-white"
+            >
+              {isExporting ? (
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+              ) : (
+                <Download className="w-4 h-4 mr-2" />
+              )}
+              Generate Promo PDF
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
