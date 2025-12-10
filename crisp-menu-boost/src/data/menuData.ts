@@ -8,6 +8,8 @@ export interface MenuItem {
   image?: string;
   isChefSpecial?: boolean;
   isBestSeller?: boolean;
+  isPremium?: boolean;
+  isTopShelf?: boolean;
 }
 
 export interface MenuCategory {
@@ -240,13 +242,13 @@ export const beveragesMenu: MenuSection = {
         { name: "100 Pipers", sizes: ["₹299", "₹598", "₹897", "₹1,794"], description: "Smooth Scotch with fruity notes" },
         { name: "Jameson Irish Whiskey", sizes: ["₹449", "₹898", "₹1,347", "₹2,694"], description: "Triple-distilled in Dublin. Smooth sherry sweetness, toasted wood & gentle spice. Ireland's finest.", isBestSeller: true },
         { name: "Johnnie Walker Red Label", sizes: ["₹429", "₹858", "₹1,287", "₹2,574"], description: "Bold & vibrant with cinnamon spice" },
-        { name: "Johnnie Walker Black Label", sizes: ["₹599", "₹1,198", "₹1,797", "₹3,594"], description: "12-year aged blend with notes of dark fruit, vanilla & signature Islay smokiness", isChefSpecial: true },
-        { name: "Chivas Regal", sizes: ["₹649", "₹1,298", "₹1,947", "₹3,894"], description: "Luxury 12-year Scotch with wild honey, vanilla & subtle hazelnut finish", isChefSpecial: true },
+        { name: "Johnnie Walker Black Label", sizes: ["₹599", "₹1,198", "₹1,797", "₹3,594"], description: "12-year aged blend with notes of dark fruit, vanilla & signature Islay smokiness", isTopShelf: true },
+        { name: "Chivas Regal", sizes: ["₹649", "₹1,298", "₹1,947", "₹3,894"], description: "Luxury 12-year Scotch with wild honey, vanilla & subtle hazelnut finish", isPremium: true },
         { name: "Jack Daniel's", sizes: ["₹549", "₹1,098", "₹1,647", "₹3,294"], description: "Tennessee whiskey mellowed drop by drop through 10 feet of sugar maple charcoal", isBestSeller: true },
         { name: "Jim Beam Bourbon", sizes: ["₹449", "₹898", "₹1,347", "₹2,694"], description: "225 years of Kentucky craft. Rich vanilla, caramel corn & oak. America's #1 bourbon." },
         { name: "Monkey Shoulder", sizes: ["₹499", "₹998", "₹1,497", "₹2,994"], description: "Batch 27. Triple malt blend of Speyside's finest. Mellow vanilla, spicy marmalade & creamy finish.", isBestSeller: true },
-        { name: "Glenfiddich 12Y", sizes: ["₹899", "₹1,798", "₹2,697", "₹5,394"], description: "Single malt with fresh pear, subtle oak & butterscotch. The world's most awarded single malt", isChefSpecial: true },
-        { name: "Talisker 10Y", sizes: ["₹849", "₹1,698", "₹2,547", "₹5,094"], description: "Isle of Skye's maritime malt. Peppery smoke, sea salt & dried fruit. Wild & rugged elegance.", isChefSpecial: true },
+        { name: "Glenfiddich 12Y", sizes: ["₹899", "₹1,798", "₹2,697", "₹5,394"], description: "Single malt with fresh pear, subtle oak & butterscotch. The world's most awarded single malt", isTopShelf: true },
+        { name: "Talisker 10Y", sizes: ["₹849", "₹1,698", "₹2,547", "₹5,094"], description: "Isle of Skye's maritime malt. Peppery smoke, sea salt & dried fruit. Wild & rugged elegance.", isPremium: true },
       ],
     },
     {
@@ -268,10 +270,10 @@ export const beveragesMenu: MenuSection = {
       title: "Premium Vodkas",
       icon: "🍸",
       items: [
-        { name: "Grey Goose (30 ml)", price: "₹649", description: "Crafted in France's Cognac region using soft winter wheat & pristine spring water. Silky smooth with subtle almond notes.", isChefSpecial: true },
+        { name: "Grey Goose (30 ml)", price: "₹649", description: "Crafted in France's Cognac region using soft winter wheat & pristine spring water. Silky smooth with subtle almond notes.", isTopShelf: true },
         { name: "Absolut Vodka (30 ml)", price: "₹449", description: "Swedish winter wheat from Åhus, distilled countless times for exceptional purity. Clean, rich & complex." },
         { name: "Absolut Raspberry (30 ml)", price: "₹479", description: "Natural raspberry infusion" },
-        { name: "Ketel One (30 ml)", price: "₹549", description: "300-year Dutch heritage. Copper pot distilled with hints of citrus & honey. Exceptionally crisp finish.", isChefSpecial: true },
+        { name: "Ketel One (30 ml)", price: "₹549", description: "300-year Dutch heritage. Copper pot distilled with hints of citrus & honey. Exceptionally crisp finish.", isPremium: true },
         { name: "Smirnoff Orange (30 ml)", price: "₹229", description: "Citrus-infused vodka" },
       ],
     },
@@ -295,7 +297,7 @@ export const beveragesMenu: MenuSection = {
       title: "Gin & Brandy",
       icon: "🍸",
       items: [
-        { name: "Bombay Sapphire (30 ml)", price: "₹449", description: "10 hand-selected botanicals vapor-infused. Bright citrus, juniper & subtle spice. Crystal clarity.", isChefSpecial: true },
+        { name: "Bombay Sapphire (30 ml)", price: "₹449", description: "10 hand-selected botanicals vapor-infused. Bright citrus, juniper & subtle spice. Crystal clarity.", isPremium: true },
         { name: "Beefeater (30 ml)", price: "₹399", description: "Classic London Dry Gin" },
         { name: "Mansion House Brandy (30 ml)", price: "₹199", description: "Smooth French-style brandy" },
         { name: "Honey Bee Brandy (30 ml)", price: "₹189", description: "Sweet honey-infused brandy" },

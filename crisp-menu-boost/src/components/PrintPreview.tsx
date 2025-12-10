@@ -61,6 +61,32 @@ const MenuItemRow = ({ item, isEven }: { item: MenuItem; isEven: boolean }) => {
                 🔥 Best Seller
               </span>
             )}
+            {item.isPremium && (
+              <span
+                className="px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider rounded"
+                style={{
+                  background: "linear-gradient(135deg, #ffd700, #ff8c00)",
+                  color: "#000",
+                  fontWeight: "800",
+                  boxShadow: "0 0 8px rgba(255,215,0,0.5)"
+                }}
+              >
+                ✨ Premium
+              </span>
+            )}
+            {item.isTopShelf && (
+              <span
+                className="px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider rounded"
+                style={{
+                  background: "linear-gradient(135deg, #9333ea, #7c3aed)",
+                  color: "#fff",
+                  fontWeight: "800",
+                  boxShadow: "0 0 8px rgba(147,51,234,0.5)"
+                }}
+              >
+                🏆 Top Shelf
+              </span>
+            )}
           </div>
           {item.description && (
             <p className="text-[11px] text-gray-400 mt-1 italic leading-relaxed">
