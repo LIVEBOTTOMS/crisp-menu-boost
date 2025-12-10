@@ -1,6 +1,8 @@
 import { useState, useRef } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { ChevronLeft, ChevronRight, Download, Printer, FileImage, FileText, X } from "lucide-react";
 import { useMenu } from "@/contexts/MenuContext";
 import { MenuSection as MenuSectionType, MenuCategory as MenuCategoryType, MenuItem } from "@/data/menuData";
@@ -593,6 +595,35 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
   const [isExporting, setIsExporting] = useState(false);
   const pageRefs = useRef<(HTMLDivElement | null)[]>([]);
 
+  // Promotional pricing state
+  const [promoPercent, setPromoPercent] = useState<string>("");
+  const [isPromoMode, setIsPromoMode] = useState(false);
+  const [showPromoDialog, setShowPromoDialog] = useState(false);
+
+  // Helper function to adjust price string by percentage
+  const adjustPrice = (priceStr: string | undefined, percent: number): string => {
+    if (!priceStr) return "";
+    const numMatch = priceStr.match(/[\d,]+/);
+    if (!numMatch) return priceStr;
+    const num = parseFloat(numMatch[0].replace(/,/g, ""));
+    const adjusted = Math.round(num * (1 + percent / 100));
+    return priceStr.replace(numMatch[0], adjusted.toLocaleString("en-IN"));
+  };
+
+  // Get adjusted item with promotional pricing
+  const getPromoItem = (item: MenuItem): MenuItem => {
+    if (!isPromoMode || !promoPercent) return item;
+    const percent = parseFloat(promoPercent);
+    if (isNaN(percent)) return item;
+    return {
+      ...item,
+      price: adjustPrice(item.price, percent),
+      halfPrice: adjustPrice(item.halfPrice, percent),
+      fullPrice: adjustPrice(item.fullPrice, percent),
+      sizes: item.sizes?.map(s => adjustPrice(s, percent))
+    };
+  };
+
   // Optimized A4 page layout - 9 pages total (1 cover + 8 menu pages)
   const pages = [
     // Page 0: COVER PAGE
@@ -755,6 +786,11 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       // Cover Page HTML
       pageElement.innerHTML = `
         <div style="font-family: 'Rajdhani', sans-serif; background: #0a0a0f; background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px); background-size: 40px 40px; width: 794px; min-height: 1123px; position: relative; display: flex; flex-direction: column; overflow: hidden; align-items: center; justify-content: center;">
+          ${isPromoMode ? `
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 80px; font-weight: 900; color: rgba(255,255,255,0.05); white-space: nowrap; pointer-events: none; z-index: 0; text-transform: uppercase; border: 4px solid rgba(255,255,255,0.05); padding: 20px 40px; text-align: center;">
+              PROMOTIONAL<br>PRICING
+            </div>
+          ` : ''}
           
           <!-- Enhanced Border Frame -->
           <div style="position: absolute; inset: 0; pointer-events: none;">
@@ -830,7 +866,12 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
     } else if ((page as any).isBackCover) {
       // Back Cover Page HTML
       pageElement.innerHTML = `
-        <div style="font-family: 'Rajdhani', sans-serif; background: #0a0a0f; background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px); background-size: 40px 40px; width: 794px; min-height: 1123px; position: relative; display: flex; flex-direction: column; overflow: hidden; align-items: center; justify-content: center;">
+        <div style="font-family: 'Rajdhani', sans-serif; background: #0a0a0f; background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px); background-size: 40px 40px; width: 794px; min-height: 1123px; position: relative; display: flex; flex-direction: column; overflow: hidden; align-items: center; justify-content: space-between;">
+          ${isPromoMode ? `
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 80px; font-weight: 900; color: rgba(255,255,255,0.05); white-space: nowrap; pointer-events: none; z-index: 0; text-transform: uppercase; border: 4px solid rgba(255,255,255,0.05); padding: 20px 40px; text-align: center;">
+              PROMOTIONAL<br>PRICING
+            </div>
+          ` : ''}
           
           <!-- Border Frame -->
           <div style="position: absolute; inset: 0; pointer-events: none;">
@@ -907,6 +948,11 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       // A4 Dimensions: 210mm x 297mm (~794px x 1123px at 96dpi)
       pageElement.innerHTML = `
       <div style="font-family: 'Rajdhani', sans-serif; background: #0a0a0f; background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px); background-size: 40px 40px; width: 794px; min-height: 1123px; position: relative; display: flex; flex-direction: column; overflow: hidden;">
+        ${isPromoMode ? `
+          <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 80px; font-weight: 900; color: rgba(255,255,255,0.05); white-space: nowrap; pointer-events: none; z-index: 0; text-transform: uppercase; border: 4px solid rgba(255,255,255,0.05); padding: 20px 40px; text-align: center;">
+            PROMOTIONAL<br>PRICING
+          </div>
+        ` : ''}
         
         <!-- World-Class Boundary System A4 -->
         <div style="position: absolute; inset: 0; pointer-events: none;">
@@ -996,7 +1042,9 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                  </div>
               ` : ""}
               <div style="display: flex; flex-direction: column; gap: 1px; margin-top: 4px;">
-                ${category.items.map((item, idx) => `
+                ${category.items.map((origItem, idx) => {
+        const item = getPromoItem(origItem);
+        return `
                   <div style="padding: 10px 12px; ${idx % 2 === 0 ? "background: rgba(255,255,255,0.02);" : ""}">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
                       <div style="flex: 1;">
@@ -1025,7 +1073,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                       </div>
                     </div>
                   </div>
-                `).join("")}
+                `}).join("")}
               </div>
             </div>
           `).join("")}
@@ -1353,6 +1401,16 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                 Current PDF
               </Button>
               <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowPromoDialog(true)}
+                disabled={isExporting}
+                className="border-purple-500 text-purple-400 hover:bg-purple-500/10"
+              >
+                <div className="w-4 h-4 mr-2">🏷️</div>
+                Promo PDF
+              </Button>
+              <Button
                 onClick={() => downloadAsPDF(true)}
                 disabled={isExporting}
                 className="bg-primary hover:bg-primary/90 min-w-[120px]"
@@ -1366,8 +1424,66 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
               </Button>
             </div>
           </div>
-        </div>
       </DialogContent>
     </Dialog>
+
+    {/* Promotional Pricing Dialog */ }
+  <Dialog open={showPromoDialog} onOpenChange={setShowPromoDialog}>
+    <DialogContent className="sm:max-w-[425px] bg-slate-900 border-gray-800 text-white">
+      <DialogHeader>
+        <DialogTitle>Create Promotional Menu</DialogTitle>
+        <p className="text-sm text-gray-400">
+          Create a temporary PDF with adjusted prices. The original menu remains unchanged.
+        </p>
+      </DialogHeader>
+      <div className="grid gap-4 py-4">
+        <div className="grid gap-2">
+          <Label htmlFor="percent">Price Adjustment Percentage (%)</Label>
+          <Input
+            id="percent"
+            placeholder="e.g. 10 for +10%, -5 for -5%"
+            value={promoPercent}
+            onChange={(e) => setPromoPercent(e.target.value)}
+            className="bg-slate-800 border-slate-700 text-white"
+          />
+        </div>
+      </div>
+      <div className="flex justify-end gap-3">
+        <Button
+          variant="ghost"
+          onClick={() => setShowPromoDialog(false)}
+          className="text-gray-400 hover:text-white"
+        >
+          Cancel
+        </Button>
+        <Button
+          onClick={() => {
+            if (!promoPercent || isNaN(parseFloat(promoPercent))) {
+              toast.error("Please enter a valid percentage");
+              return;
+            }
+            setIsPromoMode(true);
+            // Wait for state to update then download
+            setTimeout(() => {
+              downloadAsPDF(true).then(() => {
+                setIsPromoMode(false);
+                setShowPromoDialog(false);
+              });
+            }, 100);
+          }}
+          disabled={!promoPercent || isExporting}
+          className="bg-purple-600 hover:bg-purple-700 text-white"
+        >
+          {isExporting ? (
+            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+          ) : (
+            <Download className="w-4 h-4 mr-2" />
+          )}
+          Generate Promo PDF
+        </Button>
+      </div>
+    </DialogContent>
+  </Dialog>
+    </>
   );
 };
