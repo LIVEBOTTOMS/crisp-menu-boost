@@ -603,14 +603,13 @@ const PrintablePage = ({
           </div>
         </div>
       </div>
-    </div>
 
-      {/* Binary Code Watermark Footer */ }
-  <div className="absolute bottom-1 left-0 right-0 text-center opacity-20 pointer-events-none">
-    <p className="text-[5px] tracking-[1.5em] text-cyan-500 font-mono">
-      01001100 01001001 01010110 01000101
-    </p>
-  </div>
+      {/* Binary Code Watermark Footer */}
+      <div className="absolute bottom-1 left-0 right-0 text-center opacity-20 pointer-events-none">
+        <p className="text-[5px] tracking-[1.5em] text-cyan-500 font-mono">
+          01001100 01001001 01010110 01000101
+        </p>
+      </div>
     </div >
   );
 };
