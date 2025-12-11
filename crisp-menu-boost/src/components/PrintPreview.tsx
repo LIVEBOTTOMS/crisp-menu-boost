@@ -572,6 +572,15 @@ const PrintablePage = ({
         </div>
       </div>
 
+      {/* Binary Matrix Rain for Sparse Pages */}
+      {section.categories.length <= 1 && !section.title.includes("COVER") && (
+        <div className="absolute top-1/4 right-12 bottom-1/4 w-8 flex flex-col overflow-hidden opacity-10 pointer-events-none select-none z-0">
+          <p className="text-[6px] text-cyan-500 font-mono leading-relaxed break-all text-center">
+            {Array(60).fill("01001101 01010010").join(" ")}
+          </p>
+        </div>
+      )}
+
       {/* ENHANCED FOOTER - Premium & Informative */}
       <div className="py-4 px-12 relative z-10 flex-shrink-0 border-t border-gray-800/30">
         <div className="flex justify-between items-center">
@@ -975,6 +984,18 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                <p style="font-size: 10px; letter-spacing: 0.4em; color: rgba(34,211,238,0.6); font-weight: 600; text-transform: uppercase;">Eat • Drink • Code • Repeat</p>
             </div>
             
+            <!-- Binary Matrix Rain Back Cover -->
+            <div style="position: absolute; top: 20%; left: 24px; bottom: 20%; width: 24px; overflow: hidden; opacity: 0.05; pointer-events: none;">
+               <p style="font-size: 6px; color: #06b6d4; font-family: monospace; line-height: 2; word-break: break-all; text-align: center; margin: 0;">
+                  ${Array(80).fill("0101").join(" ")}
+               </p>
+            </div>
+            <div style="position: absolute; top: 20%; right: 24px; bottom: 20%; width: 24px; overflow: hidden; opacity: 0.05; pointer-events: none;">
+               <p style="font-size: 6px; color: #06b6d4; font-family: monospace; line-height: 2; word-break: break-all; text-align: center; margin: 0;">
+                  ${Array(80).fill("1010").join(" ")}
+               </p>
+            </div>
+            
             <!-- Binary Footer -->
             <div style="position: absolute; bottom: 24px; left: 0; right: 0; text-align: center; opacity: 0.3;">
               <p style="font-size: 6px; letter-spacing: 0.8em; color: #06b6d4; font-family: monospace; margin: 0;">
@@ -996,6 +1017,14 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
         
         <!-- World-Class Boundary System A4 -->
         <div style="position: absolute; inset: 0; pointer-events: none;">
+          ${page.section.categories.length <= 1 ? `
+            <!-- Binary Matrix Rain Side -->
+            <div style="position: absolute; top: 25%; right: 48px; bottom: 25%; width: 32px; overflow: hidden; opacity: 0.08; pointer-events: none; z-index: 0;">
+              <p style="font-size: 6px; color: ${accentColor}; font-family: monospace; line-height: 1.8; word-break: break-all; text-align: center; margin: 0;">
+                ${Array(100).fill("01").join(" 10 ")}
+              </p>
+            </div>
+          ` : ''}
           <div style="position: absolute; inset: 12px; border: 1px solid rgba(55,65,81,0.6);"></div>
           <div style="position: absolute; inset: 20px; border: 2px solid ${accentColor}40; box-shadow: inset 0 0 30px ${accentColor}10;"></div>
           
