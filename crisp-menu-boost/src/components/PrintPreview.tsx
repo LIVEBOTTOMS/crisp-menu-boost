@@ -276,9 +276,27 @@ const CoverPage = ({
           </div>
 
           {/* QR Code Placeholder (Optional) */}
-          <div className="pt-8">
-            <p className="text-xs tracking-[0.25em] text-gray-600 uppercase">
+          <div className="pt-8 pb-4">
+            <p className="text-xs tracking-[0.25em] text-gray-600 uppercase mb-4">
               Menu • {new Date().getFullYear()}
+            </p>
+
+            {/* Tagline from Logo */}
+            <p className="text-[10px] tracking-[0.4em] font-bold uppercase"
+              style={{
+                fontFamily: "'Orbitron', sans-serif",
+                background: "linear-gradient(90deg, #00f0ff, #ff00ff)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent"
+              }}>
+              Eat • Drink • Code • Repeat
+            </p>
+          </div>
+
+          {/* Binary Footer */}
+          <div className="absolute bottom-6 left-0 right-0 text-center opacity-30">
+            <p className="text-[6px] tracking-[0.8em] text-cyan-500 font-mono">
+              01001100 01001001 01010110 01000101
             </p>
           </div>
         </div>
@@ -586,6 +604,14 @@ const PrintablePage = ({
         </div>
       </div>
     </div>
+
+      {/* Binary Code Watermark Footer */ }
+  <div className="absolute bottom-1 left-0 right-0 text-center opacity-20 pointer-events-none">
+    <p className="text-[5px] tracking-[1.5em] text-cyan-500 font-mono">
+      01001100 01001001 01010110 01000101
+    </p>
+  </div>
+    </div >
   );
 };
 
@@ -851,9 +877,20 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
               </div>
 
               <!-- Year -->
-              <div style="padding-top: 32px;">
-                <p style="font-size: 12px; letter-spacing: 0.25em; color: #4b5563; text-transform: uppercase; margin: 0;">
+              <div style="padding-top: 32px; padding-bottom: 24px;">
+                <p style="font-size: 12px; letter-spacing: 0.25em; color: #4b5563; text-transform: uppercase; margin: 0 0 16px 0;">
                   Menu • ${new Date().getFullYear()}
+                </p>
+                <!-- Tagline -->
+                <p style="font-size: 10px; letter-spacing: 0.4em; font-weight: bold; text-transform: uppercase; font-family: 'Orbitron', sans-serif; background: linear-gradient(90deg, #00f0ff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0;">
+                  Eat • Drink • Code • Repeat
+                </p>
+              </div>
+
+              <!-- Binary Footer -->
+              <div style="position: absolute; bottom: 24px; left: 0; right: 0; text-align: center; opacity: 0.3;">
+                <p style="font-size: 6px; letter-spacing: 0.8em; color: #06b6d4; font-family: monospace; margin: 0;">
+                  01001100 01001001 01010110 01000101
                 </p>
               </div>
             </div>
@@ -937,6 +974,13 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
             <!-- Tagline -->
             <div style="margin-top: 16px;">
                <p style="font-size: 10px; letter-spacing: 0.4em; color: rgba(34,211,238,0.6); font-weight: 600; text-transform: uppercase;">Eat • Drink • Code • Repeat</p>
+            </div>
+            
+            <!-- Binary Footer -->
+            <div style="position: absolute; bottom: 24px; left: 0; right: 0; text-align: center; opacity: 0.3;">
+              <p style="font-size: 6px; letter-spacing: 0.8em; color: #06b6d4; font-family: monospace; margin: 0;">
+                01001100 01001001 01010110 01000101
+              </p>
             </div>
           </div>
         </div>
@@ -1117,6 +1161,14 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
               <p style="font-size: 8px; color: #4b5563; margin: 0;">www.thelive.bar</p>
             </div>
           </div>
+        </div>
+        </div>
+        
+        <!-- Binary Code Watermark Footer -->
+        <div style="position: absolute; bottom: 4px; left: 0; right: 0; text-align: center; opacity: 0.2; pointer-events: none;">
+          <p style="font-size: 5px; letter-spacing: 1.5em; color: #06b6d4; font-family: monospace; margin: 0;">
+            01001100 01001001 01010110 01000101
+          </p>
         </div>
       </div>
     `;
