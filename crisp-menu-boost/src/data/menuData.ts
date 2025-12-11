@@ -190,15 +190,15 @@ export const beveragesMenu: MenuSection = {
       items: [
         {
           name: "Magic Moments (Plain)",
-          sizes: ["₹80", "₹150", "₹210", "₹400"],
+          sizes: ["₹90", "₹170", "₹240", "₹440"],
           description: "Triple-distilled smoothness with clean finish"
         },
-        { name: "Magic Moments Apple / Orange", sizes: ["₹80", "₹150", "₹210", "₹400"], description: "Fruit-infused with natural flavor essences" },
-        { name: "Romanov Vodka (Plain / Apple)", sizes: ["₹80", "₹140", "₹200", "₹360"], description: "Classic Russian-style with subtle sweetness" },
-        { name: "Smirnoff", sizes: ["₹120", "₹220", "₹320", "₹600"], description: "World-renowned purity, filtered ten times" },
+        { name: "Magic Moments Apple / Orange", sizes: ["₹90", "₹170", "₹240", "₹440"], description: "Fruit-infused with natural flavor essences" },
+        { name: "Romanov Vodka (Plain / Apple)", sizes: ["₹90", "₹160", "₹220", "₹400"], description: "Classic Russian-style with subtle sweetness" },
+        { name: "Smirnoff", sizes: ["₹140", "₹250", "₹360", "₹660"], description: "World-renowned purity, filtered ten times" },
         {
           name: "Absolut Vodka",
-          sizes: ["₹200", "₹340", "₹480", "₹950"],
+          sizes: ["₹220", "₹380", "₹530", "₹1,050"],
           description: "Swedish winter wheat from Åhus, distilled countless times for exceptional purity. Clean, rich & complex."
         },
       ],
@@ -207,12 +207,12 @@ export const beveragesMenu: MenuSection = {
       title: "Aged & Spiced Rums",
       icon: "🥃",
       items: [
-        { name: "Old Monk", sizes: ["₹60", "₹110", "₹160", "₹300"], description: "Legendary 7-year aged dark rum with vanilla, oak & caramelized sugar notes", isBestSeller: true },
-        { name: "Bacardi White", sizes: ["₹120", "₹220", "₹320", "₹600"], description: "Light & crisp, perfect for cocktails" },
-        { name: "Bacardi Black", sizes: ["₹70", "₹140", "₹200", "₹380"], description: "Rich molasses flavor with oak undertones" },
-        { name: "Bacardi Lemon", sizes: ["₹140", "₹240", "₹340", "₹640"], description: "Zesty citrus twist on classic rum" },
-        { name: "Bacardi Mango", sizes: ["₹140", "₹240", "₹340", "₹640"], description: "Tropical mango-infused rum" },
-        { name: "McDowell's Rum", sizes: ["₹60", "₹110", "₹160", "₹300"], description: "Smooth Caribbean-inspired blend" },
+        { name: "Old Monk", sizes: ["₹70", "₹130", "₹180", "₹330"], description: "Legendary 7-year aged dark rum with vanilla, oak & caramelized sugar notes", isBestSeller: true },
+        { name: "Bacardi White", sizes: ["₹140", "₹250", "₹360", "₹660"], description: "Light & crisp, perfect for cocktails" },
+        { name: "Bacardi Black", sizes: ["₹80", "₹160", "₹220", "₹420"], description: "Rich molasses flavor with oak undertones" },
+        { name: "Bacardi Lemon", sizes: ["₹160", "₹270", "₹380", "₹710"], description: "Zesty citrus twist on classic rum" },
+        { name: "Bacardi Mango", sizes: ["₹160", "₹270", "₹380", "₹710"], description: "Tropical mango-infused rum" },
+        { name: "McDowell's Rum", sizes: ["₹70", "₹130", "₹180", "₹330"], description: "Smooth Caribbean-inspired blend" },
       ],
     },
     {
