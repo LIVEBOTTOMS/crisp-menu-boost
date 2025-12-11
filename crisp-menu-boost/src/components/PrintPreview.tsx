@@ -34,6 +34,38 @@ const getSectionIntro = (title: string): string => {
   return "Experience the taste of excellence.";
 };
 
+const getCategoryIconSvg = (title: string, color: string): string => {
+  const t = title.toUpperCase();
+  const stroke = color;
+
+  // Wine / Champaign
+  if (t.includes("WINE") || t.includes("SANG") || t.includes("CHAMP"))
+    return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 22h8"/><path d="M7 10h10"/><path d="M12 15v7"/><path d="M12 15a5 5 0 0 0 5-5c0-2-.5-4-2-8H9c-1.5 4-2 6-2 8a5 5 0 0 0 5 5Z"/></svg>`;
+
+  // Beer
+  if (t.includes("BEER") || t.includes("BREW") || t.includes("DRAUGHT") || t.includes("PINT"))
+    return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 11h1a3 3 0 0 1 0 6h-1"/><path d="M9 12v6"/><path d="M13 12v6"/><path d="M14 7.5c-1 0-1.44.5-3 .5s-2-.5-3-.5-1.72 0-2.5.5a2.5 2.5 0 0 1 0 5c.78 0 1.57.5 2.5.5S9.44 13 11 13s2 .5 3 .5 1.72 0 2.5-.5a2.5 2.5 0 0 1 0-5c-.78 0-1.57-.5-2.5-.5Z"/><path d="M5 8v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8"/></svg>`;
+
+  // Whisky / Spirits (Rock Glass style)
+  if (t.includes("WHISK") || t.includes("SCOTCH") || t.includes("BOURBON") || t.includes("RUM") || t.includes("VODKA") || t.includes("GIN") || t.includes("TEQUILA") || t.includes("BRANDY") || t.includes("COGNAC"))
+    return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2v11a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V2"/><path d="M12 15a5 5 0 0 0 5-5H7a5 5 0 0 0 5 5Z"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>`;
+
+  // Cocktails (Martini)
+  if (t.includes("COCKTAIL") || t.includes("MARTINI") || t.includes("SHOOTER") || t.includes("SHOT"))
+    return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 22h8"/><path d="M12 11v11"/><path d="m19 3-7 8-7-8h14Z"/></svg>`;
+
+  // Food / Appetizers
+  if (t.includes("APPETIZER") || t.includes("STARTER") || t.includes("SNACK") || t.includes("SALAD") || t.includes("SOUP") || t.includes("FRIES") || t.includes("BITE"))
+    return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>`;
+
+  // Mains (Pot/Bowl)
+  if (t.includes("MAIN") || t.includes("COURSE") || t.includes("CURRY") || t.includes("RICE") || t.includes("BIRYANI") || t.includes("NOODLE") || t.includes("PASTA") || t.includes("PIZZA"))
+    return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a1 1 0 0 0-1-1v1a2 2 0 0 1-4 0V5a2 2 0 1 0-4 0v14a2 2 0 0 1-4 0v-1a1 1 0 0 0-1 1v2"/><path d="M19 10V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v5"/><path d="M21 15a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4Z"/><path d="M10 5a2 2 0 1 1 4 0v15a2 2 0 1 1-4 0V5Z"/></svg>`;
+
+  // Default (Star/Sparkle)
+  return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>`;
+};
+
 interface PrintPreviewProps {
   isOpen: boolean;
   onClose: () => void;
@@ -158,7 +190,9 @@ const CategoryBlock = ({
           style={{ background: `linear-gradient(90deg, transparent, ${accentColor}88, transparent)` }}
         />
 
-        {category.icon && <span className="text-lg">{category.icon}</span>}
+        <span className="text-lg flex items-center justify-center opacity-80"
+          dangerouslySetInnerHTML={{ __html: getCategoryIconSvg(category.title, accentColor) }}
+        />
 
         <h3 className="text-[13px] font-bold tracking-[0.2em] uppercase" style={{ color: accentColor }}>
           {category.title}
@@ -1110,7 +1144,9 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
             <div style="margin-bottom: 32px;">
               <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding-bottom: 4px; position: relative;">
                 <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, ${accentColor}88, transparent);"></div>
-                ${category.icon ? `<span style="font-size: 16px;">${escapeHtml(category.icon)}</span>` : ""}
+                <span style="display: flex; align-items: center; justify-content: center; opacity: 0.8;">
+                   ${getCategoryIconSvg(category.title, accentColor)}
+                </span>
                 <h3 style="font-size: 12px; font-weight: bold; letter-spacing: 0.15em; text-transform: uppercase; color: ${accentColor};">${escapeHtml(category.title)}</h3>
                 ${showDietIcon ? `
                   <div style="margin-left: auto; border: 1px solid ${isVeg ? "#22c55e" : "#ef4444"}; padding: 2px; width: 12px; height: 12px; display: flex; align-items: center; justify-content: center; border-radius: 2px;">
