@@ -21,6 +21,19 @@ const escapeHtml = (text: string | undefined | null): string => {
     .replace(/'/g, "&#039;");
 };
 
+const getSectionIntro = (title: string): string => {
+  const t = title.toUpperCase();
+  if (t.includes("WHISKY") || t.includes("WHISKEY")) return "A curated journey through the world's finest distilleries.";
+  if (t.includes("VODKA") || t.includes("SPIRIT") || t.includes("RUM") || t.includes("GIN")) return "Pure, distinct, and crafted for the bold.";
+  if (t.includes("BEER") || t.includes("BREW")) return "Crisp, refreshing, and perfectly poured.";
+  if (t.includes("APPETIZER") || t.includes("STARTER") || t.includes("SNACK")) return "Small plates, bold flavors—the perfect beginning.";
+  if (t.includes("MAIN") || t.includes("Course")) return "Hearty, soulful dishes crafted with passion.";
+  if (t.includes("REFRESH") || t.includes("BEVERAGE")) return "Cool, crisp, and revitalizing.";
+  if (t.includes("PREMIUM") || t.includes("RESERVE")) return "Exclusive pours for the distinguished palate.";
+  if (t.includes("SIDE") || t.includes("DESSERT")) return "The perfect companions to your meal.";
+  return "Experience the taste of excellence.";
+};
+
 interface PrintPreviewProps {
   isOpen: boolean;
   onClose: () => void;
@@ -522,11 +535,18 @@ const PrintablePage = ({
             {section.title}
           </span>
         </div>
+
+        {/* Section Intro */}
+        <div className="text-center mt-3">
+          <p className="text-[10px] text-gray-400 font-serif italic tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            {getSectionIntro(section.title)}
+          </p>
+        </div>
       </div>
 
       {/* Content Area - Expanded for A4 */}
       <div className="flex-1 px-12 pb-6 overflow-hidden">
-        <div className="max-w-2xl mx-auto h-full">
+        <div className="max-w-2xl mx-auto h-full space-y-6">
           {section.categories.map((category, index) => {
             const isVeg = section.title.includes("VEG") && !section.title.includes("NON");
             const isNonVeg = section.title.includes("NON-VEG") || section.title.includes("MEAT") || section.title.includes("CHICKEN");
@@ -1070,19 +1090,24 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
           </div>
         </div>
 
-        <!-- Section Title -->
-        <div style="margin-top: 24px; margin-bottom: 16px; padding-left: 48px; padding-right: 48px; position: relative; text-align: center;">
-          <div style="position: absolute; top: 50%; left: 48px; right: 48px; height: 1px; background-color: rgba(31,41,55,0.5); z-index: 0;"></div>
-          <span style="display: inline-block; padding: 8px 40px; background-color: #0a0a0f; font-size: 20px; font-weight: bold; letter-spacing: 0.3em; text-transform: uppercase; border-top: 1px solid ${accentColor}30; border-bottom: 1px solid ${accentColor}30; color: ${accentColor}; font-family: 'Orbitron', sans-serif; position: relative; z-index: 1; text-shadow: 0 0 20px ${accentColor}40;">
-            ${escapeHtml(page.section.title)}
-          </span>
-        </div>
+          <div style="margin-top: 24px; margin-bottom: 24px; padding-left: 48px; padding-right: 48px; position: relative; text-align: center;">
+            <div style="position: absolute; top: 50%; left: 48px; right: 48px; height: 1px; background-color: rgba(31,41,55,0.5); z-index: 0;"></div>
+            <span style="display: inline-block; padding: 8px 40px; background-color: #0a0a0f; font-size: 20px; font-weight: bold; letter-spacing: 0.3em; text-transform: uppercase; border-top: 1px solid ${accentColor}30; border-bottom: 1px solid ${accentColor}30; color: ${accentColor}; font-family: 'Orbitron', sans-serif; position: relative; z-index: 1; text-shadow: 0 0 20px ${accentColor}40;">
+              ${escapeHtml(page.section.title)}
+            </span>
+            <!-- Section Intro HTML -->
+            <div style="margin-top: 12px; position: relative; z-index: 2;">
+              <p style="font-family: 'Cormorant Garamond', serif; font-size: 10px; color: #9ca3af; font-style: italic; letter-spacing: 0.05em; margin: 0; background-color: #0a0a0f; display: inline-block; padding: 0 16px;">
+                ${getSectionIntro(page.section.title)}
+              </p>
+            </div>
+          </div>
 
         <!-- Content -->
         <div style="flex: 1; padding-left: 48px; padding-right: 48px; padding-bottom: 24px; overflow: hidden;">
           <div style="max-width: 672px; margin: 0 auto;">
           ${page.section.categories.map((category, catIdx) => `
-            <div style="margin-bottom: 20px;">
+            <div style="margin-bottom: 32px;">
               <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding-bottom: 4px; position: relative;">
                 <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, ${accentColor}88, transparent);"></div>
                 ${category.icon ? `<span style="font-size: 16px;">${escapeHtml(category.icon)}</span>` : ""}
