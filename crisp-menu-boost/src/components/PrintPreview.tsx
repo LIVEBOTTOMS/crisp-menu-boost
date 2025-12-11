@@ -270,8 +270,8 @@ const CoverPage = ({
             <p className="text-sm text-cyan-400 tracking-wider" style={{ fontFamily: "'Orbitron', sans-serif" }}>
               www.thelive.bar
             </p>
-            <p className="text-xs text-gray-500 tracking-wide">
-              Reservations: +91 7507066880
+            <p className="text-[10px] text-cyan-400 tracking-wide font-bold uppercase mt-1" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+              For booking contact: 7507066880 / 9881241411 / 9172792591
             </p>
           </div>
 
@@ -879,8 +879,8 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                 <p style="font-size: 14px; color: #22d3ee; letter-spacing: 0.1em; font-family: 'Orbitron', sans-serif; margin: 0 0 12px 0;">
                   www.thelive.bar
                 </p>
-                <p style="font-size: 12px; color: #6b7280; letter-spacing: 0.05em; margin: 0;">
-                  Reservations: +91 7507066880
+                <p style="font-size: 10px; color: #22d3ee; letter-spacing: 0.1em; font-family: 'Orbitron', sans-serif; margin: 0; font-weight: bold; text-transform: uppercase;">
+                  For booking contact:<br/> 7507066880 / 9881241411 / 9172792591
                 </p>
               </div>
 
