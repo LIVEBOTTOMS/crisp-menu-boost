@@ -307,9 +307,13 @@ const CoverPage = ({
             <p className="text-base tracking-[0.2em] text-gray-300 uppercase font-medium">
               Premium Dining & Spirits
             </p>
-            <p className="text-sm tracking-[0.15em] text-gray-400">
+            <p className="text-[11px] text-gray-400 tracking-wider">
               Opp Pune Bakery, Wakad, Pune
             </p>
+            {/* Address QR Code */}
+            <div className="my-4 flex justify-center">
+              <img src="/address_qr.png" alt="Location QR" className="w-20 h-20 rounded shadow-lg border border-cyan-500/30" />
+            </div>
           </div>
 
           {/* Contact Information */}
@@ -926,6 +930,11 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                 <p style="font-size: 14px; letter-spacing: 0.15em; color: #9ca3af; margin: 0;">
                   Opp Pune Bakery, Wakad, Pune
                 </p>
+              </div>
+              
+              <!-- Address QR Base64/Image -->
+              <div style="margin-top: 12px; margin-bottom: 24px; display: flex; justify-content: center;">
+                <img src="/address_qr.png" style="width: 80px; height: 80px; border-radius: 4px; border: 1px solid rgba(34,211,238,0.3); box-shadow: 0 4px 12px rgba(0,0,0,0.5); display: block;" />
               </div>
 
               <!-- Contact Information -->
