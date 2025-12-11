@@ -190,24 +190,29 @@ export const beveragesMenu: MenuSection = {
       items: [
         {
           name: "Magic Moments (Plain)",
-          sizes: ["₹125", "₹250", "₹375", "₹750"],
+          sizes: ["₹88", "₹165", "₹231", "₹440"],
           description: "Triple-distilled smoothness with clean finish"
         },
-        { name: "Magic Moments Apple / Orange", sizes: ["₹133", "₹267", "₹400", "₹800"], description: "Fruit-infused with natural flavor essences" },
-        { name: "Romanov Vodka (Plain / Apple)", sizes: ["₹108", "₹217", "₹325", "₹650"], description: "Classic Russian-style with subtle sweetness" },
-        { name: "Smirnoff", sizes: ["₹183", "₹367", "₹550", "₹1,100"], description: "World-renowned purity, filtered ten times" },
+        { name: "Magic Moments Apple / Orange", sizes: ["₹88", "₹165", "₹231", "₹440"], description: "Fruit-infused with natural flavor essences" },
+        { name: "Romanov Vodka (Plain / Apple)", sizes: ["₹88", "₹154", "₹220", "₹396"], description: "Classic Russian-style with subtle sweetness" },
+        { name: "Smirnoff", sizes: ["₹132", "₹242", "₹352", "₹660"], description: "World-renowned purity, filtered ten times" },
+        {
+          name: "Absolut Vodka",
+          sizes: ["₹220", "₹374", "₹528", "₹1,045"],
+          description: "Swedish winter wheat from Åhus, distilled countless times for exceptional purity. Clean, rich & complex."
+        },
       ],
     },
     {
       title: "Aged & Spiced Rums",
       icon: "🥃",
       items: [
-        { name: "Old Monk", sizes: ["₹125", "₹250", "₹375", "₹750"], description: "Legendary 7-year aged dark rum with vanilla, oak & caramelized sugar notes", isBestSeller: true },
-        { name: "Bacardi White", sizes: ["₹150", "₹300", "₹450", "₹900"], description: "Light & crisp, perfect for cocktails" },
-        { name: "Bacardi Black", sizes: ["₹158", "₹317", "₹475", "₹950"], description: "Rich molasses flavor with oak undertones" },
-        { name: "Bacardi Lemon", sizes: ["₹163", "₹327", "₹490", "₹980"], description: "Zesty citrus twist on classic rum" },
-        { name: "Bacardi Mango", sizes: ["₹163", "₹327", "₹490", "₹980"], description: "Tropical mango-infused rum" },
-        { name: "McDowell's Rum", sizes: ["₹117", "₹233", "₹350", "₹700"], description: "Smooth Caribbean-inspired blend" },
+        { name: "Old Monk", sizes: ["₹66", "₹121", "₹176", "₹330"], description: "Legendary 7-year aged dark rum with vanilla, oak & caramelized sugar notes", isBestSeller: true },
+        { name: "Bacardi White", sizes: ["₹132", "₹242", "₹352", "₹660"], description: "Light & crisp, perfect for cocktails" },
+        { name: "Bacardi Black", sizes: ["₹77", "₹154", "₹220", "₹418"], description: "Rich molasses flavor with oak undertones" },
+        { name: "Bacardi Lemon", sizes: ["₹154", "₹264", "₹374", "₹704"], description: "Zesty citrus twist on classic rum" },
+        { name: "Bacardi Mango", sizes: ["₹154", "₹264", "₹374", "₹704"], description: "Tropical mango-infused rum" },
+        { name: "McDowell's Rum", sizes: ["₹66", "₹121", "₹176", "₹330"], description: "Smooth Caribbean-inspired blend" },
       ],
     },
     {
@@ -272,7 +277,6 @@ export const beveragesMenu: MenuSection = {
       icon: "🍸",
       items: [
         { name: "Grey Goose (30 ml)", price: "₹649", description: "Crafted in France's Cognac region using soft winter wheat & pristine spring water. Silky smooth with subtle almond notes.", isTopShelf: true },
-        { name: "Absolut Vodka (30 ml)", price: "₹449", description: "Swedish winter wheat from Åhus, distilled countless times for exceptional purity. Clean, rich & complex." },
         { name: "Absolut Raspberry (30 ml)", price: "₹479", description: "Natural raspberry infusion" },
         { name: "Ketel One (30 ml)", price: "₹549", description: "300-year Dutch heritage. Copper pot distilled with hints of citrus & honey. Exceptionally crisp finish.", isPremium: true },
         { name: "Smirnoff Orange (30 ml)", price: "₹229", description: "Citrus-infused vodka" },
