@@ -30,39 +30,39 @@ const MenuItemRow = ({ item, isEven }: { item: MenuItem; isEven: boolean }) => {
 
   return (
     <div className={`py-3 px-4 ${isEven ? "bg-white/[0.02]" : ""}`}>
-      <div className="flex justify-between items-start gap-4">
-        <div className="flex-1">
-          <h4 className="text-[15px] font-semibold text-white tracking-wide uppercase">
+      <div className="flex justify-between items-start gap-2">
+        <div className="flex-1 min-w-0">
+          <h4 className="text-[14px] font-semibold text-white tracking-wide uppercase truncate">
             {item.name}
           </h4>
           {item.description && (
-            <p className="text-[11px] text-gray-400 mt-1 italic leading-relaxed">
+            <p className="text-[10px] text-gray-400 mt-1 italic leading-relaxed truncate">
               {item.description}
             </p>
           )}
         </div>
-        <div className="flex-shrink-0 text-right">
+        <div className="flex-shrink-0 text-right ml-2">
           {hasSizes ? (
-            <div className="flex gap-4">
+            <div className="flex gap-2">
               {item.sizes!.map((size, i) => (
-                <span key={i} className="text-[13px] font-medium text-amber-400 min-w-[50px] text-center">
+                <span key={i} className="text-[11px] font-medium text-amber-400 min-w-[32px] text-right">
                   {size}
                 </span>
               ))}
             </div>
           ) : hasHalfFull ? (
-            <div className="flex gap-4 items-center">
+            <div className="flex gap-3 items-center">
               <div className="text-center">
-                <span className="text-[9px] text-gray-500 block uppercase tracking-wider">Half</span>
-                <span className="text-[13px] font-medium text-amber-400">{item.halfPrice}</span>
+                <span className="text-[8px] text-gray-500 block uppercase tracking-wider">Half</span>
+                <span className="text-[11px] font-medium text-amber-400">{item.halfPrice}</span>
               </div>
               <div className="text-center">
-                <span className="text-[9px] text-gray-500 block uppercase tracking-wider">Full</span>
-                <span className="text-[13px] font-medium text-amber-400">{item.fullPrice}</span>
+                <span className="text-[8px] text-gray-500 block uppercase tracking-wider">Full</span>
+                <span className="text-[11px] font-medium text-amber-400">{item.fullPrice}</span>
               </div>
             </div>
           ) : (
-            <span className="text-[14px] font-semibold text-amber-400">{item.price}</span>
+            <span className="text-[12px] font-semibold text-amber-400">{item.price}</span>
           )}
         </div>
       </div>
@@ -106,17 +106,17 @@ const CategoryBlock = ({
 
       {/* Size Headers for drinks */}
       {category.items[0]?.sizes && (
-        <div className="flex justify-end gap-4 px-4 pb-2 border-b border-gray-800">
+        <div className="flex justify-end gap-2 px-4 pb-2 border-b border-gray-800">
           {category.items[0].sizes.length === 4 ? (
             <>
-              <span className="text-[9px] text-gray-400 min-w-[50px] text-center uppercase tracking-wider font-semibold">30ml</span>
-              <span className="text-[9px] text-gray-400 min-w-[50px] text-center uppercase tracking-wider font-semibold">60ml</span>
-              <span className="text-[9px] text-gray-400 min-w-[50px] text-center uppercase tracking-wider font-semibold">90ml</span>
-              <span className="text-[9px] text-gray-400 min-w-[50px] text-center uppercase tracking-wider font-semibold">180ml</span>
+              <span className="text-[8px] text-gray-400 min-w-[32px] text-right uppercase tracking-wider font-semibold">30ml</span>
+              <span className="text-[8px] text-gray-400 min-w-[32px] text-right uppercase tracking-wider font-semibold">60ml</span>
+              <span className="text-[8px] text-gray-400 min-w-[32px] text-right uppercase tracking-wider font-semibold">90ml</span>
+              <span className="text-[8px] text-gray-400 min-w-[32px] text-right uppercase tracking-wider font-semibold">180ml</span>
             </>
           ) : (
             category.items[0].sizes.map((_, i) => (
-              <span key={i} className="text-[9px] text-gray-500 min-w-[50px] text-center uppercase tracking-wider">
+              <span key={i} className="text-[8px] text-gray-500 min-w-[32px] text-right uppercase tracking-wider">
                 Size {i + 1}
               </span>
             ))
@@ -134,105 +134,183 @@ const CategoryBlock = ({
   );
 };
 
+// A4 dimensions at 96dpi: 794px x 1123px
+const A4_WIDTH = 794;
+const A4_HEIGHT = 1123;
+
+// Cover Page Component
+const CoverPage = ({ pageRef }: { pageRef: React.RefObject<HTMLDivElement> }) => {
+  return (
+    <div
+      ref={pageRef}
+      className="bg-[#0a0a0f] relative flex flex-col items-center justify-center overflow-hidden"
+      style={{
+        fontFamily: "'Rajdhani', sans-serif",
+        width: `${A4_WIDTH}px`,
+        minHeight: `${A4_HEIGHT}px`,
+        background: "radial-gradient(ellipse at center, #0f0f18 0%, #0a0a0f 70%)"
+      }}
+    >
+      {/* Rain Effect Overlay */}
+      <div className="absolute inset-0 opacity-20 pointer-events-none"
+        style={{
+          backgroundImage: "linear-gradient(180deg, transparent 0%, rgba(0,240,255,0.03) 50%, transparent 100%)",
+          backgroundSize: "3px 20px",
+          animation: "rain 0.5s linear infinite"
+        }}
+      />
+
+      {/* Elegant Boundary System */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Outer Frame */}
+        <div className="absolute inset-[12px] border border-gray-800/60" />
+        
+        {/* Inner Frame with Gradient */}
+        <div className="absolute inset-[20px] border border-opacity-30" style={{ borderColor: "#00f0ff" }} />
+
+        {/* Corner Accents - Larger for cover */}
+        <div className="absolute top-[20px] left-[20px] w-24 h-24 border-l-2 border-t-2" style={{ borderColor: "#00f0ff" }} />
+        <div className="absolute top-[20px] right-[20px] w-24 h-24 border-r-2 border-t-2" style={{ borderColor: "#ff00ff" }} />
+        <div className="absolute bottom-[20px] left-[20px] w-24 h-24 border-l-2 border-b-2" style={{ borderColor: "#ff00ff" }} />
+        <div className="absolute bottom-[20px] right-[20px] w-24 h-24 border-r-2 border-b-2" style={{ borderColor: "#00f0ff" }} />
+      </div>
+
+      {/* Logo */}
+      <div className="relative z-10 mb-8">
+        <img
+          src="/live_logo_actual.jpg"
+          alt="LIVE"
+          className="h-56 w-auto object-contain"
+          style={{ 
+            filter: "brightness(1.2) contrast(1.1) saturate(1.2)",
+            boxShadow: "0 0 60px rgba(0,240,255,0.3), 0 0 120px rgba(255,0,255,0.2)"
+          }}
+        />
+      </div>
+
+      {/* Tagline */}
+      <div className="relative z-10 flex items-center justify-center gap-4 mb-12">
+        <div className="h-[1px] w-24 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
+        <span 
+          className="text-xl tracking-[0.3em] uppercase font-bold text-white/90"
+          style={{ fontFamily: "'Orbitron', sans-serif", textShadow: "0 0 20px rgba(0,240,255,0.5)" }}
+        >
+          EAT . DRINK . CODE . REPEAT
+        </span>
+        <div className="h-[1px] w-24 bg-gradient-to-l from-transparent via-magenta-500 to-transparent" />
+      </div>
+
+      {/* Decorative Utensils & Binary */}
+      <div className="relative z-10 flex flex-col items-center opacity-60">
+        <div className="flex gap-3 text-3xl text-white/80">
+          <span>🍴</span>
+          <span>🥄</span>
+        </div>
+        <div className="mt-4 text-[10px] text-cyan-400/60 tracking-widest font-mono">
+          00110101001111010110110011
+        </div>
+        <div className="text-[10px] text-magenta-400/60 tracking-widest font-mono">
+          01010101101101010111111011
+        </div>
+      </div>
+
+      {/* Menu Text at Bottom */}
+      <div className="absolute bottom-16 left-0 right-0 text-center z-10">
+        <span 
+          className="text-5xl font-bold tracking-[0.5em] uppercase"
+          style={{ 
+            fontFamily: "'Orbitron', sans-serif",
+            background: "linear-gradient(90deg, #00f0ff, #ff00ff, #00f0ff)",
+            backgroundSize: "200% 100%",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            textShadow: "0 0 40px rgba(0,240,255,0.3)"
+          }}
+        >
+          MENU
+        </span>
+      </div>
+    </div>
+  );
+};
+
 const PrintablePage = ({
   section,
   pageRef,
   variant,
   pageNumber,
-  totalPages
+  totalPages,
+  isFirstPage = false
 }: {
   section: MenuSectionType;
   pageRef: React.RefObject<HTMLDivElement>;
   variant: "cyan" | "magenta" | "gold";
   pageNumber: number;
   totalPages: number;
+  isFirstPage?: boolean;
 }) => {
   const accentColor = variant === "cyan" ? "#00f0ff" : variant === "magenta" ? "#ff00ff" : "#ffd700";
 
   return (
     <div
       ref={pageRef}
-      className="bg-[#0a0a0f] w-[559px] min-h-[794px] relative flex flex-col overflow-hidden"
+      className="bg-[#0a0a0f] relative flex flex-col overflow-hidden"
       style={{
         fontFamily: "'Rajdhani', sans-serif",
-        backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px)",
-        backgroundSize: "30px 30px"
+        backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px)",
+        backgroundSize: "40px 40px",
+        width: `${A4_WIDTH}px`,
+        minHeight: `${A4_HEIGHT}px`
       }}
     >
-      {/* World-Class Boundary System - A5 Optimized */}
+      {/* Elegant Boundary System - A4 Optimized */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Outer Frame with tech corners */}
-        <div className="absolute inset-[8px] border border-gray-800/80">
-          {/* Tech notches */}
-          <div className="absolute top-1/4 left-[-1px] w-[3px] h-8 bg-gray-800" />
-          <div className="absolute bottom-1/4 right-[-1px] w-[3px] h-8 bg-gray-800" />
-        </div>
-
+        {/* Outer Frame */}
+        <div className="absolute inset-[12px] border border-gray-800/60" />
+        
         {/* Inner Frame with Accent */}
-        <div className="absolute inset-[15px] border border-opacity-30" style={{ borderColor: accentColor }} />
+        <div className="absolute inset-[20px] border border-opacity-20" style={{ borderColor: accentColor }} />
 
-        {/* corner SVG Circuits */}
-        <svg className="absolute top-[15px] left-[15px] w-24 h-24 opacity-60" viewBox="0 0 100 100" style={{ color: accentColor }}>
-          <path fill="none" stroke="currentColor" strokeWidth="1" d="M 0,0 L 40,0 L 45,5 L 45,20 M 0,0 L 0,40 L 5,45 L 20,45" />
-          <circle cx="45" cy="20" r="2" fill="currentColor" />
-          <circle cx="20" cy="45" r="2" fill="currentColor" />
-          <rect x="2" y="2" width="10" height="10" fill="currentColor" opacity="0.5" />
-        </svg>
-
-        <svg className="absolute top-[15px] right-[15px] w-24 h-24 opacity-60" viewBox="0 0 100 100" style={{ color: accentColor, transform: "scaleX(-1)" }}>
-          <path fill="none" stroke="currentColor" strokeWidth="1" d="M 0,0 L 40,0 L 45,5 L 45,20 M 0,0 L 0,40 L 5,45 L 20,45" />
-          <circle cx="45" cy="20" r="2" fill="currentColor" />
-          <circle cx="20" cy="45" r="2" fill="currentColor" />
-          <rect x="2" y="2" width="10" height="10" fill="currentColor" opacity="0.5" />
-        </svg>
-
-        <svg className="absolute bottom-[15px] left-[15px] w-24 h-24 opacity-60" viewBox="0 0 100 100" style={{ color: accentColor, transform: "scaleY(-1)" }}>
-          <path fill="none" stroke="currentColor" strokeWidth="1" d="M 0,0 L 40,0 L 45,5 L 45,20 M 0,0 L 0,40 L 5,45 L 20,45" />
-          <circle cx="45" cy="20" r="2" fill="currentColor" />
-          <circle cx="20" cy="45" r="2" fill="currentColor" />
-          <rect x="2" y="2" width="10" height="10" fill="currentColor" opacity="0.5" />
-        </svg>
-
-        <svg className="absolute bottom-[15px] right-[15px] w-24 h-24 opacity-60" viewBox="0 0 100 100" style={{ color: accentColor, transform: "rotate(180deg)" }}>
-          <path fill="none" stroke="currentColor" strokeWidth="1" d="M 0,0 L 40,0 L 45,5 L 45,20 M 0,0 L 0,40 L 5,45 L 20,45" />
-          <circle cx="45" cy="20" r="2" fill="currentColor" />
-          <circle cx="20" cy="45" r="2" fill="currentColor" />
-          <rect x="2" y="2" width="10" height="10" fill="currentColor" opacity="0.5" />
-        </svg>
+        {/* Corner Accents */}
+        <div className="absolute top-[20px] left-[20px] w-16 h-16 border-l-2 border-t-2" style={{ borderColor: accentColor }} />
+        <div className="absolute top-[20px] right-[20px] w-16 h-16 border-r-2 border-t-2" style={{ borderColor: accentColor }} />
+        <div className="absolute bottom-[20px] left-[20px] w-16 h-16 border-l-2 border-b-2" style={{ borderColor: accentColor }} />
+        <div className="absolute bottom-[20px] right-[20px] w-16 h-16 border-r-2 border-b-2" style={{ borderColor: accentColor }} />
       </div>
 
-      {/* Premium Header with New Logo - ENHANCED BRIGHTNESS */}
-      <div className="pt-8 pb-4 text-center relative z-10">
-        <div className="flex justify-center mb-4">
-          <div className="relative p-2 border border-dashed border-gray-700 rounded-lg bg-black/40">
-            <img
-              src="/live_logo_actual.jpg"
-              alt="LIVE"
-              className="h-32 w-auto object-contain drop-shadow-[0_0_15px_rgba(0,0,0,0.8)]"
-              style={{ filter: "brightness(1.2) contrast(1.1) saturate(1.1)" }}
-            />
+      {/* Compact Header - Only on first page or section headers */}
+      {isFirstPage && (
+        <div className="pt-8 pb-4 text-center relative z-10">
+          <div className="flex justify-center mb-3">
+            <div className="relative p-2 border border-dashed border-gray-700 rounded-lg bg-black/40">
+              <img
+                src="/live_logo_actual.jpg"
+                alt="LIVE"
+                className="h-20 w-auto object-contain"
+                style={{ filter: "brightness(1.2) contrast(1.1) saturate(1.1)" }}
+              />
+            </div>
+          </div>
+          <div className="flex items-center justify-center gap-3">
+            <div className="h-[1px] w-20 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
+            <span className="text-[9px] tracking-[0.2em] uppercase font-bold text-white/90" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+              EAT . DRINK . CODE . REPEAT
+            </span>
+            <div className="h-[1px] w-20 bg-gradient-to-l from-transparent via-magenta-500 to-transparent" />
           </div>
         </div>
+      )}
 
-        <div className="flex items-center justify-center gap-3 mb-2">
-          <div className="h-[1px] w-16 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
-          <span className="text-[10px] tracking-[0.25em] uppercase font-bold text-white drop-shadow-md" style={{ fontFamily: "'Orbitron', sans-serif" }}>
-            EAT . DRINK . CODE . REPEAT
-          </span>
-          <div className="h-[1px] w-16 bg-gradient-to-l from-transparent via-magenta-500 to-transparent" />
-        </div>
-      </div>
-
-      {/* Section Title with Neon Glow */}
-      <div className="mb-6 px-8 relative">
-        <div className="absolute top-1/2 left-8 right-8 h-[1px] bg-gray-800 -z-10" />
+      {/* Section Title - Compact */}
+      <div className={`${isFirstPage ? 'mb-4' : 'pt-6 mb-4'} px-10 relative`}>
+        <div className="absolute top-1/2 left-10 right-10 h-[1px] bg-gray-800 -z-10" />
         <div className="text-center">
           <span
-            className="inline-block px-8 py-2 bg-[#0a0a0f] text-2xl font-bold tracking-[0.25em] uppercase border-y border-gray-800"
+            className="inline-block px-6 py-1.5 bg-[#0a0a0f] text-xl font-bold tracking-[0.2em] uppercase border-y border-gray-800"
             style={{
               color: accentColor,
               fontFamily: "'Orbitron', sans-serif",
-              textShadow: `0 0 10px ${accentColor}66`
+              textShadow: `0 0 8px ${accentColor}55`
             }}
           >
             {section.title}
@@ -240,14 +318,12 @@ const PrintablePage = ({
         </div>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 px-8 pb-8">
-        <div className="max-w-md mx-auto">
+      {/* Content - Two Column Layout for A4 */}
+      <div className="flex-1 px-10 pb-6">
+        <div className="grid grid-cols-2 gap-6">
           {section.categories.map((category, index) => {
-            // Auto-detect Veg/Non-Veg for Food Pages
             const isVeg = section.title.includes("VEG") && !section.title.includes("NON");
             const isNonVeg = section.title.includes("NON-VEG") || section.title.includes("MEAT") || section.title.includes("CHICKEN");
-            // Only show icons for Food pages (Indices 0-4 roughly, or just logic check)
             const showDietIcon = isVeg || isNonVeg;
 
             return (
@@ -263,22 +339,14 @@ const PrintablePage = ({
         </div>
       </div>
 
-
-      {/* Footer */}
-      <div className="pb-6 text-center relative z-10">
-        <div className="flex justify-between items-end px-12">
-          <div className="text-left">
-            <p className="text-[8px] tracking-[0.15em] text-gray-600 uppercase">PUNE</p>
-          </div>
-          <div className="text-center">
-            <p className="text-[8px] text-gray-500 mb-0.5" style={{ color: accentColor }}>page</p>
-            <p className="text-[12px] font-bold text-white" style={{ fontFamily: "'Orbitron', sans-serif" }}>
-              0{pageNumber} <span className="text-gray-600 text-[9px]">/ 0{totalPages}</span>
-            </p>
-          </div>
-          <div className="text-right">
-            <p className="text-[8px] tracking-[0.15em] text-gray-600 uppercase">DINING</p>
-          </div>
+      {/* Minimal Footer */}
+      <div className="pb-4 text-center relative z-10">
+        <div className="flex justify-between items-center px-12">
+          <p className="text-[7px] tracking-[0.15em] text-gray-600 uppercase">LIVE BAR • PUNE</p>
+          <p className="text-[10px] font-bold text-white/80" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+            {pageNumber} <span className="text-gray-600 text-[8px]">/ {totalPages}</span>
+          </p>
+          <p className="text-[7px] tracking-[0.15em] text-gray-600 uppercase">FINE DINING</p>
         </div>
       </div>
     </div>
@@ -291,148 +359,124 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
   const [isExporting, setIsExporting] = useState(false);
   const pageRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Smart grouping for A5 pages (more pages to ensure no cutoff)
-  const pages = [
-    // Page 1: Veg Snacks
+  // Smart grouping for A4 pages - Consolidated for fewer pages
+  const menuPages = [
+    // Page 1: All Appetizers (Veg + Non-Veg)
     {
       section: {
-        title: "APPETIZERS (VEG)",
-        categories: [menuData.snacksAndStarters.categories[0]]
-      },
-      variant: "cyan" as const,
-      key: "snacks-veg"
-    },
-    // Page 2: Non-Veg Snacks
-    {
-      section: {
-        title: "APPETIZERS (NON-VEG)",
-        categories: [menuData.snacksAndStarters.categories[1]]
-      },
-      variant: "cyan" as const,
-      key: "snacks-nonveg"
-    },
-    // Page 3: Curries
-    {
-      section: {
-        title: "SIGNATURE CURRIES",
-        categories: [menuData.foodMenu.categories[0], menuData.foodMenu.categories[1]]
-      },
-      variant: "magenta" as const,
-      key: "food-curries"
-    },
-    // Page 4: Mains & Thalis
-    {
-      section: {
-        title: "MAINS & THALIS",
-        categories: [menuData.foodMenu.categories[3], menuData.foodMenu.categories[2]]
-      },
-      variant: "magenta" as const,
-      key: "food-mains"
-    },
-    // Page 5: Gourmet Sides (Food separation)
-    {
-      section: {
-        title: "GOURMET SIDES",
+        title: "APPETIZERS",
         categories: [
-          menuData.sideItems.categories[1],      // Bar Bites
-          menuData.sideItems.categories[2]       // Rice
+          menuData.snacksAndStarters.categories[0],
+          menuData.snacksAndStarters.categories[1]
+        ]
+      },
+      variant: "cyan" as const,
+      key: "appetizers",
+      isFirstPage: true
+    },
+    // Page 2: All Curries & Mains
+    {
+      section: {
+        title: "SIGNATURE MAINS",
+        categories: [
+          menuData.foodMenu.categories[0],
+          menuData.foodMenu.categories[1],
+          menuData.foodMenu.categories[3],
+          menuData.foodMenu.categories[2]
         ]
       },
       variant: "magenta" as const,
-      key: "food-sides"
+      key: "mains",
+      isFirstPage: false
     },
-    // Page 6: BEERS (Large & Pints)
+    // Page 3: Sides & Rice
     {
       section: {
-        title: "CRAFT BREWS",
+        title: "SIDES & ACCOMPANIMENTS",
         categories: [
-          menuData.beveragesMenu.categories[0], // Large
-          menuData.beveragesMenu.categories[1], // Premium Pints
+          menuData.sideItems.categories[1],
+          menuData.sideItems.categories[2],
+          menuData.sideItems.categories[0]
+        ]
+      },
+      variant: "magenta" as const,
+      key: "sides",
+      isFirstPage: false
+    },
+    // Page 4: Beers & Coolers
+    {
+      section: {
+        title: "BEERS & COOLERS",
+        categories: [
+          menuData.beveragesMenu.categories[0],
+          menuData.beveragesMenu.categories[1],
+          menuData.beveragesMenu.categories[2]
         ]
       },
       variant: "cyan" as const,
-      key: "drinks-beers"
+      key: "beers",
+      isFirstPage: false
     },
-    // Page 7: COOLERS & VODKAS
+    // Page 5: Vodkas, Rums & Gin
     {
       section: {
-        title: "COOLERS & VODKAS",
+        title: "SPIRITS COLLECTION",
         categories: [
-          menuData.beveragesMenu.categories[2], // Breezers
-          menuData.beveragesMenu.categories[8], // Premium Vodkas
-          menuData.beveragesMenu.categories[3], // Crystal Vodkas
+          menuData.beveragesMenu.categories[8],
+          menuData.beveragesMenu.categories[3],
+          menuData.beveragesMenu.categories[4],
+          menuData.beveragesMenu.categories[10]
         ]
       },
       variant: "cyan" as const,
-      key: "drinks-vodkas"
+      key: "spirits",
+      isFirstPage: false
     },
-    // Page 8: RUMS, GIN & LIQUEURS
+    // Page 6: All Whiskies
     {
       section: {
-        title: "SPIRITS & LIQUEURS",
+        title: "WHISKY COLLECTION",
         categories: [
-          menuData.beveragesMenu.categories[4], // Rums
-          menuData.beveragesMenu.categories[10], // Gin & Brandy
-          menuData.beveragesMenu.categories[11], // Premium Liqueurs (Moved here for better visibility)
-        ]
-      },
-      variant: "cyan" as const,
-      key: "drinks-rums-gin-liqueurs"
-    },
-    // Page 9: INDIAN RESERVES
-    {
-      section: {
-        title: "INDIAN RESERVES",
-        categories: [
-          menuData.beveragesMenu.categories[5], // Indian Whiskies
+          menuData.beveragesMenu.categories[5],
+          menuData.beveragesMenu.categories[6]
         ]
       },
       variant: "gold" as const,
-      key: "drinks-indian-whisky"
+      key: "whiskies",
+      isFirstPage: false
     },
-    // Page 10: WORLD WHISKIES
+    // Page 7: Wines, Bottles & Liqueurs
     {
       section: {
-        title: "WORLD COLLECTION",
+        title: "WINES & PREMIUM",
         categories: [
-          menuData.beveragesMenu.categories[6], // World Whiskies
-        ]
-      },
-      variant: "gold" as const,
-      key: "drinks-world-whisky"
-    },
-    // Page 11: CELEBRATION BOTTLES
-    {
-      section: {
-        title: "CELEBRATION BOTTLES",
-        categories: [menuData.beveragesMenu.categories[7]]
-      },
-      variant: "gold" as const,
-      key: "drinks-bottles"
-    },
-    // Page 12: WINES
-    {
-      section: {
-        title: "FINE WINES COLLECTION",
-        categories: [
-          menuData.beveragesMenu.categories[9], // Wines
+          menuData.beveragesMenu.categories[9],
+          menuData.beveragesMenu.categories[7],
+          menuData.beveragesMenu.categories[11]
         ]
       },
       variant: "magenta" as const,
-      key: "drinks-wines"
+      key: "wines",
+      isFirstPage: false
     },
-    // Page 13: Refreshments
+    // Page 8: Refreshments
     {
       section: {
         title: "REFRESHMENTS",
         categories: [
-          menuData.sideItems.categories[0],      // Water/Soda (Refresh & Rehydrate)
-          menuData.beveragesMenu.categories[12], // Soft Drinks
+          menuData.beveragesMenu.categories[12],
         ]
       },
       variant: "cyan" as const,
-      key: "refreshments"
+      key: "refreshments",
+      isFirstPage: false
     },
+  ];
+
+  // Pages array with cover page first
+  const pages = [
+    { type: "cover" as const, key: "cover" },
+    ...menuPages.map(p => ({ type: "menu" as const, ...p }))
   ];
 
   const capturePageAtIndex = async (index: number): Promise<HTMLCanvasElement | null> => {
@@ -444,6 +488,72 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
     document.body.appendChild(tempDiv);
 
     const page = pages[index];
+    
+    // Handle cover page separately
+    if (page.type === "cover") {
+      const pageElement = document.createElement("div");
+      pageElement.innerHTML = `
+        <div style="font-family: 'Rajdhani', sans-serif; background: radial-gradient(ellipse at center, #0f0f18 0%, #0a0a0f 70%); width: ${A4_WIDTH}px; min-height: ${A4_HEIGHT}px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden;">
+          
+          <!-- Elegant Boundary System -->
+          <div style="position: absolute; inset: 0; pointer-events: none;">
+            <div style="position: absolute; inset: 12px; border: 1px solid rgba(55,65,81,0.6);"></div>
+            <div style="position: absolute; inset: 20px; border: 1px solid rgba(0,240,255,0.3);"></div>
+            <div style="position: absolute; top: 20px; left: 20px; width: 96px; height: 96px; border-left: 2px solid #00f0ff; border-top: 2px solid #00f0ff;"></div>
+            <div style="position: absolute; top: 20px; right: 20px; width: 96px; height: 96px; border-right: 2px solid #ff00ff; border-top: 2px solid #ff00ff;"></div>
+            <div style="position: absolute; bottom: 20px; left: 20px; width: 96px; height: 96px; border-left: 2px solid #ff00ff; border-bottom: 2px solid #ff00ff;"></div>
+            <div style="position: absolute; bottom: 20px; right: 20px; width: 96px; height: 96px; border-right: 2px solid #00f0ff; border-bottom: 2px solid #00f0ff;"></div>
+          </div>
+
+          <!-- Logo -->
+          <div style="margin-bottom: 32px; position: relative; z-index: 10;">
+            <img src="/live_logo_actual.jpg" style="height: 224px; width: auto; display: block; filter: brightness(1.2) contrast(1.1) saturate(1.2); box-shadow: 0 0 60px rgba(0,240,255,0.3), 0 0 120px rgba(255,0,255,0.2);" />
+          </div>
+
+          <!-- Tagline -->
+          <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 48px; position: relative; z-index: 10;">
+            <div style="height: 1px; width: 96px; background: linear-gradient(to right, transparent, #06b6d4, transparent);"></div>
+            <span style="font-size: 20px; letter-spacing: 0.3em; color: rgba(255,255,255,0.9); text-transform: uppercase; font-weight: bold; font-family: 'Orbitron', sans-serif; text-shadow: 0 0 20px rgba(0,240,255,0.5);">EAT . DRINK . CODE . REPEAT</span>
+            <div style="height: 1px; width: 96px; background: linear-gradient(to left, transparent, #d946ef, transparent);"></div>
+          </div>
+
+          <!-- Decorative Utensils & Binary -->
+          <div style="display: flex; flex-direction: column; align-items: center; opacity: 0.6; position: relative; z-index: 10;">
+            <div style="display: flex; gap: 12px; font-size: 30px; color: rgba(255,255,255,0.8);">
+              <span>🍴</span>
+              <span>🥄</span>
+            </div>
+            <div style="margin-top: 16px; font-size: 10px; color: rgba(6,182,212,0.6); letter-spacing: 0.2em; font-family: monospace;">00110101001111010110110011</div>
+            <div style="font-size: 10px; color: rgba(217,70,239,0.6); letter-spacing: 0.2em; font-family: monospace;">01010101101101010111111011</div>
+          </div>
+
+          <!-- Menu Text at Bottom -->
+          <div style="position: absolute; bottom: 64px; left: 0; right: 0; text-align: center; z-index: 10;">
+            <span style="font-size: 48px; font-weight: bold; letter-spacing: 0.5em; text-transform: uppercase; font-family: 'Orbitron', sans-serif; background: linear-gradient(90deg, #00f0ff, #ff00ff, #00f0ff); background-size: 200% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">MENU</span>
+          </div>
+        </div>
+      `;
+      tempDiv.appendChild(pageElement);
+
+      try {
+        const canvas = await html2canvas(pageElement.firstElementChild as HTMLElement, {
+          scale: 2,
+          backgroundColor: "#0a0a0f",
+          useCORS: true,
+          logging: false,
+          width: A4_WIDTH,
+          height: A4_HEIGHT,
+        });
+        document.body.removeChild(tempDiv);
+        return canvas;
+      } catch (error) {
+        console.error("Canvas capture error:", error);
+        document.body.removeChild(tempDiv);
+        return null;
+      }
+    }
+
+    // Menu page handling
     const accentColor = page.variant === "cyan" ? "#00f0ff" : page.variant === "magenta" ? "#ff00ff" : "#ffd700";
 
     // Auto-detect Veg/Non-Veg for PDF generation
@@ -451,104 +561,96 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
     const isNonVeg = page.section.title.includes("NON-VEG") || page.section.title.includes("MEAT") || page.section.title.includes("CHICKEN");
     const showDietIcon = isVeg || isNonVeg;
 
+    const isFirstPage = page.isFirstPage || false;
     const pageElement = document.createElement("div");
-    // A5 Dimensions: 148mm x 210mm (~560px x 794px at 96dpi)
+    // A4 Dimensions: 210mm x 297mm (~794px x 1123px at 96dpi)
     pageElement.innerHTML = `
-      <div style="font-family: 'Rajdhani', sans-serif; background: #0a0a0f; background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px); background-size: 30px 30px; width: 559px; min-height: 794px; position: relative; display: flex; flex-direction: column; overflow: hidden;">
+      <div style="font-family: 'Rajdhani', sans-serif; background: #0a0a0f; background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px); background-size: 40px 40px; width: ${A4_WIDTH}px; min-height: ${A4_HEIGHT}px; position: relative; display: flex; flex-direction: column; overflow: hidden;">
         
-        <!-- World-Class Boundary System -->
+        <!-- Elegant Boundary System - A4 Optimized -->
         <div style="position: absolute; inset: 0; pointer-events: none;">
           <!-- Outer Frame -->
-          <div style="position: absolute; inset: 8px; border: 1px solid rgba(55,65,81,0.8);">
-            <!-- Tech notches -->
-            <div style="position: absolute; top: 25%; left: -1px; width: 3px; height: 32px; background: #1f2937;"></div>
-            <div style="position: absolute; bottom: 25%; right: -1px; width: 3px; height: 32px; background: #1f2937;"></div>
-          </div>
-          
+          <div style="position: absolute; inset: 12px; border: 1px solid rgba(55,65,81,0.6);"></div>
           <!-- Inner Frame with Accent -->
-          <div style="position: absolute; inset: 15px; border: 1px solid ${accentColor}44;"></div>
-          
-          <!-- Corner Accents SVG Simulated -->
-           <div style="position: absolute; top: 15px; left: 15px; width: 48px; height: 48px; border-top: 3px solid ${accentColor}; border-left: 3px solid ${accentColor}; box-shadow: -2px -2px 10px ${accentColor}44;"></div>
-           <div style="position: absolute; top: 15px; right: 15px; width: 48px; height: 48px; border-top: 3px solid ${accentColor}; border-right: 3px solid ${accentColor}; box-shadow: 2px -2px 10px ${accentColor}44;"></div>
-           <div style="position: absolute; bottom: 15px; left: 15px; width: 48px; height: 48px; border-bottom: 3px solid ${accentColor}; border-left: 3px solid ${accentColor}; box-shadow: -2px 2px 10px ${accentColor}44;"></div>
-           <div style="position: absolute; bottom: 15px; right: 15px; width: 48px; height: 48px; border-bottom: 3px solid ${accentColor}; border-right: 3px solid ${accentColor}; box-shadow: 2px 2px 10px ${accentColor}44;"></div>
+          <div style="position: absolute; inset: 20px; border: 1px solid ${accentColor}33;"></div>
+          <!-- Corner Accents -->
+          <div style="position: absolute; top: 20px; left: 20px; width: 64px; height: 64px; border-left: 2px solid ${accentColor}; border-top: 2px solid ${accentColor};"></div>
+          <div style="position: absolute; top: 20px; right: 20px; width: 64px; height: 64px; border-right: 2px solid ${accentColor}; border-top: 2px solid ${accentColor};"></div>
+          <div style="position: absolute; bottom: 20px; left: 20px; width: 64px; height: 64px; border-left: 2px solid ${accentColor}; border-bottom: 2px solid ${accentColor};"></div>
+          <div style="position: absolute; bottom: 20px; right: 20px; width: 64px; height: 64px; border-right: 2px solid ${accentColor}; border-bottom: 2px solid ${accentColor};"></div>
         </div>
 
-        <!-- Premium Header -->
-        <div style="padding-top: 32px; padding-bottom: 16px; text-align: center; position: relative; z-index: 10;">
-          <div style="display: flex; justify-content: center; margin-bottom: 16px;">
-             <div style="padding: 8px; border: 1px dashed #374151; border-radius: 8px; background: rgba(0,0,0,0.4);">
-                <img src="/live_logo_actual.jpg" style="height: 120px; width: auto; display: block; filter: brightness(1.2) contrast(1.1) saturate(1.1);" />
-             </div>
+        ${isFirstPage ? `
+        <!-- Compact Header - Only on first page -->
+        <div style="padding-top: 24px; padding-bottom: 12px; text-align: center; position: relative; z-index: 10;">
+          <div style="display: flex; justify-content: center; margin-bottom: 8px;">
+            <div style="padding: 6px; border: 1px dashed #374151; border-radius: 8px; background: rgba(0,0,0,0.4);">
+              <img src="/live_logo_actual.jpg" style="height: 72px; width: auto; display: block; filter: brightness(1.2) contrast(1.1) saturate(1.1);" />
+            </div>
           </div>
-          <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 8px;">
-            <div style="height: 1px; width: 64px; background: linear-gradient(to right, transparent, #06b6d4, transparent);"></div>
-            <span style="font-size: 9px; letter-spacing: 0.25em; color: white; text-transform: uppercase; font-weight: bold; font-family: 'Orbitron', sans-serif; text-shadow: 0 0 5px rgba(34,211,238,0.8);">EAT . DRINK . CODE . REPEAT</span>
-            <div style="height: 1px; width: 64px; background: linear-gradient(to left, transparent, #d946ef, transparent);"></div>
+          <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <div style="height: 1px; width: 60px; background: linear-gradient(to right, transparent, #06b6d4, transparent);"></div>
+            <span style="font-size: 8px; letter-spacing: 0.2em; color: rgba(255,255,255,0.9); text-transform: uppercase; font-weight: bold; font-family: 'Orbitron', sans-serif;">EAT . DRINK . CODE . REPEAT</span>
+            <div style="height: 1px; width: 60px; background: linear-gradient(to left, transparent, #d946ef, transparent);"></div>
           </div>
         </div>
+        ` : ''}
 
-        <!-- Section Title -->
-        <div style="margin-bottom: 24px; padding-left: 32px; padding-right: 32px; position: relative; text-align: center;">
-             <div style="position: absolute; top: 50%; left: 32px; right: 32px; height: 1px; background-color: #1f2937; z-index: 0;"></div>
-             <span style="display: inline-block; padding: 6px 24px; background-color: #0a0a0f; font-size: 20px; font-weight: bold; letter-spacing: 0.2em; text-transform: uppercase; border-top: 1px solid #1f2937; border-bottom: 1px solid #1f2937; color: ${accentColor}; font-family: 'Orbitron', sans-serif; position: relative; z-index: 1; text-shadow: 0 0 10px ${accentColor}66;">
-               ${escapeHtml(page.section.title)}
-             </span>
+        <!-- Section Title - Compact -->
+        <div style="${isFirstPage ? 'margin-bottom: 16px;' : 'padding-top: 24px; margin-bottom: 16px;'} padding-left: 40px; padding-right: 40px; position: relative; text-align: center;">
+          <div style="position: absolute; top: 50%; left: 40px; right: 40px; height: 1px; background-color: #1f2937; z-index: 0;"></div>
+          <span style="display: inline-block; padding: 5px 20px; background-color: #0a0a0f; font-size: 18px; font-weight: bold; letter-spacing: 0.15em; text-transform: uppercase; border-top: 1px solid #1f2937; border-bottom: 1px solid #1f2937; color: ${accentColor}; font-family: 'Orbitron', sans-serif; position: relative; z-index: 1; text-shadow: 0 0 8px ${accentColor}55;">
+            ${escapeHtml(page.section.title)}
+          </span>
         </div>
 
-        <!-- Content -->
-        <div style="flex: 1; padding-left: 32px; padding-right: 32px; padding-bottom: 32px;">
-          <div style="max-width: 440px; margin: 0 auto;">
+        <!-- Content - Two Column Layout for A4 -->
+        <div style="flex: 1; padding-left: 32px; padding-right: 32px; padding-bottom: 20px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
           ${page.section.categories.map((category, catIdx) => `
-            <div style="margin-bottom: 20px;">
-              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding-bottom: 4px; position: relative;">
-                <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, ${accentColor}88, transparent);"></div>
-                ${category.icon ? `<span style="font-size: 16px;">${escapeHtml(category.icon)}</span>` : ""}
-                <h3 style="font-size: 12px; font-weight: bold; letter-spacing: 0.15em; text-transform: uppercase; color: ${accentColor};">${escapeHtml(category.title)}</h3>
-                ${showDietIcon ? `
-                  <div style="margin-left: auto; border: 1px solid ${isVeg ? "#22c55e" : "#ef4444"}; padding: 2px; width: 12px; height: 12px; display: flex; align-items: center; justify-content: center; border-radius: 2px;">
-                     <div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${isVeg ? "#22c55e" : "#ef4444"};"></div>
-                  </div>
-                ` : ""}
+            <div style="margin-bottom: 16px; break-inside: avoid;">
+              <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px; padding-bottom: 3px; position: relative;">
+                <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, ${accentColor}66, transparent);"></div>
+                ${category.icon ? `<span style="font-size: 14px;">${escapeHtml(category.icon)}</span>` : ""}
+                <h3 style="font-size: 11px; font-weight: bold; letter-spacing: 0.12em; text-transform: uppercase; color: ${accentColor}; margin: 0;">${escapeHtml(category.title)}</h3>
               </div>
               ${category.items[0]?.sizes ? `
-                <div style="display: flex; justify-content: flex-end; gap: 16px; padding: 0 16px 8px; border-bottom: 1px solid rgba(31,41,55,1);">
+                <div style="display: flex; justify-content: flex-end; gap: 6px; padding: 0 6px 6px; border-bottom: 1px solid rgba(31,41,55,0.8);">
                   ${category.items[0].sizes.length === 4 ? `
-                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 50px;">30ml</span>
-                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 50px;">60ml</span>
-                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 50px;">90ml</span>
-                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 50px;">180ml</span>
+                    <span style="font-size: 7px; color: #9ca3af; text-align: right; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; width: 30px;">30ml</span>
+                    <span style="font-size: 7px; color: #9ca3af; text-align: right; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; width: 30px;">60ml</span>
+                    <span style="font-size: 7px; color: #9ca3af; text-align: right; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; width: 30px;">90ml</span>
+                    <span style="font-size: 7px; color: #9ca3af; text-align: right; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; width: 30px;">180ml</span>
                   ` : `
-                    ${category.items[0].sizes.map((_, i) => `<span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right;">Size ${i + 1}</span>`).join("")}
+                    ${category.items[0].sizes.map((_, i) => `<span style="font-size: 7px; color: #9ca3af; text-align: right; width: 30px;">Size ${i + 1}</span>`).join("")}
                   `}
                 </div>
               ` : category.items[0]?.halfPrice ? `
-                 <div style="display: flex; justify-content: flex-end; gap: 12px; padding: 0 16px 8px; border-bottom: 1px solid rgba(31,41,55,1);">
-                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">Half</span>
-                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">Full</span>
-                 </div>
+                <div style="display: flex; justify-content: flex-end; gap: 8px; padding: 0 6px 6px; border-bottom: 1px solid rgba(31,41,55,0.8);">
+                  <span style="font-size: 7px; color: #9ca3af; text-align: right; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">Half</span>
+                  <span style="font-size: 7px; color: #9ca3af; text-align: right; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">Full</span>
+                </div>
               ` : ""}
-              <div style="display: flex; flex-direction: column; gap: 1px; margin-top: 4px;">
+              <div style="display: flex; flex-direction: column; margin-top: 3px;">
                 ${category.items.map((item, idx) => `
-                  <div style="padding: 8px 10px; ${idx % 2 === 0 ? "background: rgba(255,255,255,0.02);" : ""}">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
-                      <div style="flex: 1;">
-                        <h4 style="font-size: 13px; font-weight: 600; color: white; letter-spacing: 0.05em; text-transform: uppercase;">${escapeHtml(item.name)}</h4>
-                        ${item.description ? `<p style="font-size: 9px; color: #9ca3af; margin-top: 2px; font-style: italic; line-height: 1.4;">${escapeHtml(item.description)}</p>` : ""}
+                  <div style="padding: 4px 6px; ${idx % 2 === 0 ? "background: rgba(255,255,255,0.015);" : ""}">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 4px;">
+                      <div style="flex: 1; min-width: 0; max-width: 65%;">
+                        <h4 style="font-size: 10px; font-weight: 600; color: white; letter-spacing: 0.02em; text-transform: uppercase; margin: 0; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(item.name)}</h4>
+                        ${item.description ? `<p style="font-size: 7px; color: #9ca3af; margin: 1px 0 0 0; font-style: italic; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(item.description)}</p>` : ""}
                       </div>
                       <div style="flex-shrink: 0; text-align: right;">
                         ${item.sizes ? `
-                          <div style="display: flex; gap: 16px; justify-content: flex-end;">
-                            ${item.sizes.map(size => `<span style="font-size: 11px; font-weight: 500; color: #fbbf24; min-width: 40px; text-align: right; width: 50px;">${escapeHtml(size)}</span>`).join("")}
+                          <div style="display: flex; gap: 6px; justify-content: flex-end;">
+                            ${item.sizes.map(size => `<span style="font-size: 9px; font-weight: 500; color: #fbbf24; width: 30px; text-align: right;">${escapeHtml(size)}</span>`).join("")}
                           </div>
                         ` : item.halfPrice && item.fullPrice ? `
-                          <div style="display: flex; gap: 12px; align-items: center; justify-content: flex-end;">
-                            <span style="font-size: 11px; font-weight: 500; color: #fbbf24; min-width: 40px; text-align: right;">${escapeHtml(item.halfPrice)}</span>
-                            <span style="font-size: 11px; font-weight: 500; color: #fbbf24; min-width: 40px; text-align: right;">${escapeHtml(item.fullPrice)}</span>
+                          <div style="display: flex; gap: 8px; align-items: center; justify-content: flex-end;">
+                            <span style="font-size: 9px; font-weight: 500; color: #fbbf24;">${escapeHtml(item.halfPrice)}</span>
+                            <span style="font-size: 9px; font-weight: 500; color: #fbbf24;">${escapeHtml(item.fullPrice)}</span>
                           </div>
                         ` : `
-                          <span style="font-size: 13px; font-weight: 600; color: #fbbf24;">${escapeHtml(item.price)}</span>
+                          <span style="font-size: 10px; font-weight: 600; color: #fbbf24;">${escapeHtml(item.price)}</span>
                         `}
                       </div>
                     </div>
@@ -560,21 +662,14 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
           </div>
         </div>
 
-        <!-- Footer -->
-        <div style="padding-bottom: 24px; padding-left: 48px; padding-right: 48px; position: relative; z-index: 10;">
-          <div style="display: flex; justify-content: space-between; align-items: flex-end;">
-            <div style="text-align: left;">
-              <p style="font-size: 8px; letter-spacing: 0.15em; color: #4b5563; text-transform: uppercase; margin: 0;">PUNE</p>
-            </div>
-            <div style="text-align: center;">
-               <p style="font-size: 8px; color: ${accentColor}; margin-bottom: 2px; margin: 0;">page</p>
-               <p style="font-size: 12px; font-weight: bold; color: white; font-family: 'Orbitron', sans-serif; margin: 0;">
-                 0${index + 1} <span style="font-size: 10px; color: #4b5563;">/ 0${pages.length}</span>
-               </p>
-            </div>
-            <div style="text-align: right;">
-              <p style="font-size: 8px; letter-spacing: 0.15em; color: #4b5563; text-transform: uppercase; margin: 0;">DINING</p>
-            </div>
+        <!-- Minimal Footer -->
+        <div style="padding-bottom: 16px; text-align: center; position: relative; z-index: 10;">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 48px;">
+            <p style="font-size: 7px; letter-spacing: 0.12em; color: #4b5563; text-transform: uppercase; margin: 0;">LIVE BAR • PUNE</p>
+            <p style="font-size: 10px; font-weight: bold; color: rgba(255,255,255,0.8); font-family: 'Orbitron', sans-serif; margin: 0;">
+              ${index + 1} <span style="font-size: 8px; color: #4b5563;">/ ${pages.length}</span>
+            </p>
+            <p style="font-size: 7px; letter-spacing: 0.12em; color: #4b5563; text-transform: uppercase; margin: 0;">FINE DINING</p>
           </div>
         </div>
       </div>
@@ -599,8 +694,8 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
         backgroundColor: "#0a0a0f",
         useCORS: true,
         logging: false,
-        width: 559, // A5 width
-        height: 794, // A5 height
+        width: A4_WIDTH,
+        height: A4_HEIGHT,
       });
       document.body.removeChild(tempDiv);
       return canvas;
@@ -657,13 +752,13 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       const pdf = new jsPDF({
         orientation: "portrait",
         unit: "mm",
-        format: "a5", // A5 Format
+        format: "a4",
         compress: true
       });
 
       const pagesToExport = allPages ? pages.map((_, i) => i) : [currentPage];
-      const pdfWidth = 148; // A5 width
-      const pdfHeight = 210; // A5 height
+      const pdfWidth = 210; // A4 width in mm
+      const pdfHeight = 297; // A4 height in mm
       let pagesAdded = 0;
 
       for (let i = 0; i < pagesToExport.length; i++) {
@@ -732,15 +827,18 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
         return;
       }
 
+      const currentPageData = pages[currentPage];
+      const pageTitle = currentPageData.type === "cover" ? "Cover" : currentPageData.section.title;
+      
       printWindow.document.write(`
         <!DOCTYPE html>
         <html>
           <head>
-            <title>Menu - ${pages[currentPage].section.title}</title>
+            <title>Menu - ${pageTitle}</title>
             <style>
               @media print {
                 body { margin: 0; padding: 0; }
-                @page { size: A5; margin: 0; }
+                @page { size: A4; margin: 0; }
               }
               body { display: flex; justify-content: center; margin: 0; }
               img { max-width: 100%; height: auto; }
@@ -759,13 +857,18 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
     }
   };
 
+  const getCurrentPageTitle = () => {
+    const currentPageData = pages[currentPage];
+    return currentPageData.type === "cover" ? "Cover Page" : currentPageData.section.title;
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-5xl h-[90vh] bg-background border-border p-0 flex flex-col">
         <DialogHeader className="p-4 border-b border-border flex-shrink-0">
           <div className="flex items-center justify-between">
             <DialogTitle className="font-orbitron text-foreground">
-              Print Preview - {pages[currentPage].section.title}
+              Print Preview - {getCurrentPageTitle()}
             </DialogTitle>
             <Button variant="ghost" size="icon" onClick={onClose}>
               <X className="w-4 h-4" />
@@ -776,14 +879,19 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
         {/* Preview Area */}
         <div className="flex-1 overflow-auto p-4 bg-muted/30">
           <div className="flex justify-center">
-            <div className="shadow-2xl transform scale-[0.65] origin-top">
-              <PrintablePage
-                section={pages[currentPage].section}
-                pageRef={{ current: null }}
-                variant={pages[currentPage].variant}
-                pageNumber={currentPage + 1}
-                totalPages={pages.length}
-              />
+            <div className="shadow-2xl transform scale-[0.5] origin-top">
+              {pages[currentPage].type === "cover" ? (
+                <CoverPage pageRef={{ current: null }} />
+              ) : (
+                <PrintablePage
+                  section={pages[currentPage].section}
+                  pageRef={{ current: null }}
+                  variant={pages[currentPage].variant}
+                  pageNumber={currentPage + 1}
+                  totalPages={pages.length}
+                  isFirstPage={pages[currentPage].isFirstPage}
+                />
+              )}
             </div>
           </div>
         </div>
