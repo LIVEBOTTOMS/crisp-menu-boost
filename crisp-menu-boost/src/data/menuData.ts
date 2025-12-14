@@ -379,7 +379,6 @@ export const sideItems: MenuSection = {
       title: "Refresh & Rehydrate",
       icon: "💧",
       items: [
-        { name: "Premium Packaged Water", price: "₹60", description: "Purified mineral water, ice-cold" },
         { name: "Fresh Lime Soda (Sweet/Salted)", price: "₹120", description: "Hand-squeezed lime with sparkling soda" },
         { name: "Iced Tea (Lemon/Peach)", price: "₹150", description: "Freshly brewed, served over crushed ice" },
       ],
