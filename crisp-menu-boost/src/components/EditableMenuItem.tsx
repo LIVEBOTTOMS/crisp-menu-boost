@@ -249,7 +249,7 @@ export const EditableMenuItem = ({
               )}
             </div>
             {item.description && (
-              <p className="text-sm text-muted-foreground/80 mt-1.5 font-rajdhani leading-relaxed tracking-wide group-hover:text-muted-foreground transition-colors">
+              <p className="text-sm text-muted-foreground/80 mt-1.5 font-montserrat leading-relaxed tracking-wide group-hover:text-muted-foreground transition-colors">
                 {item.description}
               </p>
             )}
@@ -258,7 +258,7 @@ export const EditableMenuItem = ({
           {/* Price(s) */}
           <div className="flex-shrink-0 text-right self-start pt-0.5">
             {hasSizes ? (
-              <div className={`flex items-center gap-4 text-sm font-rajdhani font-semibold ${accentColor === 'cyan' ? 'text-neon-cyan' : 'text-neon-magenta'
+              <div className={`flex items-center gap-4 text-sm font-orbitron font-semibold ${accentColor === 'cyan' ? 'text-neon-cyan' : 'text-neon-magenta'
                 }`}>
                 {item.sizes!.map((size, i) => (
                   <div key={i} className="flex flex-col items-end group/price">
@@ -270,7 +270,7 @@ export const EditableMenuItem = ({
                 ))}
               </div>
             ) : hasMultiplePrices ? (
-              <div className="flex items-center gap-4 font-rajdhani">
+              <div className="flex items-center gap-4 font-orbitron">
                 <div className="flex flex-col items-end">
                   <span className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5">Half</span>
                   <span className="text-neon-gold font-bold tracking-wide text-base">{item.halfPrice}</span>

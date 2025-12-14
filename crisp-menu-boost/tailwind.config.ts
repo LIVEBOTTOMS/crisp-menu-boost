@@ -72,6 +72,10 @@ export default {
         cormorant: ['Cormorant Garamond', 'serif'],
         cinzel: ['Cinzel', 'serif'],
         montserrat: ['Montserrat', 'sans-serif'],
+        orbitron: ['Orbitron', 'sans-serif'],
+        rajdhani: ['Rajdhani', 'sans-serif'],
+        playfair: ['Playfair Display', 'serif'],
+        dancing: ['Dancing Script', 'cursive'],
       },
       borderRadius: {
         lg: "var(--radius)",
