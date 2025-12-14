@@ -432,9 +432,9 @@ const PrintablePage = ({
         {/* Content */}
         <div className="relative z-10 flex flex-col items-center max-w-[650px] px-12 text-center">
           {/* Story */}
-          <div className="mb-10">
+          <div className="mb-6">
             <h2
-              className="text-3xl font-bold tracking-[0.2em] mb-6"
+              className="text-2xl font-bold tracking-[0.2em] mb-4"
               style={{
                 fontFamily: "'Cinzel', serif",
                 background: `linear-gradient(135deg, ${accentColor}, #fff)`,
@@ -444,37 +444,52 @@ const PrintablePage = ({
             >
               OUR STORY
             </h2>
-            <div className="relative p-6 rounded-lg border border-white/5 bg-black/40">
-              <p className="text-gray-200 text-sm leading-8 tracking-wide font-light italic" style={{ fontFamily: "'Playfair Display', serif" }}>
-                "Food is the universal language that connects us all. It transcends borders, cultures, and differences, bringing us together around a shared table. At LIVE, we believe in the power of this connection. Every dish we serve is a chapter in our story, crafted with passion, tradition, and a touch of innovation. We invite you to savor the moment, share the joy, and create memories that linger long after the last bite."
+            <div className="relative p-4 rounded-lg border border-white/5 bg-black/40">
+              <p className="text-gray-200 text-[13px] leading-7 tracking-wide font-light italic" style={{ fontFamily: "'Playfair Display', serif" }}>
+                "Food is the universal language that connects us all. It transcends borders, cultures, and differences, bringing us together around a shared table. At LIVE, we believe in the power of this connection. Every dish we serve is a chapter in our story, crafted with passion, tradition, and a touch of innovation. We invite you to savor the moment, share the joy, and create memories that linger long after the last bite. Here's to good food, great company, and the beautiful tapestry of life woven one meal at a time."
               </p>
             </div>
           </div>
 
-          {/* Location & Hours */}
-          <div className="w-full flex gap-8 mb-8">
-            <div className="flex-1 p-4 border border-gray-800/50 rounded bg-gray-900/20">
+          {/* Location & Hours Grid */}
+          <div className="w-full flex gap-6 mb-6">
+            <div className="flex-1 p-4 border border-gray-700/50 rounded bg-gray-900/20">
               <h3 className="text-sm font-bold tracking-[0.2em] mb-2" style={{ color: accentColor, fontFamily: "'Orbitron', sans-serif" }}>📍 LOCATION</h3>
-              <p className="text-gray-400 text-xs leading-relaxed">Opp Pune Bakery, Wakad<br />Pune, Maharashtra</p>
+              <p className="text-gray-400 text-xs">Opp Pune Bakery, Wakad<br />Pune, Maharashtra</p>
             </div>
-            <div className="flex-1 p-4 border border-gray-800/50 rounded bg-gray-900/20">
+            <div className="flex-1 p-4 border border-gray-700/50 rounded bg-gray-900/20">
               <h3 className="text-sm font-bold tracking-[0.2em] mb-2" style={{ color: accentColor, fontFamily: "'Orbitron', sans-serif" }}>🕐 HOURS</h3>
               <p className="text-gray-400 text-xs">Mon - Sun: 11:00 AM - 12:00 AM</p>
             </div>
           </div>
 
-          {/* Contact */}
-          <div className="w-full mb-8">
+          {/* Feedback QR */}
+          <div className="w-full mb-5 p-4 border border-dashed border-white/20 rounded-lg bg-black/60">
+            <p className="text-white text-xs tracking-[0.2em] uppercase font-bold mb-3" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+              ❤️ Loved the Vibe?
+            </p>
+            <div className="bg-white p-1.5 rounded-md inline-block">
+              <img src="/feedback_qr.png" className="w-20 h-20 block" alt="QR Code" />
+            </div>
+            <p className="text-gray-400 text-[10px] tracking-widest mt-3" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+              Scan to leave us a Google Review!<br />Your feedback keeps us alive.
+            </p>
+          </div>
+
+          {/* Reservations & Social - Compact */}
+          <div className="w-full mb-4">
             <div className="pb-4 border-b border-gray-700/50 mb-4">
               <h3 className="text-lg font-bold tracking-[0.2em] mb-2" style={{ color: accentColor, fontFamily: "'Orbitron', sans-serif" }}>RESERVATIONS</h3>
-              <p className="text-xl text-white font-light tracking-wider mb-1">+91 7507066880</p>
+              <p className="text-xl font-light tracking-widest text-white mb-1">+91 7507066880</p>
               <p className="text-cyan-400 text-sm font-semibold tracking-wide" style={{ fontFamily: "'Orbitron', sans-serif" }}>www.thelive.bar</p>
             </div>
             <div>
-              <p className="text-gray-300 text-sm mb-2">Follow our journey</p>
+              <p className="text-gray-400 text-sm mb-2">Follow our journey</p>
               <h3 className="text-xl font-bold tracking-[0.2em]" style={{ color: accentColor, fontFamily: "'Orbitron', sans-serif" }}>Live.lounge.wakad</h3>
             </div>
           </div>
+
+
 
           {/* Tagline */}
           <div className="mt-4">
