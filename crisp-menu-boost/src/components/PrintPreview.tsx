@@ -1305,18 +1305,18 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
               ${category.items[0]?.sizes ? `
                 <div style="display: flex; justify-content: flex-end; gap: 16px; padding: 0 16px 8px; border-bottom: 1px solid rgba(31,41,55,1);">
                   ${category.items[0].sizes.length === 4 ? `
-                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 50px;">30ml</span>
-                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 50px;">60ml</span>
-                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 50px;">90ml</span>
-                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 50px;">180ml</span>
+                    <span style="font-size: 9px; color: #9ca3af; min-width: 45px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 60px; font-family: 'Orbitron', sans-serif;">30ml</span>
+                    <span style="font-size: 9px; color: #9ca3af; min-width: 45px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 60px; font-family: 'Orbitron', sans-serif;">60ml</span>
+                    <span style="font-size: 9px; color: #9ca3af; min-width: 45px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 60px; font-family: 'Orbitron', sans-serif;">90ml</span>
+                    <span style="font-size: 9px; color: #9ca3af; min-width: 45px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 60px; font-family: 'Orbitron', sans-serif;">180ml</span>
                   ` : `
                     ${category.items[0].sizes.map((_, i) => `<span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right;">Size ${i + 1}</span>`).join("")}
                   `}
                 </div>
               ` : category.items[0]?.halfPrice ? `
                  <div style="display: flex; justify-content: flex-end; gap: 12px; padding: 0 16px 8px; border-bottom: 1px solid rgba(31,41,55,1);">
-                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">Half</span>
-                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">Full</span>
+                    <span style="font-size: 9px; color: #9ca3af; min-width: 45px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; font-family: 'Orbitron', sans-serif;">Half</span>
+                    <span style="font-size: 9px; color: #9ca3af; min-width: 45px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; font-family: 'Orbitron', sans-serif;">Full</span>
                  </div>
               ` : ""}
               <div style="display: flex; flex-direction: column; gap: 1px; margin-top: 4px;">
