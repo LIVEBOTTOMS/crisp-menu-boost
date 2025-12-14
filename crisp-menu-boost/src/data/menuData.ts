@@ -178,7 +178,7 @@ export const beveragesMenu: MenuSection = {
       title: "Craft & Classic Brews - Large (650 ml)",
       icon: "🍺",
       items: [
-        { name: "Kingfisher Premium", price: "₹380", description: "India's favorite crisp, refreshing lager", isBestSeller: true },
+        { name: "Kingfisher Premium", price: "₹380", description: "India's favorite crisp & refreshing lager", isBestSeller: true },
         { name: "Budweiser Mild", price: "₹400", description: "Smooth American-style pale lager" },
         { name: "Budweiser Magnum Strong", price: "₹400", description: "Bold & full-bodied with rich malt character" },
         { name: "Tuborg Strong", price: "₹380", description: "Danish heritage with robust flavor profile" },
