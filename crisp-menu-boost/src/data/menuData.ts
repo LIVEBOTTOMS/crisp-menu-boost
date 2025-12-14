@@ -421,5 +421,16 @@ export const sideItems: MenuSection = {
         { name: "Vanilla Ice Cream with Chocolate Sauce", price: "₹109", description: "Served with rich hot chocolate sauce" },
       ],
     },
+    {
+      title: "Signature Cocktails & Mocktails",
+      icon: "🍹",
+      items: [
+        { name: "Classic Mojito", price: "₹349", description: "White rum, fresh mint, lime, sugar & soda", isBestSeller: true },
+        { name: "Long Island Iced Tea (LIIT)", price: "₹499", description: "Five spirits potent mix with cola splash" },
+        { name: "Cosmopolitan", price: "₹349", description: "Vodka, triple sec, cranberry juice & lime" },
+        { name: "Virgin Mojito", price: "₹199", description: "Fresh mint & lime refresher (Non-Alcoholic)" },
+        { name: "Blue Lagoon", price: "₹199", description: "Citrusy blue curled mocktail (Non-Alcoholic)" },
+      ],
+    },
   ],
 };

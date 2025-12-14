@@ -948,11 +948,12 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       key: "premium",
       twoColumn: true
     },
-    // Page 8: REFRESHMENTS
+    // Page 8: COCKTAILS & REFRESHMENTS
     {
       section: {
-        title: "SWEET ENDINGS & REFRESHMENTS",
+        title: "COCKTAILS, SWEETS & REFRESHMENTS",
         categories: [
+          menuData.sideItems.categories[5],       // Cocktails & Mocktails
           menuData.sideItems.categories[4],       // Desserts
           menuData.sideItems.categories[0],       // Water/Soda
           menuData.beveragesMenu.categories[12]   // Soft Drinks
