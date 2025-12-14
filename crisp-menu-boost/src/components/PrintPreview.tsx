@@ -9,6 +9,7 @@ import { MenuSection as MenuSectionType, MenuCategory as MenuCategoryType, MenuI
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { toast } from "sonner";
+import { QR_CODE_BASE64 } from "@/data/qrCode";
 
 // HTML entity escaping to prevent XSS in PDF export
 const escapeHtml = (text: string | undefined | null): string => {
@@ -469,7 +470,7 @@ const PrintablePage = ({
               ❤️ Loved the Vibe?
             </p>
             <div className="bg-white p-1.5 rounded-md inline-block">
-              <img src="/feedback_qr.png" className="w-20 h-20 block" alt="QR Code" />
+              <img src={QR_CODE_BASE64} className="w-20 h-20 block" alt="QR Code" />
             </div>
             <p className="text-gray-400 text-[10px] tracking-widest mt-3" style={{ fontFamily: "'Orbitron', sans-serif" }}>
               Scan to leave us a Google Review!<br />Your feedback keeps us alive.
@@ -1171,7 +1172,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                 ❤️ Loved the Vibe?
               </p>
               <div style="background: white; padding: 6px; border-radius: 6px; display: inline-block;">
-                <img src="/feedback_qr.png" style="width: 80px; height: 80px; display: block;" />
+                <img src="${QR_CODE_BASE64}" style="width: 80px; height: 80px; display: block;" />
               </div>
               <p style="color: #9ca3af; font-size: 10px; letter-spacing: 0.1em; margin-top: 10px; font-family: 'Orbitron', sans-serif;">
                 Scan to leave us a Google Review!<br/>Your feedback keeps us alive.
