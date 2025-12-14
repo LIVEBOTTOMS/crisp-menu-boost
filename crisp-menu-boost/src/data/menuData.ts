@@ -267,7 +267,7 @@ export const beveragesMenu: MenuSection = {
       ],
     },
     {
-      title: "World Whisky Collection",
+      title: "World Whisky Collection", // Verified against Gravity Menu
       icon: "🥃",
       items: [
         { name: "Ballantine's Finest", sizes: ["₹200", "₹350", "₹500", "₹980"], description: "Scottish blend with honey & apple notes" },
