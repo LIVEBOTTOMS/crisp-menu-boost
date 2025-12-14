@@ -134,7 +134,7 @@ const MenuItemRow = ({ item, isEven }: { item: MenuItem; isEven: boolean }) => {
             )}
           </div>
           {item.description && (
-            <p className="text-[10px] text-gray-300 mt-1 font-medium leading-normal tracking-wide" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+            <p className="text-[10px] text-gray-400 mt-0.5 italic leading-tight tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               {item.description}
             </p>
           )}
@@ -857,10 +857,9 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
     // Page 3B: INDO-CHINESE & RICE
     {
       section: {
-        title: "ASIAN, RICE & SOUPS",
+        title: "ASIAN & RICE",
         categories: [
           menuData.foodMenu.categories[4],    // Indo-Chinese Favorites
-          menuData.sideItems.categories[3],   // Indo-Chinese Soups
           menuData.sideItems.categories[2]    // Rice
         ]
       },
@@ -936,9 +935,8 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
     // Page 8: REFRESHMENTS
     {
       section: {
-        title: "SWEET ENDINGS & REFRESHMENTS",
+        title: "REFRESHMENTS",
         categories: [
-          menuData.sideItems.categories[4],       // Desserts
           menuData.sideItems.categories[0],       // Water/Soda
           menuData.beveragesMenu.categories[12]   // Soft Drinks
         ]
@@ -1116,7 +1114,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                 OUR STORY
               </h2>
               <div style="position: relative; padding: 16px 24px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.4);">
-                <p style="color: #d1d5db; font-size: 11px; line-height: 1.8; letter-spacing: 0.05em; font-weight: 500; font-family: 'Montserrat', sans-serif;">
+                <p style="color: #e2e8f0; font-size: 13px; line-height: 1.8; letter-spacing: 0.05em; font-weight: 300; font-style: italic; font-family: 'Playfair Display', serif;">
                   "Food is the universal language that connects us all. It transcends borders, cultures, and differences, bringing us together around a shared table. At LIVE, we believe in the power of this connection. Every dish we serve is a chapter in our story, crafted with passion, tradition, and a touch of innovation. We invite you to savor the moment, share the joy, and create memories that linger long after the last bite. Here's to good food, great company, and the beautiful tapestry of life woven one meal at a time."
                 </p>
               </div>
@@ -1157,10 +1155,12 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
               <div style="background: white; padding: 6px; border-radius: 6px; display: inline-block;">
                 <img src="/feedback_qr.png" style="width: 80px; height: 80px; display: block;" />
               </div>
-              <p style="color: #e2e8f0; font-size: 11px; letter-spacing: 0.1em; margin-top: 12px; font-weight: 500; font-family: 'Montserrat', sans-serif;">
+              <p style="color: #9ca3af; font-size: 10px; letter-spacing: 0.1em; margin-top: 10px; font-family: 'Orbitron', sans-serif;">
                 Scan to leave us a Google Review!<br/>Your feedback keeps us alive.
               </p>
             </div>
+            
+
 
             <!-- Tagline -->
             <div style="margin-top: 16px;">
@@ -1260,7 +1260,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
             </span>
             <!-- Section Intro HTML -->
             <div style="margin-top: 12px; position: relative; z-index: 2;">
-              <p style="font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 500; color: #d1d5db; letter-spacing: 0.05em; margin: 0; background-color: #0a0a0f; display: inline-block; padding: 0 16px;">
+              <p style="font-family: 'Cormorant Garamond', serif; font-size: 10px; color: #9ca3af; font-style: italic; letter-spacing: 0.05em; margin: 0; background-color: #0a0a0f; display: inline-block; padding: 0 16px;">
                 ${getSectionIntro(page.section.title)}
               </p>
             </div>
@@ -1314,7 +1314,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                           ${item.isPremium ? `<span style="padding: 2px 8px; font-size: 8px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 4px; background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; box-shadow: 0 0 8px rgba(255,215,0,0.5);">✨ Premium</span>` : ''}
                           ${item.isTopShelf ? `<span style="padding: 2px 8px; font-size: 8px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 4px; background: linear-gradient(135deg, #9333ea, #7c3aed); color: #fff; box-shadow: 0 0 8px rgba(147,51,234,0.5);">🏆 Top Shelf</span>` : ''}
                         </div>
-                        ${item.description ? `<p style="font-size: 10px; color: #d1d5db; margin-top: 3px; font-weight: 500; line-height: 1.4; font-family: 'Montserrat', sans-serif; letter-spacing: 0.02em;">${escapeHtml(item.description)}</p>` : ''}
+                        ${item.description ? `<p style="font-size: 9px; color: #9ca3af; margin-top: 2px; font-style: italic; line-height: 1.3; font-family: 'Cormorant Garamond', serif; letter-spacing: 0.02em;">${escapeHtml(item.description)}</p>` : ''}
                       </div>
                       <div style="flex-shrink: 0; text-align: right;">
                         ${item.sizes ? `
