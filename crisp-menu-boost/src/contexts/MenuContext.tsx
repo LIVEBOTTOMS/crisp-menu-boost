@@ -76,7 +76,7 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const resetDatabase = async () => {
-    const success = await dbResetDatabase();
+    const success = await dbResetDatabase(false); // Force overwrite prices from code
     if (success) {
       await refreshMenu();
     }
