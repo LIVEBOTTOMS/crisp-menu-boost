@@ -267,25 +267,25 @@ export const beveragesMenu: MenuSection = {
       ],
     },
     {
-      title: "World Whisky Collection", // Verified against Gravity Menu
+      title: "World Whisky Collection", // Verified against Gravity Bar & Hinjewadi Avg (Dec 2025)
       icon: "🥃",
       items: [
         { name: "Ballantine's Finest", sizes: ["₹259", "₹469", "₹699", "₹1,149"], description: "Scottish blend with honey & apple notes" },
-        { name: "Black & White", sizes: ["₹180", "₹350", "₹700", "₹980"], description: "Smoky Highland character with gentle peat" },
+        { name: "Black & White", sizes: ["₹249", "₹449", "₹679", "₹1,139"], description: "Smoky Highland character with gentle peat" },
         { name: "Black Dog", sizes: ["₹249", "₹449", "₹679", "₹1,139"], description: "Triple gold matured for exceptional smoothness" },
         { name: "VAT 69", sizes: ["₹249", "₹449", "₹679", "₹1,139"], description: "Classic Scotch with smooth character" },
         { name: "Teachers Highland", sizes: ["₹299", "₹499", "₹749", "₹1,289"], description: "Highland single malt excellence" },
         { name: "Teachers 50", sizes: ["₹329", "₹599", "₹899", "₹1,519"], description: "Premium 50-year heritage blend" },
         { name: "100 Pipers", sizes: ["₹279", "₹499", "₹749", "₹1,199"], description: "Smooth Scotch with fruity notes" },
         { name: "Jameson Irish Whiskey", sizes: ["₹289", "₹529", "₹799", "₹1,299"], description: "Triple-distilled in Dublin. Smooth sherry sweetness, toasted wood & gentle spice. Ireland's finest.", isBestSeller: true },
-        { name: "Johnnie Walker Red Label", sizes: ["₹200", "₹350", "₹500", "₹980"], description: "Bold & vibrant with cinnamon spice" },
-        { name: "Johnnie Walker Black Label", sizes: ["₹540", "₹1,080", "₹1,620", "₹3,240"], description: "12-year aged blend with notes of dark fruit, vanilla & signature Islay smokiness", isTopShelf: true },
+        { name: "Johnnie Walker Red Label", sizes: ["₹269", "₹489", "₹729", "₹1,199"], description: "Bold & vibrant with cinnamon spice" },
+        { name: "Johnnie Walker Black Label", sizes: ["₹429", "₹779", "₹1,169", "₹2,099"], description: "12-year aged blend with notes of dark fruit, vanilla & signature Islay smokiness", isTopShelf: true },
         { name: "Chivas Regal", sizes: ["₹419", "₹759", "₹1,139", "₹1,999"], description: "Luxury 12-year Scotch with wild honey, vanilla & subtle hazelnut finish", isPremium: true },
         { name: "Jack Daniel's", sizes: ["₹339", "₹629", "₹949", "₹1,549"], description: "Tennessee whiskey mellowed drop by drop through 10 feet of sugar maple charcoal", isBestSeller: true },
-        { name: "Jim Beam Bourbon", sizes: ["₹410", "₹810", "₹1,220", "₹2,430"], description: "225 years of Kentucky craft. Rich vanilla, caramel corn & oak. America's #1 bourbon." },
-        { name: "Monkey Shoulder", sizes: ["₹450", "₹900", "₹1,350", "₹2,700"], description: "Batch 27. Triple malt blend of Speyside's finest. Mellow vanilla, spicy marmalade & creamy finish.", isBestSeller: true },
-        { name: "Glenfiddich 12Y", sizes: ["₹810", "₹1,620", "₹2,430", "₹4,860"], description: "Single malt with fresh pear, subtle oak & butterscotch. The world's most awarded single malt", isTopShelf: true },
-        { name: "Talisker 10Y", sizes: ["₹770", "₹1,530", "₹2,300", "₹4,590"], description: "Isle of Skye's maritime malt. Peppery smoke, sea salt & dried fruit. Wild & rugged elegance.", isPremium: true },
+        { name: "Jim Beam Bourbon", sizes: ["₹319", "₹579", "₹869", "₹1,449"], description: "225 years of Kentucky craft. Rich vanilla, caramel corn & oak. America's #1 bourbon." },
+        { name: "Monkey Shoulder", sizes: ["₹449", "₹809", "₹1,219", "₹2,199"], description: "Batch 27. Triple malt blend of Speyside's finest. Mellow vanilla, spicy marmalade & creamy finish.", isBestSeller: true },
+        { name: "Glenfiddich 12Y", sizes: ["₹599", "₹1,099", "₹1,649", "₹2,899"], description: "Single malt with fresh pear, subtle oak & butterscotch. The world's most awarded single malt", isTopShelf: true },
+        { name: "Talisker 10Y", sizes: ["₹579", "₹1,049", "₹1,579", "₹2,799"], description: "Isle of Skye's maritime malt. Peppery smoke, sea salt & dried fruit. Wild & rugged elegance.", isPremium: true },
       ],
     },
     {
