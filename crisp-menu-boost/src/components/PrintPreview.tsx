@@ -1289,7 +1289,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
         <div style="flex: 1; padding-left: 48px; padding-right: 48px; padding-bottom: 24px; overflow: hidden;">
           <div style="max-width: 672px; margin: 0 auto; ${(page as any).twoColumn ? 'display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start;' : ''}">
           ${page.section.categories.filter(c => c && c.items).map((category, catIdx) => `
-            <div style="margin-bottom: 32px;">
+            <div style="margin-bottom: 24px;">
               <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding-bottom: 4px; position: relative;">
                 <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, ${accentColor}88, transparent);"></div>
                 <span style="display: flex; align-items: center; justify-content: center; opacity: 0.8;">
@@ -1323,30 +1323,30 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                 ${category.items.map((origItem, idx) => {
         const item = getPromoItem(origItem, overridePercent);
         return `
-                  <div style="padding: 6px 12px; ${idx % 2 === 0 ? "background: rgba(255,255,255,0.02);" : ""}">
+                  <div style="padding: 4px 12px; ${idx % 2 === 0 ? "background: rgba(255,255,255,0.02);" : ""}">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
                       <div style="flex: 1;">
                         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                          <h4 style="font-size: 14px; font-weight: 600; color: white; letter-spacing: 0.05em; text-transform: uppercase;">${escapeHtml(item.name)}</h4>
+                          <h4 style="font-size: 16px; font-weight: 600; color: white; letter-spacing: 0.05em; text-transform: uppercase; font-family: 'Orbitron', sans-serif;">${escapeHtml(item.name)}</h4>
                           ${item.isChefSpecial ? `<span style="padding: 2px 8px; font-size: 8px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 4px; background: linear-gradient(135deg, #ff00ff, #ff6b9d); color: #fff; box-shadow: 0 0 8px rgba(255,0,255,0.5);">⭐ Chef's Special</span>` : ''}
                           ${item.isBestSeller ? `<span style="padding: 2px 8px; font-size: 8px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 4px; background: linear-gradient(135deg, #00f0ff, #0077ff); color: #000; box-shadow: 0 0 8px rgba(0,240,255,0.5);">🔥 Best Seller</span>` : ''}
                           ${item.isPremium ? `<span style="padding: 2px 8px; font-size: 8px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 4px; background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; box-shadow: 0 0 8px rgba(255,215,0,0.5);">✨ Premium</span>` : ''}
                           ${item.isTopShelf ? `<span style="padding: 2px 8px; font-size: 8px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 4px; background: linear-gradient(135deg, #9333ea, #7c3aed); color: #fff; box-shadow: 0 0 8px rgba(147,51,234,0.5);">🏆 Top Shelf</span>` : ''}
                         </div>
-                        ${item.description ? `<p style="font-size: 9px; color: #9ca3af; margin-top: 2px; font-style: italic; line-height: 1.3; font-family: 'Cormorant Garamond', serif; letter-spacing: 0.02em;">${escapeHtml(item.description)}</p>` : ''}
+                        ${item.description ? `<p style="font-size: 11px; color: #9ca3af; margin-top: 2px; font-style: italic; line-height: 1.3; font-family: 'Montserrat', sans-serif; letter-spacing: 0.02em;">${escapeHtml(item.description)}</p>` : ''}
                       </div>
                       <div style="flex-shrink: 0; text-align: right;">
                         ${item.sizes ? `
                           <div style="display: flex; gap: 16px; justify-content: flex-end;">
-                            ${item.sizes.map(size => `<span style="font-size: 15px; font-weight: 600; color: #fbbf24; min-width: 40px; text-align: right; width: 50px;">${escapeHtml(size)}</span>`).join("")}
+                            ${item.sizes.map(size => `<span style="font-size: 16px; font-weight: 600; color: #fbbf24; min-width: 45px; text-align: right; width: 60px; font-family: 'Orbitron', sans-serif;">${escapeHtml(size)}</span>`).join("")}
                           </div>
                         ` : item.halfPrice && item.fullPrice ? `
                           <div style="display: flex; gap: 12px; align-items: center; justify-content: flex-end;">
                             <span style="font-size: 15px; font-weight: 600; color: #fbbf24; min-width: 40px; text-align: right;">${escapeHtml(item.halfPrice)}</span>
-                            <span style="font-size: 15px; font-weight: 600; color: #fbbf24; min-width: 40px; text-align: right;">${escapeHtml(item.fullPrice)}</span>
+                            <span style="font-size: 16px; font-weight: 600; color: #fbbf24; min-width: 45px; text-align: right; font-family: 'Orbitron', sans-serif;">${escapeHtml(item.fullPrice)}</span>
                           </div>
                         ` : `
-                          <span style="font-size: 18px; font-weight: 700; color: #fbbf24;">${escapeHtml(item.price)}</span>
+                          <span style="font-size: 19px; font-weight: 700; color: #fbbf24; font-family: 'Orbitron', sans-serif;">${escapeHtml(item.price)}</span>
                         `}
                       </div>
                     </div>
