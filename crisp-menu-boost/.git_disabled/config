@@ -6,9 +6,8 @@
 	symlinks = false
 	ignorecase = true
 [remote "origin"]
-	url = https://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@github.com/LIVEBOTTOMS/crisp-menu-boost.git
+	url = https://github.com/MenuXlive/live-menu-app.git
 	fetch = +refs/heads/*:refs/remotes/origin/*
-[branch "main"]
+[branch "master"]
 	remote = origin
 	merge = refs/heads/main
-	vscode-merge-base = origin/main

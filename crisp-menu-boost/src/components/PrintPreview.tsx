@@ -9,6 +9,7 @@ import { MenuSection as MenuSectionType, MenuCategory as MenuCategoryType, MenuI
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { toast } from "sonner";
+import { QR_CODE_BASE64 } from "@/data/qrCode";
 
 // HTML entity escaping to prevent XSS in PDF export
 const escapeHtml = (text: string | undefined | null): string => {
@@ -76,7 +77,7 @@ const MenuItemRow = ({ item, isEven }: { item: MenuItem; isEven: boolean }) => {
   const hasHalfFull = item.halfPrice && item.fullPrice;
 
   return (
-    <div className={`py-2 px-4 ${isEven ? "bg-white/[0.02]" : ""}`}>
+    <div className={`py-0.5 px-4 ${isEven ? "bg-white/[0.02]" : ""}`}>
       <div className="flex justify-between items-start gap-4">
         <div className="flex-1">
           <div className="flex items-center gap-2 flex-wrap">
@@ -84,51 +85,49 @@ const MenuItemRow = ({ item, isEven }: { item: MenuItem; isEven: boolean }) => {
               {item.name}
             </h4>
             {item.isChefSpecial && (
-              <span
-                className="px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider rounded"
+              <span className="px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider rounded border border-pink-500/40"
                 style={{
-                  background: "linear-gradient(135deg, #ff00ff, #ff6b9d)",
-                  color: "#fff",
-                  boxShadow: "0 0 8px rgba(255,0,255,0.5)"
+                  background: "linear-gradient(135deg, #be185d 0%, #ec4899 50%, #be185d 100%)",
+                  color: "white",
+                  boxShadow: "0 0 12px rgba(190, 24, 93, 0.5), inset 0 1px 1px rgba(255,255,255,0.3)",
+                  backdropFilter: "blur(4px)"
                 }}
               >
                 ⭐ Chef's Special
               </span>
             )}
             {item.isBestSeller && (
-              <span
-                className="px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider rounded"
+              <span className="px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider rounded border border-cyan-500/40"
                 style={{
-                  background: "linear-gradient(135deg, #00f0ff, #0077ff)",
-                  color: "#000",
-                  fontWeight: "800",
-                  boxShadow: "0 0 8px rgba(0,240,255,0.5)"
+                  background: "linear-gradient(135deg, #0ea5e9 0%, #22d3ee 50%, #0ea5e9 100%)",
+                  color: "white",
+                  boxShadow: "0 0 12px rgba(14, 165, 233, 0.5), inset 0 1px 1px rgba(255,255,255,0.3)",
+                  backdropFilter: "blur(4px)"
                 }}
               >
                 🔥 Best Seller
               </span>
             )}
             {item.isPremium && (
-              <span
-                className="px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider rounded"
+              <span className="px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider rounded border border-yellow-500/40"
                 style={{
-                  background: "linear-gradient(135deg, #ffd700, #ff8c00)",
-                  color: "#000",
-                  fontWeight: "800",
-                  boxShadow: "0 0 8px rgba(255,215,0,0.5)"
+                  background: "linear-gradient(135deg, #eab308 0%, #fde047 50%, #eab308 100%)",
+                  color: "#1a1a1a",
+                  boxShadow: "0 0 12px rgba(234, 179, 8, 0.6), inset 0 1px 1px rgba(255,255,255,0.4)",
+                  backdropFilter: "blur(4px)",
+                  textShadow: "0 0.5px 0 rgba(255,255,255,0.5)"
                 }}
               >
                 ✨ Premium
               </span>
             )}
             {item.isTopShelf && (
-              <span
-                className="px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider rounded"
+              <span className="px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider rounded border border-purple-500/40"
                 style={{
-                  background: "linear-gradient(135deg, #9333ea, #7c3aed)",
-                  color: "#fff",
-                  fontWeight: "800",
-                  boxShadow: "0 0 8px rgba(147,51,234,0.5)"
+                  background: "linear-gradient(135deg, #9333ea 0%, #c084fc 50%, #9333ea 100%)",
+                  color: "white",
+                  boxShadow: "0 0 12px rgba(147, 51, 234, 0.5), inset 0 1px 1px rgba(255,255,255,0.3)",
+                  backdropFilter: "blur(4px)"
                 }}
               >
                 🏆 Top Shelf
@@ -136,7 +135,7 @@ const MenuItemRow = ({ item, isEven }: { item: MenuItem; isEven: boolean }) => {
             )}
           </div>
           {item.description && (
-            <p className="text-[11px] text-gray-300 mt-1 italic leading-loose tracking-wider font-serif opacity-90" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <p className="text-[10px] text-gray-400 mt-0.5 italic leading-tight tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               {item.description}
             </p>
           )}
@@ -145,7 +144,7 @@ const MenuItemRow = ({ item, isEven }: { item: MenuItem; isEven: boolean }) => {
           {hasSizes ? (
             <div className="flex gap-4">
               {item.sizes!.map((size, i) => (
-                <span key={i} className="text-[13px] font-medium text-amber-400 min-w-[50px] text-center">
+                <span key={i} className="text-[15px] font-semibold text-amber-400 min-w-[50px] text-center">
                   {size}
                 </span>
               ))}
@@ -154,15 +153,15 @@ const MenuItemRow = ({ item, isEven }: { item: MenuItem; isEven: boolean }) => {
             <div className="flex gap-4 items-center">
               <div className="text-center">
                 <span className="text-[9px] text-gray-500 block uppercase tracking-wider">Half</span>
-                <span className="text-[13px] font-medium text-amber-400">{item.halfPrice}</span>
+                <span className="text-[15px] font-semibold text-amber-400">{item.halfPrice}</span>
               </div>
               <div className="text-center">
                 <span className="text-[9px] text-gray-500 block uppercase tracking-wider">Full</span>
-                <span className="text-[13px] font-medium text-amber-400">{item.fullPrice}</span>
+                <span className="text-[15px] font-semibold text-amber-400">{item.fullPrice}</span>
               </div>
             </div>
           ) : (
-            <span className="text-[14px] font-semibold text-amber-400">{item.price}</span>
+            <span className="text-[18px] font-bold text-amber-400">{item.price}</span>
           )}
         </div>
       </div>
@@ -183,18 +182,31 @@ const CategoryBlock = ({
 }) => {
   return (
     <div className="mb-4">
-      {/* Category Header with Holographic Gradient */}
+      {/* Category Header with Enhanced Divider */}
       <div className="flex items-center gap-3 mb-3 pb-2 relative">
+        {/* Main underline gradient */}
         <div
           className="absolute bottom-0 left-0 right-0 h-[1px]"
           style={{ background: `linear-gradient(90deg, transparent, ${accentColor}88, transparent)` }}
         />
 
+        {/* Decorative Corner Flourishes */}
+        <div className="absolute bottom-[-1px] left-0 w-12 h-[3px]" style={{
+          background: `linear-gradient(90deg, ${accentColor}60, transparent)`
+        }} />
+        <div className="absolute bottom-[-1px] right-0 w-12 h-[3px]" style={{
+          background: `linear-gradient(-90deg, ${accentColor}60, transparent)`
+        }} />
+
+        {/* Decorative dots */}
+        <div className="absolute bottom-[-3px] left-14 w-1 h-1 rounded-full" style={{ backgroundColor: `${accentColor}80` }} />
+        <div className="absolute bottom-[-3px] right-14 w-1 h-1 rounded-full" style={{ backgroundColor: `${accentColor}80` }} />
+
         <span className="text-lg flex items-center justify-center opacity-80"
           dangerouslySetInnerHTML={{ __html: getCategoryIconSvg(category.title, accentColor) }}
         />
 
-        <h3 className="text-[13px] font-bold tracking-[0.2em] uppercase" style={{ color: accentColor }}>
+        <h3 className="text-[14px] font-bold tracking-[0.2em] uppercase" style={{ color: accentColor }}>
           {category.title}
         </h3>
 
@@ -283,7 +295,7 @@ const CoverPage = ({
       <div className="relative z-10 flex flex-col items-center">
         <div className="relative mb-8">
           <img
-            src={`/live_main_logo.jpg?v=${Date.now()}`}
+            src="/live_main_logo.jpg"
             alt="LIVE - Bar & Kitchen"
             className="relative w-[500px] h-auto drop-shadow-2xl"
             style={{ filter: "brightness(1.1) contrast(1.1)" }}
@@ -364,7 +376,8 @@ const PrintablePage = ({
   totalPages,
   isCover = false,
   isBackCover = false,
-  proverb
+  proverb,
+  twoColumn = false
 }: {
   section: MenuSectionType;
   pageRef: React.RefObject<HTMLDivElement>;
@@ -374,6 +387,7 @@ const PrintablePage = ({
   isCover?: boolean;
   isBackCover?: boolean;
   proverb?: string;
+  twoColumn?: boolean;
 }) => {
   const accentColor = variant === "cyan" ? "#00f0ff" : variant === "magenta" ? "#ff00ff" : "#ffd700";
 
@@ -419,9 +433,9 @@ const PrintablePage = ({
         {/* Content */}
         <div className="relative z-10 flex flex-col items-center max-w-[650px] px-12 text-center">
           {/* Story */}
-          <div className="mb-10">
+          <div className="mb-6">
             <h2
-              className="text-3xl font-bold tracking-[0.2em] mb-6"
+              className="text-2xl font-bold tracking-[0.2em] mb-4"
               style={{
                 fontFamily: "'Cinzel', serif",
                 background: `linear-gradient(135deg, ${accentColor}, #fff)`,
@@ -431,37 +445,52 @@ const PrintablePage = ({
             >
               OUR STORY
             </h2>
-            <div className="relative p-6 rounded-lg border border-white/5 bg-black/40">
-              <p className="text-gray-200 text-sm leading-8 tracking-wide font-light italic" style={{ fontFamily: "'Playfair Display', serif" }}>
-                "Food is the universal language that connects us all. It transcends borders, cultures, and differences, bringing us together around a shared table. At LIVE, we believe in the power of this connection. Every dish we serve is a chapter in our story, crafted with passion, tradition, and a touch of innovation. We invite you to savor the moment, share the joy, and create memories that linger long after the last bite."
+            <div className="relative p-4 rounded-lg border border-white/5 bg-black/40">
+              <p className="text-gray-200 text-[13px] leading-7 tracking-wide font-light italic" style={{ fontFamily: "'Playfair Display', serif" }}>
+                "Food is the universal language that connects us all. It transcends borders, cultures, and differences, bringing us together around a shared table. At LIVE, we believe in the power of this connection. Every dish we serve is a chapter in our story, crafted with passion, tradition, and a touch of innovation. We invite you to savor the moment, share the joy, and create memories that linger long after the last bite. Here's to good food, great company, and the beautiful tapestry of life woven one meal at a time."
               </p>
             </div>
           </div>
 
-          {/* Location & Hours */}
-          <div className="w-full flex gap-8 mb-8">
-            <div className="flex-1 p-4 border border-gray-800/50 rounded bg-gray-900/20">
+          {/* Location & Hours Grid */}
+          <div className="w-full flex gap-6 mb-6">
+            <div className="flex-1 p-4 border border-gray-700/50 rounded bg-gray-900/20">
               <h3 className="text-sm font-bold tracking-[0.2em] mb-2" style={{ color: accentColor, fontFamily: "'Orbitron', sans-serif" }}>📍 LOCATION</h3>
-              <p className="text-gray-400 text-xs leading-relaxed">Opp Pune Bakery, Wakad<br />Pune, Maharashtra</p>
+              <p className="text-gray-400 text-xs">Opp Pune Bakery, Wakad<br />Pune, Maharashtra</p>
             </div>
-            <div className="flex-1 p-4 border border-gray-800/50 rounded bg-gray-900/20">
+            <div className="flex-1 p-4 border border-gray-700/50 rounded bg-gray-900/20">
               <h3 className="text-sm font-bold tracking-[0.2em] mb-2" style={{ color: accentColor, fontFamily: "'Orbitron', sans-serif" }}>🕐 HOURS</h3>
               <p className="text-gray-400 text-xs">Mon - Sun: 11:00 AM - 12:00 AM</p>
             </div>
           </div>
 
-          {/* Contact */}
-          <div className="w-full mb-8">
+          {/* Feedback QR */}
+          <div className="w-full mb-5 p-4 border border-dashed border-white/20 rounded-lg bg-black/60">
+            <p className="text-white text-xs tracking-[0.2em] uppercase font-bold mb-3" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+              ❤️ Loved the Vibe?
+            </p>
+            <div className="bg-white p-1.5 rounded-md inline-block">
+              <img src={QR_CODE_BASE64} className="w-20 h-20 block" alt="QR Code" />
+            </div>
+            <p className="text-gray-400 text-[10px] tracking-widest mt-3" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+              Scan to leave us a Google Review!<br />Your feedback keeps us alive.
+            </p>
+          </div>
+
+          {/* Reservations & Social - Compact */}
+          <div className="w-full mb-4">
             <div className="pb-4 border-b border-gray-700/50 mb-4">
               <h3 className="text-lg font-bold tracking-[0.2em] mb-2" style={{ color: accentColor, fontFamily: "'Orbitron', sans-serif" }}>RESERVATIONS</h3>
-              <p className="text-xl text-white font-light tracking-wider mb-1">+91 7507066880</p>
+              <p className="text-xl font-light tracking-widest text-white mb-1">+91 7507066880</p>
               <p className="text-cyan-400 text-sm font-semibold tracking-wide" style={{ fontFamily: "'Orbitron', sans-serif" }}>www.thelive.bar</p>
             </div>
             <div>
-              <p className="text-gray-300 text-sm mb-2">Follow our journey</p>
-              <h3 className="text-xl font-bold tracking-[0.2em]" style={{ color: accentColor, fontFamily: "'Orbitron', sans-serif" }}>live.lounge15</h3>
+              <p className="text-gray-400 text-sm mb-2">Follow our journey</p>
+              <h3 className="text-xl font-bold tracking-[0.2em]" style={{ color: accentColor, fontFamily: "'Orbitron', sans-serif" }}>Live.lounge.wakad</h3>
             </div>
           </div>
+
+
 
           {/* Tagline */}
           <div className="mt-4">
@@ -584,7 +613,7 @@ const PrintablePage = ({
 
       {/* Content Area - Expanded for A4 */}
       <div className="flex-1 px-12 pb-6 overflow-hidden">
-        <div className="max-w-2xl mx-auto h-full space-y-6">
+        <div className={`mx-auto h-full ${twoColumn ? 'grid grid-cols-2 gap-6 content-start' : 'max-w-2xl space-y-6'}`}>
           {section.categories.map((category, index) => {
             const isVeg = section.title.includes("VEG") && !section.title.includes("NON");
             const isNonVeg = section.title.includes("NON-VEG") || section.title.includes("MEAT") || section.title.includes("CHICKEN");
@@ -607,8 +636,8 @@ const PrintablePage = ({
       {proverb && (
         <div className="px-12 py-2 text-center relative z-10">
           <p
-            className="text-sm italic text-gray-300 tracking-wide"
-            style={{ fontFamily: "'Playfair Display', serif" }}
+            className="text-lg italic text-gray-300 tracking-wide"
+            style={{ fontFamily: "'Dancing Script', cursive" }}
           >
             "{proverb}"
           </p>
@@ -652,12 +681,14 @@ const PrintablePage = ({
           <div className="text-center flex-shrink-0 px-6">
             <div className="flex items-center gap-2">
               <div className="w-8 h-[1px]" style={{ background: `linear-gradient(90deg, transparent, ${accentColor}50)` }} />
-              <div className="flex flex-col items-center">
-                <p className="text-[7px] uppercase tracking-widest mb-0.5" style={{ color: accentColor }}>Page</p>
-                <p className="text-lg font-bold text-white" style={{ fontFamily: "'Orbitron', sans-serif" }}>
-                  {String(pageNumber).padStart(2, '0')}
-                  <span className="text-gray-600 text-xs ml-1">/ {String(totalPages).padStart(2, '0')}</span>
-                </p>
+              <div className="relative w-12 h-12 flex items-center justify-center">
+                <div className="absolute inset-0 border transform rotate-45" style={{ borderColor: `${accentColor}50` }} />
+                <div className="relative z-10 flex flex-col items-center">
+                  <p className="text-[6px] uppercase tracking-widest mb-0.5" style={{ color: accentColor }}>Page</p>
+                  <p className="text-[14px] font-bold text-white leading-none" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+                    {String(pageNumber).padStart(2, '0')}
+                  </p>
+                </div>
               </div>
               <div className="w-8 h-[1px]" style={{ background: `linear-gradient(-90deg, transparent, ${accentColor}50)` }} />
             </div>
@@ -670,6 +701,81 @@ const PrintablePage = ({
           </div>
         </div>
       </div>
+
+      {/* Decorative Food Illustrations */}
+      {!isCover && !isBackCover && (
+        <div className="absolute bottom-16 left-0 right-0 pointer-events-none opacity-[0.12] overflow-hidden h-24">
+          <svg viewBox="0 0 800 100" className="w-full h-full" style={{ color: accentColor }}>
+            {/* Wine Glass */}
+            <g transform="translate(50, 20)" stroke="currentColor" fill="none" strokeWidth="1.5">
+              <path d="M0,0 Q5,-5 10,0 L10,30 Q10,35 15,35 L25,35 Q30,35 30,30 L30,0 Q35,-5 40,0" />
+              <path d="M20,35 L20,55" />
+              <ellipse cx="20" cy="60" rx="15" ry="5" />
+            </g>
+            {/* Cocktail Glass */}
+            <g transform="translate(120, 15)" stroke="currentColor" fill="none" strokeWidth="1.5">
+              <path d="M0,0 L25,30 L50,0" />
+              <path d="M25,30 L25,55" />
+              <ellipse cx="25" cy="60" rx="12" ry="4" />
+              <circle cx="10" cy="10" r="5" />
+              <path d="M42,5 L55,0" />
+            </g>
+            {/* Shrimp/Prawn */}
+            <g transform="translate(200, 25)" stroke="currentColor" fill="none" strokeWidth="1.5">
+              <path d="M0,30 Q10,0 40,5 Q60,10 70,25 Q65,35 55,40 Q40,42 25,38 Q10,35 0,30" />
+              <path d="M70,25 Q75,22 80,25" />
+              <path d="M70,28 Q75,28 78,30" />
+              <path d="M15,32 Q20,35 25,32" />
+              <path d="M30,35 Q35,38 40,35" />
+            </g>
+            {/* Fish */}
+            <g transform="translate(320, 20)" stroke="currentColor" fill="none" strokeWidth="1.5">
+              <path d="M0,25 Q20,5 50,10 Q80,15 90,25 Q80,35 50,40 Q20,45 0,25" />
+              <circle cx="75" cy="22" r="4" />
+              <path d="M-15,25 L0,15 L0,35 L-15,25" />
+              <path d="M30,20 Q35,25 30,30" />
+              <path d="M45,18 Q50,25 45,32" />
+            </g>
+            {/* Lemon Slice */}
+            <g transform="translate(450, 30)" stroke="currentColor" fill="none" strokeWidth="1.5">
+              <circle cx="20" cy="20" r="20" />
+              <circle cx="20" cy="20" r="15" />
+              <path d="M20,5 L20,35" />
+              <path d="M5,20 L35,20" />
+              <path d="M9,9 L31,31" />
+              <path d="M31,9 L9,31" />
+            </g>
+            {/* Kebab Skewer */}
+            <g transform="translate(530, 10)" stroke="currentColor" fill="none" strokeWidth="1.5">
+              <path d="M5,0 L5,70" />
+              <ellipse cx="5" cy="15" rx="8" ry="6" />
+              <ellipse cx="5" cy="30" rx="10" ry="7" />
+              <ellipse cx="5" cy="45" rx="8" ry="6" />
+              <ellipse cx="5" cy="58" rx="6" ry="5" />
+            </g>
+            {/* Herb/Leaf */}
+            <g transform="translate(580, 25)" stroke="currentColor" fill="none" strokeWidth="1.5">
+              <path d="M20,50 Q20,30 35,15 Q50,0 70,5" />
+              <path d="M30,35 Q40,25 55,20" />
+              <path d="M25,45 Q30,40 40,38" />
+              <path d="M45,28 Q55,22 65,20" />
+            </g>
+            {/* Beer Mug */}
+            <g transform="translate(660, 15)" stroke="currentColor" fill="none" strokeWidth="1.5">
+              <rect x="0" y="10" width="35" height="45" rx="3" />
+              <path d="M35,18 Q50,18 50,35 Q50,48 35,48" />
+              <path d="M5,5 Q10,0 15,5 Q20,8 25,5 Q30,2 35,8" />
+              <path d="M8,20 L8,45" opacity="0.5" />
+              <path d="M15,18 L15,48" opacity="0.5" />
+            </g>
+            {/* Chili */}
+            <g transform="translate(740, 30)" stroke="currentColor" fill="none" strokeWidth="1.5">
+              <path d="M0,20 Q5,0 15,5 Q30,10 35,30 Q38,45 30,50 Q20,55 10,45 Q0,35 0,20" />
+              <path d="M12,5 Q10,-5 15,-8" />
+            </g>
+          </svg>
+        </div>
+      )}
 
       {/* Binary Code Watermark Footer */}
       <div className="absolute bottom-1 left-0 right-0 text-center opacity-20 pointer-events-none">
@@ -725,7 +831,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       key: "cover",
       isCover: true
     },
-    // Page 1: ALL APPETIZERS (Veg + Non-Veg)
+    // Page 1: ALL APPETIZERS (Veg + Non-Veg) - TWO COLUMN
     {
       section: {
         title: "ARTISAN APPETIZERS",
@@ -735,7 +841,8 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
         ]
       },
       variant: "cyan" as const,
-      key: "appetizers-all"
+      key: "appetizers-all",
+      twoColumn: true
     },
     // Page 2: CURRIES & MAINS
     {
@@ -750,19 +857,32 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       variant: "magenta" as const,
       key: "food-mains"
     },
-    // Page 3: VEG MAINS & SIDES
+    // Page 3: VEGETARIAN & BITES
     {
       section: {
-        title: "VEGETARIAN & SIDES",
+        title: "VEGETARIAN & BITES",
         categories: [
           menuData.foodMenu.categories[3],    // Veg Chef's Mains
           menuData.sideItems.categories[1],   // Bar Bites
+        ]
+      },
+      variant: "magenta" as const,
+      key: "veg-bites",
+      proverb: "Good food is the foundation of genuine happiness."
+    },
+    // Page 3B: INDO-CHINESE & RICE
+    {
+      section: {
+        title: "ASIAN, RICE & SOUPS",
+        categories: [
+          menuData.foodMenu.categories[4],    // Indo-Chinese Favorites
+          menuData.sideItems.categories[3],   // Indo-Chinese Soups
           menuData.sideItems.categories[2]    // Rice
         ]
       },
       variant: "magenta" as const,
-      key: "veg-sides",
-      proverb: "Good food is the foundation of genuine happiness."
+      key: "asian-rice",
+      twoColumn: true
     },
     // Page 4: BEERS & COOLERS
     {
@@ -775,7 +895,8 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
         ]
       },
       variant: "cyan" as const,
-      key: "beers-coolers"
+      key: "beers-coolers",
+      twoColumn: true
     },
     // Page 5: VODKAS, RUMS & SPIRITS
     {
@@ -825,13 +946,16 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
         ]
       },
       variant: "gold" as const,
-      key: "premium"
+      key: "premium",
+      twoColumn: true
     },
-    // Page 8: REFRESHMENTS
+    // Page 8: COCKTAILS & REFRESHMENTS
     {
       section: {
-        title: "REFRESHMENTS",
+        title: "COCKTAILS, SWEETS & REFRESHMENTS",
         categories: [
+          menuData.sideItems.categories[5],       // Cocktails & Mocktails
+          menuData.sideItems.categories[4],       // Desserts
           menuData.sideItems.categories[0],       // Water/Soda
           menuData.beveragesMenu.categories[12]   // Soft Drinks
         ]
@@ -1004,19 +1128,19 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
           <div style="position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; max-width: 650px; padding: 0 48px; text-align: center;">
             
             <!-- Story -->
-            <div style="margin-bottom: 40px;">
-              <h2 style="font-size: 30px; font-weight: bold; letter-spacing: 0.2em; margin-bottom: 24px; font-family: 'Cinzel', serif; background: linear-gradient(135deg, ${accentColor}, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; color: ${accentColor};">
+            <div style="margin-bottom: 24px;">
+              <h2 style="font-size: 24px; font-weight: bold; letter-spacing: 0.2em; margin-bottom: 16px; font-family: 'Cinzel', serif; background: linear-gradient(135deg, ${accentColor}, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; color: ${accentColor};">
                 OUR STORY
               </h2>
-              <div style="position: relative; padding: 24px 32px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.4);">
-                <p style="color: #e2e8f0; font-size: 14px; line-height: 2; letter-spacing: 0.05em; font-weight: 300; font-style: italic; font-family: 'Playfair Display', serif;">
+              <div style="position: relative; padding: 16px 24px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.4);">
+                <p style="color: #e2e8f0; font-size: 13px; line-height: 1.8; letter-spacing: 0.05em; font-weight: 300; font-style: italic; font-family: 'Playfair Display', serif;">
                   "Food is the universal language that connects us all. It transcends borders, cultures, and differences, bringing us together around a shared table. At LIVE, we believe in the power of this connection. Every dish we serve is a chapter in our story, crafted with passion, tradition, and a touch of innovation. We invite you to savor the moment, share the joy, and create memories that linger long after the last bite. Here's to good food, great company, and the beautiful tapestry of life woven one meal at a time."
                 </p>
               </div>
             </div>
 
             <!-- Location & Hours Grid -->
-            <div style="width: 100%; display: flex; gap: 32px; margin-bottom: 32px;">
+            <div style="width: 100%; display: flex; gap: 24px; margin-bottom: 24px;">
               <!-- Location -->
               <div style="flex: 1; padding: 16px; border: 1px solid rgba(31,41,55,0.5); border-radius: 4px; background: rgba(17,24,39,0.2);">
                 <h3 style="font-size: 14px; font-weight: bold; letter-spacing: 0.2em; margin-bottom: 8px; color: ${accentColor}; font-family: 'Orbitron', sans-serif;">📍 LOCATION</h3>
@@ -1038,9 +1162,24 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                </div>
                <div>
                  <p style="color: #d1d5db; font-size: 14px; margin-bottom: 8px;">Follow our journey</p>
-                 <h3 style="font-size: 20px; font-weight: bold; letter-spacing: 0.2em; color: ${accentColor}; font-family: 'Orbitron', sans-serif;">live.lounge15</h3>
+                 <h3 style="font-size: 20px; font-weight: bold; letter-spacing: 0.2em; color: ${accentColor}; font-family: 'Orbitron', sans-serif;">Live.lounge.wakad</h3>
                </div>
             </div>
+            
+            <!-- Feedback QR -->
+            <div style="width: 100%; margin-bottom: 20px; padding: 16px; border: 1px dashed rgba(255,255,255,0.2); border-radius: 8px; background: rgba(0,0,0,0.6);">
+              <p style="color: #fff; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700; margin-bottom: 10px; font-family: 'Orbitron', sans-serif;">
+                ❤️ Loved the Vibe?
+              </p>
+              <div style="background: white; padding: 6px; border-radius: 6px; display: inline-block;">
+                <img src="${QR_CODE_BASE64}" style="width: 80px; height: 80px; display: block;" />
+              </div>
+              <p style="color: #9ca3af; font-size: 10px; letter-spacing: 0.1em; margin-top: 10px; font-family: 'Orbitron', sans-serif;">
+                Scan to leave us a Google Review!<br/>Your feedback keeps us alive.
+              </p>
+            </div>
+            
+
 
             <!-- Tagline -->
             <div style="margin-top: 16px;">
@@ -1148,9 +1287,9 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
 
         <!-- Content -->
         <div style="flex: 1; padding-left: 48px; padding-right: 48px; padding-bottom: 24px; overflow: hidden;">
-          <div style="max-width: 672px; margin: 0 auto;">
-          ${page.section.categories.map((category, catIdx) => `
-            <div style="margin-bottom: 32px;">
+          <div style="max-width: 672px; margin: 0 auto; ${(page as any).twoColumn ? 'display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start;' : ''}">
+          ${page.section.categories.filter(c => c && c.items).map((category, catIdx) => `
+            <div style="margin-bottom: 24px;">
               <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding-bottom: 4px; position: relative;">
                 <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, ${accentColor}88, transparent);"></div>
                 <span style="display: flex; align-items: center; justify-content: center; opacity: 0.8;">
@@ -1166,48 +1305,48 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
               ${category.items[0]?.sizes ? `
                 <div style="display: flex; justify-content: flex-end; gap: 16px; padding: 0 16px 8px; border-bottom: 1px solid rgba(31,41,55,1);">
                   ${category.items[0].sizes.length === 4 ? `
-                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 50px;">30ml</span>
-                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 50px;">60ml</span>
-                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 50px;">90ml</span>
-                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 50px;">180ml</span>
+                    <span style="font-size: 9px; color: #9ca3af; min-width: 45px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 60px; font-family: 'Orbitron', sans-serif;">30ml</span>
+                    <span style="font-size: 9px; color: #9ca3af; min-width: 45px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 60px; font-family: 'Orbitron', sans-serif;">60ml</span>
+                    <span style="font-size: 9px; color: #9ca3af; min-width: 45px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 60px; font-family: 'Orbitron', sans-serif;">90ml</span>
+                    <span style="font-size: 9px; color: #9ca3af; min-width: 45px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; width: 60px; font-family: 'Orbitron', sans-serif;">180ml</span>
                   ` : `
                     ${category.items[0].sizes.map((_, i) => `<span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right;">Size ${i + 1}</span>`).join("")}
                   `}
                 </div>
               ` : category.items[0]?.halfPrice ? `
                  <div style="display: flex; justify-content: flex-end; gap: 12px; padding: 0 16px 8px; border-bottom: 1px solid rgba(31,41,55,1);">
-                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">Half</span>
-                    <span style="font-size: 9px; color: #9ca3af; min-width: 40px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">Full</span>
+                    <span style="font-size: 9px; color: #9ca3af; min-width: 45px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; font-family: 'Orbitron', sans-serif;">Half</span>
+                    <span style="font-size: 9px; color: #9ca3af; min-width: 45px; text-align: right; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; font-family: 'Orbitron', sans-serif;">Full</span>
                  </div>
               ` : ""}
               <div style="display: flex; flex-direction: column; gap: 1px; margin-top: 4px;">
                 ${category.items.map((origItem, idx) => {
         const item = getPromoItem(origItem, overridePercent);
         return `
-                  <div style="padding: 10px 12px; ${idx % 2 === 0 ? "background: rgba(255,255,255,0.02);" : ""}">
+                  <div style="padding: 4px 12px; ${idx % 2 === 0 ? "background: rgba(255,255,255,0.02);" : ""}">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
                       <div style="flex: 1;">
                         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                          <h4 style="font-size: 14px; font-weight: 600; color: white; letter-spacing: 0.05em; text-transform: uppercase;">${escapeHtml(item.name)}</h4>
+                          <h4 style="font-size: 16px; font-weight: 600; color: white; letter-spacing: 0.05em; text-transform: uppercase; font-family: 'Orbitron', sans-serif;">${escapeHtml(item.name)}</h4>
                           ${item.isChefSpecial ? `<span style="padding: 2px 8px; font-size: 8px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 4px; background: linear-gradient(135deg, #ff00ff, #ff6b9d); color: #fff; box-shadow: 0 0 8px rgba(255,0,255,0.5);">⭐ Chef's Special</span>` : ''}
                           ${item.isBestSeller ? `<span style="padding: 2px 8px; font-size: 8px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 4px; background: linear-gradient(135deg, #00f0ff, #0077ff); color: #000; box-shadow: 0 0 8px rgba(0,240,255,0.5);">🔥 Best Seller</span>` : ''}
                           ${item.isPremium ? `<span style="padding: 2px 8px; font-size: 8px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 4px; background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; box-shadow: 0 0 8px rgba(255,215,0,0.5);">✨ Premium</span>` : ''}
                           ${item.isTopShelf ? `<span style="padding: 2px 8px; font-size: 8px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 4px; background: linear-gradient(135deg, #9333ea, #7c3aed); color: #fff; box-shadow: 0 0 8px rgba(147,51,234,0.5);">🏆 Top Shelf</span>` : ''}
                         </div>
-                        ${item.description ? `<p style="font-size: 10px; color: #d1d5db; margin-top: 4px; font-style: italic; line-height: 1.6; font-family: 'Cormorant Garamond', serif; letter-spacing: 0.03em; opacity: 0.9;">${escapeHtml(item.description)}</p>` : ''}
+                        ${item.description ? `<p style="font-size: 11px; color: #9ca3af; margin-top: 2px; font-style: italic; line-height: 1.3; font-family: 'Montserrat', sans-serif; letter-spacing: 0.02em;">${escapeHtml(item.description)}</p>` : ''}
                       </div>
                       <div style="flex-shrink: 0; text-align: right;">
                         ${item.sizes ? `
                           <div style="display: flex; gap: 16px; justify-content: flex-end;">
-                            ${item.sizes.map(size => `<span style="font-size: 12px; font-weight: 500; color: #fbbf24; min-width: 40px; text-align: right; width: 50px;">${escapeHtml(size)}</span>`).join("")}
+                            ${item.sizes.map(size => `<span style="font-size: 16px; font-weight: 600; color: #fbbf24; min-width: 45px; text-align: right; width: 60px; font-family: 'Orbitron', sans-serif;">${escapeHtml(size)}</span>`).join("")}
                           </div>
                         ` : item.halfPrice && item.fullPrice ? `
                           <div style="display: flex; gap: 12px; align-items: center; justify-content: flex-end;">
-                            <span style="font-size: 12px; font-weight: 500; color: #fbbf24; min-width: 40px; text-align: right;">${escapeHtml(item.halfPrice)}</span>
-                            <span style="font-size: 12px; font-weight: 500; color: #fbbf24; min-width: 40px; text-align: right;">${escapeHtml(item.fullPrice)}</span>
+                            <span style="font-size: 15px; font-weight: 600; color: #fbbf24; min-width: 40px; text-align: right;">${escapeHtml(item.halfPrice)}</span>
+                            <span style="font-size: 16px; font-weight: 600; color: #fbbf24; min-width: 45px; text-align: right; font-family: 'Orbitron', sans-serif;">${escapeHtml(item.fullPrice)}</span>
                           </div>
                         ` : `
-                          <span style="font-size: 14px; font-weight: 600; color: #fbbf24;">${escapeHtml(item.price)}</span>
+                          <span style="font-size: 19px; font-weight: 700; color: #fbbf24; font-family: 'Orbitron', sans-serif;">${escapeHtml(item.price)}</span>
                         `}
                       </div>
                     </div>
@@ -1222,7 +1361,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
         <!-- Proverb -->
         ${(page as any).proverb ? `
         <div style="padding: 0 48px 8px; text-align: center; position: relative; z-index: 10;">
-          <p style="font-size: 14px; font-style: italic; color: #d1d5db; font-family: 'Playfair Display', serif; letter-spacing: 0.02em;">
+          <p style="font-size: 16px; font-style: italic; color: #d1d5db; font-family: 'Dancing Script', cursive; letter-spacing: 0.02em;">
             "${(page as any).proverb}"
           </p>
         </div>
@@ -1247,9 +1386,12 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
             <div style="text-align: center; flex-shrink: 0; padding: 0 24px;">
               <div style="display: flex; align-items: center; gap: 8px;">
                 <div style="width: 32px; height: 1px; background: linear-gradient(90deg, transparent, ${accentColor}50);"></div>
-                <div style="display: flex; flex-direction: column; align-items: center;">
-                  <p style="font-size: 7px; text-transform: uppercase; letter-spacing: 0.15em; color: ${accentColor}; margin: 0 0 2px 0;">Page</p>
-                  <p style="font-size: 18px; font-weight: bold; color: white; font-family: 'Orbitron', sans-serif; margin: 0;">${String(index + 1).padStart(2, '0')}<span style="font-size: 12px; color: #4b5563; margin-left: 4px;">/ ${String(pages.length).padStart(2, '0')}</span></p>
+                <div style="position: relative; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
+                  <div style="position: absolute; inset: 0; border: 1px solid ${accentColor}40; transform: rotate(45deg);"></div>
+                  <div style="position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;">
+                    <p style="font-size: 6px; text-transform: uppercase; letter-spacing: 0.1em; color: ${accentColor}; margin: 0 0 2px 0;">Page</p>
+                    <p style="font-size: 14px; font-weight: bold; color: white; font-family: 'Orbitron', sans-serif; margin: 0; line-height: 1;">${String(index + 1).padStart(2, '0')}</p>
+                  </div>
                 </div>
                 <div style="width: 32px; height: 1px; background: linear-gradient(-90deg, transparent, ${accentColor}50);"></div>
               </div>
@@ -1379,26 +1521,20 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       }
 
       if (pagesAdded > 0) {
-        const fileName = allPages ? "LiveBar-Full-Menu.pdf" : `LiveBar-Menu-${pages[currentPage].key}.pdf`;
+        const fileName = allPages
+          ? (overridePercent !== undefined ? `LiveBar_Promo_${overridePercent}pct.pdf` : "LiveBar_Full_Menu.pdf")
+          : `LiveBar_${pages[currentPage].key}.pdf`;
 
-        // Manual Blob download for maximum compatibility
+        // Create blob and download with explicit type
         const pdfBlob = pdf.output('blob');
-        const url = URL.createObjectURL(pdfBlob);
-
-        const link = document.createElement('a');
-        link.href = url;
-        const simpleName = allPages ? "LiveBar_Full_Menu.pdf" : "LiveBar_Page.pdf";
-        link.setAttribute('download', simpleName); // Explicit attribute
-        link.style.display = 'none';
-        document.body.appendChild(link);
-
-        link.click();
-
-        // Cleanup
-        setTimeout(() => {
-          document.body.removeChild(link);
-          URL.revokeObjectURL(url);
-        }, 100);
+        const blobUrl = window.URL.createObjectURL(new Blob([pdfBlob], { type: 'application/pdf' }));
+        const downloadLink = document.createElement('a');
+        downloadLink.href = blobUrl;
+        downloadLink.download = fileName;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        window.URL.revokeObjectURL(blobUrl);
 
         toast.success("PDF downloaded successfully!");
       } else {
@@ -1479,6 +1615,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                   isCover={(pages[currentPage] as any).isCover}
                   isBackCover={(pages[currentPage] as any).isBackCover}
                   proverb={(pages[currentPage] as any).proverb}
+                  twoColumn={(pages[currentPage] as any).twoColumn}
                 />
               </div>
             </div>
