@@ -366,8 +366,8 @@ const ReviewForm = ({ menuItemId, customerPhone, onSubmit, onClose }: ReviewForm
                 rating,
                 review_text: reviewText,
                 photo_urls: photoUrls,
-                is_verified: false
-            });
+                is_verified: false,
+                helpful_votes: 0
         } catch (error) {
             console.error('Failed to submit review:', error);
             toast.error('Failed to submit review');
