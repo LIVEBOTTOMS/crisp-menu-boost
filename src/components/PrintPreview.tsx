@@ -135,7 +135,7 @@ const MenuItemRow = ({ item, isEven }: { item: MenuItem; isEven: boolean }) => {
             )}
           </div>
           {item.description && (
-            <p className="text-[13px] text-gray-400 mt-0.5 italic leading-tight tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <p className="text-[15px] text-cyan-100 mt-1 italic font-semibold leading-relaxed tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#cffafe" }}>
               {item.description}
             </p>
           )}
@@ -1333,7 +1333,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                           ${item.isPremium ? `<span style="padding: 2px 8px; font-size: 8px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 4px; background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; box-shadow: 0 0 8px rgba(255,215,0,0.5);">✨ Premium</span>` : ''}
                           ${item.isTopShelf ? `<span style="padding: 2px 8px; font-size: 8px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 4px; background: linear-gradient(135deg, #9333ea, #7c3aed); color: #fff; box-shadow: 0 0 8px rgba(147,51,234,0.5);">🏆 Top Shelf</span>` : ''}
                         </div>
-                        ${item.description ? `<p style="font-size: 11px; color: #9ca3af; margin-top: 2px; font-style: italic; line-height: 1.3; font-family: 'Montserrat', sans-serif; letter-spacing: 0.02em;">${escapeHtml(item.description)}</p>` : ''}
+                        ${item.description ? `<p style="font-size: 15px; color: #cffafe; margin-top: 4px; font-style: italic; line-height: 1.5; font-family: 'Cormorant Garamond', serif; letter-spacing: 0.03em; font-weight: 600;">${escapeHtml(item.description)}</p>` : ''}
                       </div>
                       <div style="flex-shrink: 0; text-align: right;">
                         ${item.sizes ? `
