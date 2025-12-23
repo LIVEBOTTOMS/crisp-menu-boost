@@ -330,17 +330,8 @@ export const DineoutPreview = ({ isOpen, onClose, menuData, platform, markup }: 
                     {/* Top border line */}
                     <div className="absolute top-0 left-0 right-0 h-1" style={{ background: 'linear-gradient(90deg, #00f0ff, transparent 50%, #ff00ff)' }} />
 
-                    {/* LIVE Logo watermark */}
-                    <div className="absolute top-6 right-8 opacity-30">
-                        <span className="font-orbitron text-lg" style={{
-                            background: 'linear-gradient(90deg, #00f0ff, #ff00ff)',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent'
-                        }}>LIVE</span>
-                    </div>
-
                     {/* Category Header */}
-                    <div className="mb-6 pb-3" style={{ borderBottom: '2px solid rgba(0,240,255,0.3)' }}>
+                    <div className="mb-5 pb-3" style={{ borderBottom: '2px solid rgba(0,240,255,0.3)' }}>
                         <div className="flex items-center gap-3">
                             {page.icon && <span className="text-2xl">{page.icon}</span>}
                             <h3 className="font-orbitron text-xl font-bold tracking-[0.15em] uppercase"
@@ -358,55 +349,55 @@ export const DineoutPreview = ({ isOpen, onClose, menuData, platform, markup }: 
                     {/* Size Headers for Spirits */}
                     {hasSizes && (
                         <div className="flex justify-end gap-3 mb-4 pr-2 pb-2" style={{ borderBottom: '1px solid rgba(0,240,255,0.2)' }}>
-                            <span className="text-[9px] text-cyan-400/80 w-12 text-center font-bold font-orbitron">30ml</span>
-                            <span className="text-[9px] text-cyan-400/80 w-12 text-center font-bold font-orbitron">60ml</span>
-                            <span className="text-[9px] text-cyan-400/80 w-12 text-center font-bold font-orbitron">90ml</span>
-                            <span className="text-[9px] text-purple-400/80 w-12 text-center font-bold font-orbitron">180ml</span>
+                            <span className="text-[10px] text-cyan-400/80 w-12 text-center font-bold font-orbitron">30ml</span>
+                            <span className="text-[10px] text-cyan-400/80 w-12 text-center font-bold font-orbitron">60ml</span>
+                            <span className="text-[10px] text-cyan-400/80 w-12 text-center font-bold font-orbitron">90ml</span>
+                            <span className="text-[10px] text-purple-400/80 w-12 text-center font-bold font-orbitron">180ml</span>
                         </div>
                     )}
 
-                    {/* Menu Items */}
-                    <div className="space-y-5 flex-1">
+                    {/* Menu Items - Better spacing with larger fonts */}
+                    <div className="space-y-4 flex-1 overflow-hidden">
                         {page.items.map((item: any, idx: number) => (
                             <div key={idx} className="group">
                                 <div className="flex justify-between items-start gap-4">
-                                    <div className="flex-1">
+                                    <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2 flex-wrap">
                                             <h4 className="font-orbitron font-bold text-base tracking-tight text-white uppercase">
                                                 {item.name}
                                             </h4>
-                                            {item.isBestSeller && <span className="text-[8px] px-1.5 py-0.5 bg-neon-gold/20 text-neon-gold rounded font-bold">★ BEST SELLER</span>}
-                                            {item.isChefSpecial && <span className="text-[8px] px-1.5 py-0.5 bg-pink-500/20 text-pink-400 rounded font-bold">⭐ CHEF'S PICK</span>}
+                                            {item.isBestSeller && <span className="text-[8px] px-1.5 py-0.5 bg-neon-gold/20 text-neon-gold rounded font-bold">★ BEST</span>}
+                                            {item.isChefSpecial && <span className="text-[8px] px-1.5 py-0.5 bg-pink-500/20 text-pink-400 rounded font-bold">⭐ CHEF</span>}
                                             {item.isPremium && <span className="text-[8px] px-1.5 py-0.5 bg-purple-500/20 text-purple-400 rounded font-bold">✨ PREMIUM</span>}
                                         </div>
                                         {item.description && (
-                                            <p className="font-cormorant italic text-sm text-slate-400 mt-0.5 leading-snug line-clamp-2">
+                                            <p className="text-sm text-slate-400 mt-1 leading-tight line-clamp-1">
                                                 {item.description}
                                             </p>
                                         )}
                                     </div>
-                                    <div className="text-right flex items-center">
+                                    <div className="text-right flex items-center flex-shrink-0">
                                         {item.finalSizes ? (
                                             <div className="flex gap-3">
                                                 {item.finalSizes.map((s: string, sIdx: number) => (
-                                                    <span key={sIdx} className="font-orbitron font-bold text-sm text-neon-gold w-12 text-center">
+                                                    <span key={sIdx} className="font-orbitron font-bold text-base text-neon-gold w-12 text-center">
                                                         {s.replace('₹', '')}/-
                                                     </span>
                                                 ))}
                                             </div>
                                         ) : item.finalHalf ? (
-                                            <div className="flex gap-4">
+                                            <div className="flex gap-3">
                                                 <div className="flex flex-col items-center">
                                                     <span className="text-[8px] uppercase text-slate-500">Half</span>
-                                                    <span className="font-orbitron font-bold text-sm text-neon-gold">{item.finalHalf.replace('₹', '')}/-</span>
+                                                    <span className="font-orbitron font-bold text-base text-neon-gold">{item.finalHalf.replace('₹', '')}/-</span>
                                                 </div>
                                                 <div className="flex flex-col items-center">
                                                     <span className="text-[8px] uppercase text-slate-500">Full</span>
-                                                    <span className="font-orbitron font-bold text-sm text-neon-gold">{item.finalFull.replace('₹', '')}/-</span>
+                                                    <span className="font-orbitron font-bold text-base text-neon-gold">{item.finalFull.replace('₹', '')}/-</span>
                                                 </div>
                                             </div>
                                         ) : (
-                                            <span className="font-orbitron font-bold text-lg text-neon-gold">
+                                            <span className="font-orbitron font-bold text-base text-neon-gold">
                                                 {(item.finalPrice || "").replace('₹', '')}/-
                                             </span>
                                         )}
@@ -435,7 +426,7 @@ export const DineoutPreview = ({ isOpen, onClose, menuData, platform, markup }: 
 
         if (page.type === 'outro') {
             return (
-                <div id={`dineout-page-${index}`} style={pageStyle} className={commonStyle + " items-center justify-center text-center"}>
+                <div id={`dineout-page-${index}`} style={pageStyle} className={commonStyle + " items-center justify-center text-center p-12"}>
                     {/* Circuit corner decorations */}
                     <div className="absolute top-8 left-8 w-24 h-24 opacity-30">
                         <svg viewBox="0 0 100 100" className="w-full h-full">
@@ -451,13 +442,8 @@ export const DineoutPreview = ({ isOpen, onClose, menuData, platform, markup }: 
                     </div>
 
                     <div className="space-y-6">
-                        {/* Pulsing circle */}
-                        <div className="w-20 h-20 border-2 rounded-full flex items-center justify-center mx-auto mb-8"
-                            style={{ borderColor: 'rgba(0,240,255,0.3)', boxShadow: '0 0 20px rgba(0,240,255,0.2)' }}>
-                            <div className="w-3 h-3 rounded-full animate-ping" style={{ background: '#00f0ff' }} />
-                        </div>
-
-                        <h3 className="font-orbitron text-2xl tracking-[0.5em]"
+                        {/* Thank You Header */}
+                        <h3 className="font-orbitron text-2xl tracking-[0.5em] mb-8"
                             style={{
                                 background: 'linear-gradient(90deg, #00f0ff, #ff00ff)',
                                 WebkitBackgroundClip: 'text',
@@ -466,8 +452,29 @@ export const DineoutPreview = ({ isOpen, onClose, menuData, platform, markup }: 
                             THANK YOU
                         </h3>
 
-                        <p className="font-orbitron text-sm text-cyan-400/60 tracking-widest">
-                            Follow us for more premium experiences
+                        {/* Loved the Vibe Section */}
+                        <div className="mt-8 mb-6">
+                            <p className="text-base font-orbitron tracking-wider mb-4" style={{ color: '#ff00ff' }}>
+                                ❤️ LOVED THE VIBE?
+                            </p>
+                        </div>
+
+                        {/* QR Code - Using inline image to ensure PDF rendering */}
+                        <div className="flex justify-center my-6">
+                            <div className="bg-white p-3 rounded-lg" style={{ width: '180px', height: '180px' }}>
+                                <img
+                                    src="/feedback_qr.png"
+                                    alt="Google Review QR Code"
+                                    style={{ width: '100%', height: '100%', display: 'block' }}
+                                    crossOrigin="anonymous"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Scan Text */}
+                        <p className="text-sm text-slate-300 tracking-wide mt-4">
+                            Scan to leave us a Google Review!<br />
+                            <span className="text-xs text-slate-500">Your Feedback Keeps Us ALIVE</span>
                         </p>
 
                         {/* Binary code */}
@@ -475,7 +482,7 @@ export const DineoutPreview = ({ isOpen, onClose, menuData, platform, markup }: 
                             01001100.01001001.01010110.01000101
                         </div>
 
-                        <div className="pt-8 text-[10px] text-slate-600 tracking-widest uppercase space-y-2">
+                        <div className="pt-6 text-[10px] text-slate-600 tracking-widest uppercase space-y-2">
                             <p>Taxes as applicable</p>
                             <p>Always drink responsibly</p>
                         </div>

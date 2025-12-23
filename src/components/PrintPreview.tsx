@@ -81,7 +81,7 @@ const MenuItemRow = ({ item, isEven }: { item: MenuItem; isEven: boolean }) => {
       <div className="flex justify-between items-start gap-4">
         <div className="flex-1">
           <div className="flex items-center gap-2 flex-wrap">
-            <h4 className="text-[15px] font-semibold text-white tracking-wide uppercase">
+            <h4 className="text-[20px] font-semibold text-white tracking-wide uppercase">
               {item.name}
             </h4>
             {item.isChefSpecial && (
@@ -135,7 +135,7 @@ const MenuItemRow = ({ item, isEven }: { item: MenuItem; isEven: boolean }) => {
             )}
           </div>
           {item.description && (
-            <p className="text-[14px] text-white mt-1 leading-relaxed tracking-wide" style={{ fontFamily: "'Montserrat', sans-serif", color: "#ffffff", fontWeight: 400 }}>
+            <p className="text-[17px] text-gray-300 mt-1 italic leading-snug" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}>
               {item.description}
             </p>
           )}
@@ -144,7 +144,7 @@ const MenuItemRow = ({ item, isEven }: { item: MenuItem; isEven: boolean }) => {
           {hasSizes ? (
             <div className="flex gap-4">
               {item.sizes!.map((size, i) => (
-                <span key={i} className="text-[15px] font-semibold text-amber-400 min-w-[50px] text-center">
+                <span key={i} className="text-[20px] font-semibold text-amber-400 min-w-[55px] text-center">
                   {size}
                 </span>
               ))}
@@ -153,15 +153,15 @@ const MenuItemRow = ({ item, isEven }: { item: MenuItem; isEven: boolean }) => {
             <div className="flex gap-4 items-center">
               <div className="text-center">
                 <span className="text-[9px] text-gray-500 block uppercase tracking-wider">Half</span>
-                <span className="text-[15px] font-semibold text-amber-400">{item.halfPrice}</span>
+                <span className="text-[20px] font-semibold text-amber-400">{item.halfPrice}</span>
               </div>
               <div className="text-center">
                 <span className="text-[9px] text-gray-500 block uppercase tracking-wider">Full</span>
-                <span className="text-[15px] font-semibold text-amber-400">{item.fullPrice}</span>
+                <span className="text-[20px] font-semibold text-amber-400">{item.fullPrice}</span>
               </div>
             </div>
           ) : (
-            <span className="text-[18px] font-bold text-amber-400">{item.price}</span>
+            <span className="text-[20px] font-bold text-amber-400">{item.price}</span>
           )}
         </div>
       </div>
@@ -555,33 +555,20 @@ const PrintablePage = ({
         <div className="absolute top-1/2 right-[20px] w-[40px] h-[2px] -translate-y-1/2" style={{ background: `linear-gradient(-90deg, ${accentColor}80, transparent)` }} />
       </div>
 
-      {/* ENHANCED HEADER - Compact & Premium */}
-      <div className="pt-6 pb-3 text-center relative z-10 flex-shrink-0">
-        <div className="flex items-center justify-center gap-6">
-          {/* Left Decorative Line */}
-          <div className="flex-1 max-w-[120px] h-[1px]" style={{ background: `linear-gradient(90deg, transparent, ${accentColor}60)` }} />
-
-          {/* Logo Section */}
-          <div className="flex flex-col items-center">
-            <img
-              src={`/live_main_logo.jpg?v=${Date.now()}`}
-              alt="LIVE - Bar & Kitchen"
-              className="h-14 w-auto"
-              style={{ filter: "brightness(1.1) contrast(1.05)" }}
-            />
-          </div>
-
-          {/* Right Decorative Line */}
-          <div className="flex-1 max-w-[120px] h-[1px]" style={{ background: `linear-gradient(-90deg, transparent, ${accentColor}60)` }} />
-        </div>
-
-        {/* Tagline */}
-        <div className="flex items-center justify-center gap-3 mt-2">
-          <div className="w-12 h-[1px] bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
-          <span className="text-[8px] tracking-[0.3em] uppercase text-cyan-400/80 font-semibold" style={{ fontFamily: "'Orbitron', sans-serif" }}>
-            Eat • Drink • Code • Repeat
+      {/* ENHANCED HEADER - Tagline Only */}
+      <div className="pt-3 pb-2 text-center relative z-10 flex-shrink-0">
+        <div className="flex items-center justify-center gap-4">
+          <div className="w-20 h-[2px]" style={{ background: `linear-gradient(90deg, transparent, ${accentColor})` }} />
+          <span className="text-[11px] tracking-[0.4em] uppercase font-bold"
+            style={{
+              fontFamily: "'Orbitron', sans-serif",
+              background: "linear-gradient(90deg, #00f0ff, #ff00ff)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent"
+            }}>
+            EAT • DRINK • CODE • REPEAT
           </span>
-          <div className="w-12 h-[1px] bg-gradient-to-l from-transparent via-magenta-500/50 to-transparent" />
+          <div className="w-20 h-[2px]" style={{ background: `linear-gradient(-90deg, transparent, ${accentColor})` }} />
         </div>
       </div>
 
@@ -605,7 +592,7 @@ const PrintablePage = ({
 
         {/* Section Intro */}
         <div className="text-center mt-3">
-          <p className="text-[10px] text-gray-400 font-serif italic tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+          <p className="text-[17px] text-gray-300 font-serif italic tracking-wide font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             {getSectionIntro(section.title)}
           </p>
         </div>
@@ -831,18 +818,27 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       key: "cover",
       isCover: true
     },
-    // Page 1: ALL APPETIZERS (Veg + Non-Veg) - TWO COLUMN
+    // Page 1: VEG APPETIZERS
     {
       section: {
-        title: "ARTISAN APPETIZERS",
+        title: "VEG APPETIZERS",
         categories: [
-          menuData.snacksAndStarters.categories[0], // VEG
-          menuData.snacksAndStarters.categories[1]  // NON-VEG
+          menuData.snacksAndStarters.categories[0] // VEG
         ]
       },
       variant: "cyan" as const,
-      key: "appetizers-all",
-      twoColumn: true
+      key: "appetizers-veg"
+    },
+    // Page 2: NON-VEG APPETIZERS
+    {
+      section: {
+        title: "NON-VEG APPETIZERS",
+        categories: [
+          menuData.snacksAndStarters.categories[1] // NON-VEG
+        ]
+      },
+      variant: "cyan" as const,
+      key: "appetizers-nonveg"
     },
     // Page 2: CURRIES & MAINS
     {
@@ -898,21 +894,31 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       key: "beers-coolers",
       twoColumn: true
     },
-    // Page 5: VODKAS, RUMS & SPIRITS
+    // Page 5: VODKAS
     {
       section: {
-        title: "SPIRITS COLLECTION",
+        title: "VODKA COLLECTION",
         categories: [
           menuData.beveragesMenu.categories[8], // Premium Vodkas
-          menuData.beveragesMenu.categories[3], // Crystal Vodkas
+          menuData.beveragesMenu.categories[3]  // Crystal Vodkas
+        ]
+      },
+      variant: "cyan" as const,
+      key: "vodkas"
+    },
+    // Page 6: RUMS & GINS
+    {
+      section: {
+        title: "RUMS, GINS & SPIRITS",
+        categories: [
           menuData.beveragesMenu.categories[4], // Rums
           menuData.beveragesMenu.categories[10] // Gin & Brandy
         ]
       },
       variant: "cyan" as const,
-      key: "spirits"
+      key: "rums-gins"
     },
-    // Page 6: INDIAN WHISKIES
+    // Page 7: INDIAN WHISKIES
     {
       section: {
         title: "INDIAN WHISKY RESERVES",
@@ -923,7 +929,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       variant: "gold" as const,
       key: "indian-whiskies"
     },
-    // Page 7: WORLD WHISKIES
+    // Page 8: WORLD WHISKIES
     {
       section: {
         title: "WORLD WHISKY COLLECTION",
@@ -935,33 +941,52 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       key: "world-whiskies",
       proverb: "Too much of anything is bad, but too much good whisky is barely enough."
     },
-    // Page 7: CELEBRATION BOTTLES & WINES
+    // Page 9: CELEBRATION BOTTLES
     {
       section: {
-        title: "PREMIUM SELECTION",
+        title: "CELEBRATION BOTTLES",
         categories: [
-          menuData.beveragesMenu.categories[7],  // Celebration Bottles
+          menuData.beveragesMenu.categories[7]  // Celebration Bottles
+        ]
+      },
+      variant: "gold" as const,
+      key: "celebration"
+    },
+    // Page 10: WINES & LIQUEURS
+    {
+      section: {
+        title: "WINES & LIQUEURS",
+        categories: [
           menuData.beveragesMenu.categories[9],  // Wines
           menuData.beveragesMenu.categories[11]  // Liqueurs
         ]
       },
       variant: "gold" as const,
-      key: "premium",
-      twoColumn: true
+      key: "wines-liqueurs"
     },
-    // Page 8: COCKTAILS & REFRESHMENTS
+    // Page 11: COCKTAILS & MOCKTAILS
     {
       section: {
-        title: "COCKTAILS, SWEETS & REFRESHMENTS",
+        title: "COCKTAILS & MOCKTAILS",
         categories: [
-          menuData.sideItems.categories[5],       // Cocktails & Mocktails
+          menuData.sideItems.categories[5]       // Cocktails & Mocktails
+        ]
+      },
+      variant: "cyan" as const,
+      key: "cocktails"
+    },
+    // Page 12: DESSERTS & REFRESHMENTS
+    {
+      section: {
+        title: "DESSERTS & REFRESHMENTS",
+        categories: [
           menuData.sideItems.categories[4],       // Desserts
           menuData.sideItems.categories[0],       // Water/Soda
           menuData.beveragesMenu.categories[12]   // Soft Drinks
         ]
       },
       variant: "cyan" as const,
-      key: "refreshments",
+      key: "desserts-refreshments",
       proverb: "Life is too short to drink anything but the best."
     },
     // Page 9: BACK COVER
@@ -1333,7 +1358,7 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                           ${item.isPremium ? `<span style="padding: 2px 8px; font-size: 8px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 4px; background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; box-shadow: 0 0 8px rgba(255,215,0,0.5);">✨ Premium</span>` : ''}
                           ${item.isTopShelf ? `<span style="padding: 2px 8px; font-size: 8px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 4px; background: linear-gradient(135deg, #9333ea, #7c3aed); color: #fff; box-shadow: 0 0 8px rgba(147,51,234,0.5);">🏆 Top Shelf</span>` : ''}
                         </div>
-                        ${item.description ? `<p style="font-size: 14px; color: #ffffff; margin-top: 4px; line-height: 1.5; font-family: 'Montserrat', sans-serif; letter-spacing: 0.03em; font-weight: 400;">${escapeHtml(item.description)}</p>` : ''}
+                        ${item.description ? `<p style="font-size: 11px; color: #9ca3af; margin-top: 2px; font-style: italic; line-height: 1.3; font-family: 'Montserrat', sans-serif; letter-spacing: 0.02em;">${escapeHtml(item.description)}</p>` : ''}
                       </div>
                       <div style="flex-shrink: 0; text-align: right;">
                         ${item.sizes ? `
@@ -1503,17 +1528,33 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
       for (let i = 0; i < pagesToExport.length; i++) {
         const pageIndex = pagesToExport[i];
         toast.info(allPages ? `Processing page ${i + 1} of ${pages.length}...` : "Generating PDF...", {
-          duration: 2000,
+          duration: 1500,
         });
 
-        // Wait a bit to ensure browser doesn't freeze and DOM is ready
-        await new Promise(resolve => setTimeout(resolve, 200));
+        // Wait for DOM to be ready
+        await new Promise(resolve => setTimeout(resolve, 100));
 
-        const canvas = await capturePageAtIndex(pageIndex, overridePercent);
+        // Try to capture from hidden React-rendered pages first
+        const hiddenPageElement = document.getElementById(`pdf-page-${pageIndex}`);
+
+        let canvas: HTMLCanvasElement | null = null;
+
+        if (hiddenPageElement && !overridePercent) {
+          // Capture the actual React-rendered page (matches preview exactly)
+          canvas = await html2canvas(hiddenPageElement, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: "#0a0a0f",
+            logging: false,
+            allowTaint: true
+          });
+        } else {
+          // Fallback to capturePageAtIndex for promo pricing
+          canvas = await capturePageAtIndex(pageIndex, overridePercent);
+        }
+
         if (canvas) {
           if (pagesAdded > 0) pdf.addPage();
-
-          // Use JPEG with high quality to ensure valid image data
           const imgData = canvas.toDataURL("image/jpeg", 1.0);
           pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight, undefined, "FAST");
           pagesAdded++;
@@ -1525,7 +1566,6 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
           ? (overridePercent !== undefined ? `LiveBar_Promo_${overridePercent}pct.pdf` : "LiveBar_Full_Menu.pdf")
           : `LiveBar_${pages[currentPage].key}.pdf`;
 
-        // Create blob and download with explicit type
         const pdfBlob = pdf.output('blob');
         const blobUrl = window.URL.createObjectURL(new Blob([pdfBlob], { type: 'application/pdf' }));
         const downloadLink = document.createElement('a');
@@ -1767,6 +1807,34 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Hidden container for PDF capture - renders all pages */}
+      <div
+        id="pdf-hidden-pages"
+        style={{
+          position: 'absolute',
+          left: '-9999px',
+          top: 0,
+          width: '794px',
+          zIndex: -1
+        }}
+      >
+        {pages.map((page, index) => (
+          <div key={page.key} id={`pdf-page-${index}`}>
+            <PrintablePage
+              section={page.section}
+              pageRef={{ current: null }}
+              variant={page.variant}
+              pageNumber={index + 1}
+              totalPages={pages.length}
+              isCover={(page as any).isCover}
+              isBackCover={(page as any).isBackCover}
+              proverb={(page as any).proverb}
+              twoColumn={(page as any).twoColumn}
+            />
+          </div>
+        ))}
+      </div>
     </>
   );
 };
