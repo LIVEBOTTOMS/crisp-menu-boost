@@ -9,9 +9,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, LogOut, Menu, Users, Settings, ShieldCheck, ShieldX, Home, Percent, Download, Edit, QrCode, Archive, RotateCcw } from 'lucide-react';
+import { Loader2, LogOut, Menu, Users, Settings, ShieldCheck, ShieldX, Home, Percent, Download, Edit, QrCode, Archive, RotateCcw, ShoppingBag } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { PrintPreview } from '@/components/PrintPreview';
+import { SwiggyZomatoManager } from '@/components/SwiggyZomatoManager';
 import { QRCodeGenerator } from '@/components/QRCodeGenerator';
 import { BackgroundEffects } from '@/components/BackgroundEffects';
 import { ArchivedMenus } from '@/components/ArchivedMenus';
@@ -27,6 +28,7 @@ const AdminDashboard = () => {
   const [isPriceDialogOpen, setIsPriceDialogOpen] = useState(false);
   const [isPrintPreviewOpen, setIsPrintPreviewOpen] = useState(false);
   const [isQRCodeOpen, setIsQRCodeOpen] = useState(false);
+  const [isSwiggyManagerOpen, setIsSwiggyManagerOpen] = useState(false);
   const [isArchivedMenusOpen, setIsArchivedMenusOpen] = useState(false);
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
   const [showPDFPrompt, setShowPDFPrompt] = useState(false);
@@ -358,6 +360,16 @@ const AdminDashboard = () => {
                 Generate QR Code
               </Button>
 
+              {/* Swiggy/Zomato Menu */}
+              <Button
+                variant="outline"
+                onClick={() => setIsSwiggyManagerOpen(true)}
+                className="border-neon-magenta/50 text-neon-magenta hover:bg-neon-magenta/10"
+              >
+                <ShoppingBag className="w-4 h-4 mr-2" />
+                Swiggy/Zomato Menu
+              </Button>
+
               {/* Archived Menus */}
               <Button
                 variant="outline"
@@ -408,6 +420,7 @@ const AdminDashboard = () => {
 
       <PrintPreview isOpen={isPrintPreviewOpen} onClose={() => setIsPrintPreviewOpen(false)} />
       <QRCodeGenerator isOpen={isQRCodeOpen} onClose={() => setIsQRCodeOpen(false)} />
+      <SwiggyZomatoManager isOpen={isSwiggyManagerOpen} onClose={() => setIsSwiggyManagerOpen(false)} />
       <ArchivedMenus isOpen={isArchivedMenusOpen} onClose={() => setIsArchivedMenusOpen(false)} />
 
       {/* PDF Prompt Dialog after price adjustment */}
