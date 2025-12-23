@@ -135,7 +135,7 @@ const MenuItemRow = ({ item, isEven }: { item: MenuItem; isEven: boolean }) => {
             )}
           </div>
           {item.description && (
-            <p className="text-[10px] text-gray-400 mt-0.5 italic leading-tight tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <p className="text-[13px] text-gray-400 mt-0.5 italic leading-tight tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               {item.description}
             </p>
           )}
