@@ -404,6 +404,61 @@ export const useMenuDatabase = () => {
     }
   };
 
+  const adjustPricesInDb = async (percentage: number, sectionType?: MenuSectionType) => {
+    try {
+      // 1. Fetch all items that need adjustment
+      let query = supabase
+        .from("menu_items")
+        .select(`
+          id, name, price, half_price, full_price, sizes,
+          menu_categories!inner(
+            id, section_id,
+            menu_sections!inner(id, type)
+          )
+        `);
+
+      if (sectionType) {
+        query = query.eq('menu_categories.menu_sections.type', sectionType);
+      }
+
+      const { data: items, error: fetchError } = await query;
+
+      const typedItems: any = items;
+
+      if (fetchError) throw fetchError;
+      if (!typedItems || typedItems.length === 0) return true;
+
+      const multiplier = 1 + percentage / 100;
+
+      // 2. Prepare adjusted items for batch update (upsert)
+      const adjustedItems = typedItems.map((item: any) => ({
+        id: item.id,
+        price: item.price ? Math.round(item.price * multiplier) : null,
+        half_price: item.half_price ? Math.round(item.half_price * multiplier) : null,
+        full_price: item.full_price ? Math.round(item.full_price * multiplier) : null,
+        sizes: item.sizes ? item.sizes.map((sizeStr: string) => {
+          const numMatch = sizeStr.match(/[\d,]+/);
+          if (!numMatch) return sizeStr;
+          const num = parseFloat(numMatch[0].replace(/,/g, ""));
+          const adjusted = Math.round(num * multiplier);
+          return sizeStr.replace(numMatch[0], adjusted.toLocaleString("en-IN"));
+        }) : null
+      }));
+
+      // 3. Batch update using upsert
+      const { error: updateError } = await supabase
+        .from("menu_items")
+        .upsert(adjustedItems);
+
+      if (updateError) throw updateError;
+
+      return true;
+    } catch (error) {
+      console.error("Error adjusting prices in DB:", error);
+      return false;
+    }
+  };
+
   return {
     fetchMenuData,
     updateMenuItem,
@@ -412,6 +467,7 @@ export const useMenuDatabase = () => {
     resetDatabase,
     restoreDatabase,
     fetchArchivedMenus,
+    adjustPricesInDb,
     isLoading,
     isSeeded,
   };

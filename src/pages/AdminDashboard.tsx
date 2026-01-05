@@ -19,6 +19,7 @@ import { ArchivedMenus } from '@/components/ArchivedMenus';
 import { ThemeSelector } from '@/components/ThemeSelector';
 import { supabase } from '@/integrations/supabase/client';
 import { getVenueConfig } from '@/config/venueConfig';
+import { MenuTheme } from '@/config/menuThemes';
 
 interface VenueData {
   id: string;
@@ -28,6 +29,7 @@ interface VenueData {
   subtitle: string | null;
   logo_text: string | null;
   logo_subtext: string | null;
+  logo_image_url: string | null;
   theme?: string;
 }
 
@@ -62,8 +64,8 @@ const AdminDashboard = () => {
   const loadVenueData = async (venueSlug: string) => {
     setIsLoadingVenue(true);
     try {
-      const { data, error } = await supabase
-        .from('venues')
+      const { data, error } = await (supabase
+        .from('venues' as any) as any)
         .select('*')
         .eq('slug', venueSlug)
         .eq('is_active', true)
@@ -456,15 +458,17 @@ const AdminDashboard = () => {
                 Swiggy/Zomato Menu
               </Button>
 
-              {/* Archived Menus */}
-              <Button
-                variant="outline"
-                onClick={() => setIsArchivedMenusOpen(true)}
-                className="border-orange-500/50 text-orange-400 hover:bg-orange-500/10"
-              >
-                <Archive className="w-4 h-4 mr-2" />
-                Menu Archives
-              </Button>
+              {/* Archived Menus - Hidden for MoonWalk */}
+              {!currentVenue.name.toLowerCase().includes('moonwalk') && (
+                <Button
+                  variant="outline"
+                  onClick={() => setIsArchivedMenusOpen(true)}
+                  className="border-orange-500/50 text-orange-400 hover:bg-orange-500/10"
+                >
+                  <Archive className="w-4 h-4 mr-2" />
+                  Menu Archives
+                </Button>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -484,7 +488,7 @@ const AdminDashboard = () => {
           </CardHeader>
           <CardContent>
             <ThemeSelector
-              currentTheme={venueData?.theme || 'elegant-classic'}
+              currentTheme={(venueData?.theme as MenuTheme) || 'elegant-classic'}
               onThemeSelect={handleThemeUpdate}
             />
           </CardContent>
@@ -546,7 +550,7 @@ const AdminDashboard = () => {
             <DialogTitle className="text-white">Download Updated Menu PDF?</DialogTitle>
           </DialogHeader>
           <p className="text-slate-300 text-sm">
-            Prices have been updated and the previous menu has been archived. Would you like to download the new menu as a PDF?
+            Prices have been updated {currentVenue.name.toLowerCase().includes('moonwalk') ? '' : 'and the previous menu has been archived'}. Would you like to download the new menu as a PDF?
           </p>
           <div className="flex gap-3 mt-4">
             <Button
@@ -559,17 +563,19 @@ const AdminDashboard = () => {
               <Download className="w-4 h-4 mr-2" />
               Download PDF
             </Button>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setShowPDFPrompt(false);
-                setIsArchivedMenusOpen(true);
-              }}
-              className="border-orange-500/50 text-orange-400 hover:bg-orange-500/10"
-            >
-              <Archive className="w-4 h-4 mr-2" />
-              View Archives
-            </Button>
+            {!currentVenue.name.toLowerCase().includes('moonwalk') && (
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowPDFPrompt(false);
+                  setIsArchivedMenusOpen(true);
+                }}
+                className="border-orange-500/50 text-orange-400 hover:bg-orange-500/10"
+              >
+                <Archive className="w-4 h-4 mr-2" />
+                View Archives
+              </Button>
+            )}
             <Button
               variant="ghost"
               onClick={() => setShowPDFPrompt(false)}

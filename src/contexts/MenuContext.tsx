@@ -65,7 +65,7 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const { fetchMenuData, updateMenuItem: dbUpdateMenuItem, checkAndSeed, archiveCurrentMenu, resetDatabase: dbResetDatabase, restoreDatabase: dbRestoreDatabase } = useMenuDatabase();
+  const { fetchMenuData, updateMenuItem: dbUpdateMenuItem, checkAndSeed, archiveCurrentMenu, resetDatabase: dbResetDatabase, restoreDatabase: dbRestoreDatabase, adjustPricesInDb } = useMenuDatabase();
 
   const refreshMenu = async () => {
     setIsLoading(true);
@@ -182,7 +182,12 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
 
       return newData;
     });
-    // TODO: Batch update prices in database
+
+    // Persistent update in database
+    await adjustPricesInDb(percentage, sectionKey ? sectionKeyToType(sectionKey) : undefined);
+
+    // Refresh to ensure everything is synced
+    await refreshMenu();
   };
 
   return (
