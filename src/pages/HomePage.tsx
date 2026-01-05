@@ -129,7 +129,7 @@ const HomePage = () => {
                             <div className="grid md:grid-cols-2 gap-6">
                                 {/* View Menu */}
                                 <div
-                                    onClick={() => navigate(activeMenu.isDefault ? '/' : `/menu/${activeMenu.slug}`)}
+                                    onClick={() => navigate(`/menu/${activeMenu.slug}`)}
                                     className="group cursor-pointer relative overflow-hidden rounded-xl border-2 border-neon-magenta/30 bg-background/40 p-6 hover:border-neon-magenta hover:bg-neon-magenta/5 transition-all duration-300"
                                 >
                                     <div className="absolute inset-0 bg-gradient-to-br from-neon-magenta/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
