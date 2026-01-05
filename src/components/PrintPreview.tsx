@@ -610,22 +610,24 @@ const PrintablePage = ({
         <div className="absolute top-1/2 right-[20px] w-[40px] h-[2px] -translate-y-1/2" style={{ background: `linear-gradient(-90deg, ${accentColor}80, transparent)` }} />
       </div>
 
-      {/* ENHANCED HEADER - Tagline Only */}
-      <div className="pt-3 pb-2 text-center relative z-10 flex-shrink-0">
-        <div className="flex items-center justify-center gap-4">
-          <div className="w-20 h-[2px]" style={{ background: `linear-gradient(90deg, transparent, ${accentColor})` }} />
-          <span className="text-[11px] tracking-[0.4em] uppercase font-bold"
-            style={{
-              fontFamily: "'Orbitron', sans-serif",
-              background: "linear-gradient(90deg, #00f0ff, #ff00ff)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent"
-            }}>
-            EAT • DRINK • CODE • REPEAT
-          </span>
-          <div className="w-20 h-[2px]" style={{ background: `linear-gradient(-90deg, transparent, ${accentColor})` }} />
+      {/* ENHANCED HEADER - Tagline Only for LIVE */}
+      {(!logoText || logoText === 'LIVE') && (
+        <div className="pt-3 pb-2 text-center relative z-10 flex-shrink-0">
+          <div className="flex items-center justify-center gap-4">
+            <div className="w-20 h-[2px]" style={{ background: `linear-gradient(90deg, transparent, ${accentColor})` }} />
+            <span className="text-[11px] tracking-[0.4em] uppercase font-bold"
+              style={{
+                fontFamily: "'Orbitron', sans-serif",
+                background: "linear-gradient(90deg, #00f0ff, #ff00ff)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent"
+              }}>
+              EAT • DRINK • CODE • REPEAT
+            </span>
+            <div className="w-20 h-[2px]" style={{ background: `linear-gradient(-90deg, transparent, ${accentColor})` }} />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Section Title - Always at Top */}
       <div className="mt-6 mb-4 px-12 relative flex-shrink-0">
