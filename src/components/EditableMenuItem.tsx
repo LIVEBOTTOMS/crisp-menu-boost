@@ -77,27 +77,27 @@ export const EditableMenuItem = ({
                 id={`chef-${index}`}
                 checked={editedItem.isChefSpecial}
                 onCheckedChange={(c) => setEditedItem({ ...editedItem, isChefSpecial: c as boolean })}
-                className="border-magenta-500 data-[state=checked]:bg-magenta-500"
+                className="border-secondary data-[state=checked]:bg-secondary"
               />
-              <Label htmlFor={`chef-${index}`} className="text-[10px] uppercase tracking-wider text-magenta-400 font-bold cursor-pointer">Chef's Special</Label>
+              <Label htmlFor={`chef-${index}`} className="text-[10px] uppercase tracking-wider text-secondary font-bold cursor-pointer">Chef's Special</Label>
             </div>
             <div className="flex items-center space-x-2">
               <Checkbox
                 id={`best-${index}`}
                 checked={editedItem.isBestSeller}
                 onCheckedChange={(c) => setEditedItem({ ...editedItem, isBestSeller: c as boolean })}
-                className="border-cyan-500 data-[state=checked]:bg-cyan-500"
+                className="border-primary data-[state=checked]:bg-primary"
               />
-              <Label htmlFor={`best-${index}`} className="text-[10px] uppercase tracking-wider text-cyan-400 font-bold cursor-pointer">Best Seller</Label>
+              <Label htmlFor={`best-${index}`} className="text-[10px] uppercase tracking-wider text-primary font-bold cursor-pointer">Best Seller</Label>
             </div>
             <div className="flex items-center space-x-2">
               <Checkbox
                 id={`premium-${index}`}
                 checked={editedItem.isPremium}
                 onCheckedChange={(c) => setEditedItem({ ...editedItem, isPremium: c as boolean })}
-                className="border-yellow-500 data-[state=checked]:bg-yellow-500"
+                className="border-accent data-[state=checked]:bg-accent"
               />
-              <Label htmlFor={`premium-${index}`} className="text-[10px] uppercase tracking-wider text-yellow-400 font-bold cursor-pointer">Premium</Label>
+              <Label htmlFor={`premium-${index}`} className="text-[10px] uppercase tracking-wider text-accent font-bold cursor-pointer">Premium</Label>
             </div>
             <div className="flex items-center space-x-2">
               <Checkbox
@@ -173,8 +173,8 @@ export const EditableMenuItem = ({
     >
       {/* Subtle Tech Background Pattern on Hover */}
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
-        <div className={`absolute top-0 left-0 w-8 h-8 border-l border-t ${accentColor === 'cyan' ? 'border-neon-cyan/20' : 'border-neon-magenta/20'}`} />
-        <div className={`absolute bottom-0 right-0 w-8 h-8 border-r border-b ${accentColor === 'cyan' ? 'border-neon-cyan/20' : 'border-neon-magenta/20'}`} />
+        <div className={`absolute top-0 left-0 w-8 h-8 border-l border-t ${accentColor === 'cyan' ? 'border-primary/20' : 'border-secondary/20'}`} />
+        <div className={`absolute bottom-0 right-0 w-8 h-8 border-r border-b ${accentColor === 'cyan' ? 'border-primary/20' : 'border-secondary/20'}`} />
       </div>
 
       {/* Delete button in edit mode */}
@@ -194,7 +194,7 @@ export const EditableMenuItem = ({
         {item.image && !imageError && (
           <div className={cn(
             "w-32 h-32 rounded-xl overflow-hidden border border-white/10 flex-shrink-0 bg-black/40 shadow-2xl relative group-hover:shadow-[0_0_20px_-5px_var(--accent-color)]",
-            accentColor === "cyan" ? "group-hover:border-neon-cyan/50 shadow-neon-cyan/10" : "group-hover:border-neon-magenta/50 shadow-neon-magenta/10",
+            accentColor === "cyan" ? "group-hover:border-primary/50 shadow-primary/10" : "group-hover:border-secondary/50 shadow-secondary/10",
             "transition-all duration-500 group-hover:scale-[1.02]"
           )}>
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
@@ -214,8 +214,8 @@ export const EditableMenuItem = ({
               <span className={cn(
                 "w-1.5 h-1.5 rounded-sm rotate-45 transition-all duration-300 group-hover:scale-125 group-hover:shadow-[0_0_8px_currentColor] flex-shrink-0",
                 accentColor === "cyan"
-                  ? "bg-neon-cyan shadow-neon-cyan/20 text-neon-cyan"
-                  : "bg-neon-magenta shadow-neon-magenta/20 text-neon-magenta"
+                  ? "bg-primary shadow-primary/20 text-primary"
+                  : "bg-secondary shadow-secondary/20 text-secondary"
               )} />
               <span className="font-orbitron text-base font-medium tracking-wide text-foreground group-hover:text-white transition-colors">
                 {item.name}
@@ -223,17 +223,17 @@ export const EditableMenuItem = ({
 
               {/* Badges */}
               {item.isChefSpecial && (
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-neon-magenta/10 text-neon-magenta tracking-widest uppercase border border-neon-magenta/20">
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-secondary/10 text-secondary tracking-widest uppercase border border-secondary/20">
                   Chef's Special
                 </span>
               )}
               {item.isBestSeller && (
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-neon-cyan/10 text-neon-cyan tracking-widest uppercase border border-neon-cyan/20">
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-primary/10 text-primary tracking-widest uppercase border border-primary/20">
                   Best Seller
                 </span>
               )}
               {item.isPremium && (
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-neon-gold/10 text-neon-gold tracking-widest uppercase border border-neon-gold/20">
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-accent/10 text-accent tracking-widest uppercase border border-accent/20">
                   Premium
                 </span>
               )}
@@ -258,7 +258,7 @@ export const EditableMenuItem = ({
           {/* Price(s) */}
           <div className="flex-shrink-0 text-right self-start pt-0.5">
             {hasSizes ? (
-              <div className={`flex items-center gap-4 text-sm font-orbitron font-semibold ${accentColor === 'cyan' ? 'text-neon-cyan' : 'text-neon-magenta'
+              <div className={`flex items-center gap-4 text-sm font-orbitron font-semibold ${accentColor === 'cyan' ? 'text-primary' : 'text-secondary'
                 }`}>
                 {item.sizes!.map((size, i) => (
                   <div key={i} className="flex flex-col items-end group/price">
@@ -273,16 +273,16 @@ export const EditableMenuItem = ({
               <div className="flex items-center gap-4 font-orbitron">
                 <div className="flex flex-col items-end">
                   <span className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5">Half</span>
-                  <span className="text-neon-gold font-bold tracking-wide text-base">{item.halfPrice}</span>
+                  <span className="text-accent font-bold tracking-wide text-base">{item.halfPrice}</span>
                 </div>
                 <div className="w-px h-6 bg-white/10" />
                 <div className="flex flex-col items-end">
                   <span className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5">Full</span>
-                  <span className="text-neon-gold font-bold tracking-wide text-base">{item.fullPrice}</span>
+                  <span className="text-accent font-bold tracking-wide text-base">{item.fullPrice}</span>
                 </div>
               </div>
             ) : (
-              <span className="font-orbitron text-lg font-bold text-neon-gold tracking-wide whitespace-nowrap drop-shadow-[0_0_8px_rgba(255,215,0,0.3)] group-hover:scale-105 transition-transform inline-block">
+              <span className="font-orbitron text-lg font-bold text-accent tracking-wide whitespace-nowrap drop-shadow-[0_0_8px_rgba(255,215,0,0.3)] group-hover:scale-105 transition-transform inline-block">
                 {item.price}
               </span>
             )}

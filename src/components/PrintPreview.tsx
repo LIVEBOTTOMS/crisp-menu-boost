@@ -91,7 +91,7 @@ const MenuItemRow = ({ item, isEven }: { item: MenuItem; isEven: boolean }) => {
               {item.name}
             </h4>
             {item.isChefSpecial && (
-              <span className="px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider rounded border border-pink-500/40"
+              <span className="px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider rounded border border-secondary/40"
                 style={{
                   background: "linear-gradient(135deg, #be185d 0%, #ec4899 50%, #be185d 100%)",
                   color: "white",
@@ -103,7 +103,7 @@ const MenuItemRow = ({ item, isEven }: { item: MenuItem; isEven: boolean }) => {
               </span>
             )}
             {item.isBestSeller && (
-              <span className="px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider rounded border border-cyan-500/40"
+              <span className="px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider rounded border border-primary/40"
                 style={{
                   background: "linear-gradient(135deg, #0ea5e9 0%, #22d3ee 50%, #0ea5e9 100%)",
                   color: "white",
@@ -115,7 +115,7 @@ const MenuItemRow = ({ item, isEven }: { item: MenuItem; isEven: boolean }) => {
               </span>
             )}
             {item.isPremium && (
-              <span className="px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider rounded border border-yellow-500/40"
+              <span className="px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider rounded border border-accent/40"
                 style={{
                   background: "linear-gradient(135deg, #eab308 0%, #fde047 50%, #eab308 100%)",
                   color: "#1a1a1a",
@@ -262,7 +262,8 @@ const CoverPage = ({
   venueSubtitle,
   logoText,
   logoSubtext,
-  venueSlug
+  venueSlug,
+  logoUrl
 }: {
   pageRef: React.RefObject<HTMLDivElement>;
   variant: "cyan" | "magenta" | "gold";
@@ -271,6 +272,7 @@ const CoverPage = ({
   logoText?: string;
   logoSubtext?: string;
   venueSlug?: string;
+  logoUrl?: string;
 }) => {
   const accentColor = variant === "cyan" ? "#00f0ff" : variant === "magenta" ? "#ff00ff" : "#ffd700";
   const normalizedSlug = venueSlug?.toLowerCase() || '';
@@ -321,7 +323,7 @@ const CoverPage = ({
               style={{ filter: "brightness(1.1) contrast(1.1)" }}
             />
           ) : (
-            <div className="px-10 py-5 border border-cyan-500/30 bg-black/50 backdrop-blur-sm rounded-lg">
+            <div className="px-10 py-5 border border-primary/30 bg-black/50 backdrop-blur-sm rounded-lg">
               <h1 className="font-orbitron text-7xl font-black tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 drop-shadow-[0_0_25px_rgba(0,240,255,0.5)]">
                 {logoText || venueName}
               </h1>
@@ -359,7 +361,7 @@ const CoverPage = ({
             {/* Address QR Code */}
             {isDefaultVenue && (
               <div className="my-4 flex justify-center">
-                <img src="/address_qr.png" alt="Location QR" className="w-20 h-20 rounded shadow-lg border border-cyan-500/30" />
+                <img src="/address_qr.png" alt="Location QR" className="w-20 h-20 rounded shadow-lg border border-primary/30" />
               </div>
             )}
           </div>
@@ -454,7 +456,7 @@ const PrintablePage = ({
   // Render cover page
   if (isCover) {
     return (
-      <CoverPage
+      <CoverPage logoUrl={logoUrl}
         pageRef={pageRef}
         variant={variant}
         venueName={venueName}

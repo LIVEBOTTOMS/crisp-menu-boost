@@ -38,21 +38,21 @@ export const MenuCategory = ({ category, index, sectionKey }: MenuCategoryProps)
       {/* Premium Category Header */}
       <div className="mb-6 relative">
         <div className="flex items-center gap-4">
-          <div className={`h-px flex-1 bg-gradient-to-r from-transparent ${isEven ? 'via-neon-cyan/50 to-transparent' : 'via-neon-magenta/50 to-transparent'
+          <div className={`h-px flex-1 bg-gradient-to-r from-transparent ${isEven ? 'via-primary/50 to-transparent' : 'via-secondary/50 to-transparent'
             }`} />
 
           <div className={`inline-flex items-center gap-3 px-6 py-2 rounded-full border backdrop-blur-md shadow-lg ${isEven
-            ? "border-neon-cyan/30 bg-neon-cyan/5 shadow-neon-cyan/10"
-            : "border-neon-magenta/30 bg-neon-magenta/5 shadow-neon-magenta/10"
+            ? "border-primary/30 bg-primary/5 shadow-primary/10"
+            : "border-secondary/30 bg-secondary/5 shadow-secondary/10"
             }`}>
             {category.icon && <span className="text-xl filter drop-shadow-md">{category.icon}</span>}
-            <h3 className={`font-orbitron text-lg font-bold tracking-[0.2em] uppercase ${isEven ? "text-neon-cyan" : "text-neon-magenta"
+            <h3 className={`font-orbitron text-lg font-bold tracking-[0.2em] uppercase ${isEven ? "text-primary" : "text-secondary"
               }`}>
               {category.title}
             </h3>
           </div>
 
-          <div className={`h-px flex-1 bg-gradient-to-r from-transparent ${isEven ? 'via-neon-cyan/50 to-transparent' : 'via-neon-magenta/50 to-transparent'
+          <div className={`h-px flex-1 bg-gradient-to-r from-transparent ${isEven ? 'via-primary/50 to-transparent' : 'via-secondary/50 to-transparent'
             }`} />
         </div>
       </div>
