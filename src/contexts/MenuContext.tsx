@@ -17,7 +17,7 @@ interface MenuContextType {
   updateMenuItem: (sectionKey: string, categoryIndex: number, itemIndex: number, updatedItem: MenuItem) => void;
   addMenuItem: (sectionKey: string, categoryIndex: number, newItem: MenuItem) => void;
   deleteMenuItem: (sectionKey: string, categoryIndex: number, itemIndex: number) => void;
-  adjustPrices: (percentage: number, sectionKey?: string, categoryIndex?: number) => Promise<void>;
+  adjustPrices: (percentage: number, sectionKey?: string, categoryIndex?: number, venueSlug?: string) => Promise<void>;
   refreshMenu: () => Promise<void>;
   resetDatabase: () => Promise<boolean>;
   restoreDatabase: (menuData: any) => Promise<boolean>;
@@ -144,9 +144,14 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
     // TODO: Delete from database
   };
 
-  const adjustPrices = async (percentage: number, sectionKey?: string, categoryIndex?: number) => {
-    // Archive current menu before price adjustment
-    await archiveCurrentMenu(`Price adjustment: ${percentage > 0 ? '+' : ''}${percentage}%`);
+  const adjustPrices = async (percentage: number, sectionKey?: string, categoryIndex?: number, venueSlug?: string) => {
+    // Archive current menu before price adjustment - ONLY for LIVE (default) and Moonwalk
+    const normalizedSlug = venueSlug?.toLowerCase() || '';
+    const shouldArchive = !normalizedSlug || normalizedSlug === 'live' || normalizedSlug.includes('moonwalk');
+
+    if (shouldArchive) {
+      await archiveCurrentMenu(`Price adjustment: ${percentage > 0 ? '+' : ''}${percentage}%`);
+    }
 
     const multiplier = 1 + percentage / 100;
 
