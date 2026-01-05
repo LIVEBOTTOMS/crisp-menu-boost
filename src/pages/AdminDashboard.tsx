@@ -84,6 +84,9 @@ const AdminDashboard = () => {
     subtitle: defaultVenue.subtitle,
     logo_text: defaultVenue.logoText,
     logo_subtext: defaultVenue.logoSubtext,
+    logo_image_url: null,
+    tagline: null,
+    theme: 'cyberpunk-tech',
   };
 
   useEffect(() => {
