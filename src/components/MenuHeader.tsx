@@ -1,4 +1,3 @@
-import qrCode from "@/assets/qr-code.png";
 import { CircuitBorder } from "./CircuitBorder";
 import { getVenueConfig } from "@/config/venueConfig";
 
@@ -19,7 +18,7 @@ export const MenuHeader = ({ venueName, venueSubtitle, logoText, logoSubtext }: 
     logoText: logoText || defaultVenue.logoText,
     logoSubtext: logoSubtext || defaultVenue.logoSubtext,
     qrCodeLabel: defaultVenue.qrCodeLabel,
-    established: defaultVenue.established,
+    establishedYear: defaultVenue.establishedYear,
   };
 
   return (
@@ -66,14 +65,11 @@ export const MenuHeader = ({ venueName, venueSubtitle, logoText, logoSubtext }: 
                 <div className="h-[2px] w-24 bg-gradient-to-l from-transparent via-secondary to-neon-magenta opacity-60" />
               </div>
 
-              {/* Subtitle / Tagline */}
-              <p className="font-orbitron text-sm md:text-base tracking-[0.4em] text-neon-cyan mt-4 uppercase font-bold drop-shadow-md animate-pulse-glow">
-                {venue.tagline}
-              </p>
+              {/* Tagline removed - now venue-specific in Index.tsx */}
             </div>
           </div>
 
-          {/* Restaurant info with QR code - Enhanced */}
+          {/* Restaurant info - QR code moved to Print/Download */}
           <div className="flex flex-col items-center md:items-end gap-4">
             <div className="text-center md:text-right">
               <h3 className="font-cinzel text-2xl md:text-3xl font-bold tracking-[0.2em] text-foreground drop-shadow-lg">
@@ -86,21 +82,6 @@ export const MenuHeader = ({ venueName, venueSubtitle, logoText, logoSubtext }: 
                 Est. {venue.establishedYear}
               </p>
             </div>
-
-            {/* QR Code with enhanced styling */}
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-neon-cyan via-neon-magenta to-neon-gold rounded-xl opacity-30 group-hover:opacity-50 blur transition-opacity" />
-              <div className="relative bg-white p-2 rounded-xl shadow-2xl">
-                <img
-                  src={qrCode}
-                  alt={venue.qrCodeLabel || "Scan for location"}
-                  className="w-24 h-24 md:w-28 md:h-28"
-                />
-              </div>
-            </div>
-            <p className="font-rajdhani text-xs text-muted-foreground tracking-[0.15em] uppercase">
-              {venue.qrCodeLabel || "Scan for Location"}
-            </p>
           </div>
         </div>
 
