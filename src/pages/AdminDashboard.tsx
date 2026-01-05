@@ -16,6 +16,7 @@ import { SwiggyZomatoManager } from '@/components/SwiggyZomatoManager';
 import { QRCodeGenerator } from '@/components/QRCodeGenerator';
 import { BackgroundEffects } from '@/components/BackgroundEffects';
 import { ArchivedMenus } from '@/components/ArchivedMenus';
+import { ThemeSelector } from '@/components/ThemeSelector';
 import { supabase } from '@/integrations/supabase/client';
 import { getVenueConfig } from '@/config/venueConfig';
 
@@ -27,6 +28,7 @@ interface VenueData {
   subtitle: string | null;
   logo_text: string | null;
   logo_subtext: string | null;
+  theme?: string;
 }
 
 const AdminDashboard = () => {
@@ -132,6 +134,33 @@ const AdminDashboard = () => {
         ? 'You can no longer make changes to the menu.'
         : 'You can now edit menu items.',
     });
+  };
+
+  const handleThemeUpdate = async (themeId: string) => {
+    if (!venueData?.id) return;
+
+    try {
+      const { error } = await supabase
+        .from('venues')
+        .update({ theme: themeId })
+        .eq('id', venueData.id);
+
+      if (error) throw error;
+
+      setVenueData(prev => prev ? { ...prev, theme: themeId } : null);
+
+      toast({
+        title: 'Theme Updated',
+        description: `Successfully switched to the brand new theme!`,
+      });
+    } catch (error) {
+      console.error('Error updating theme:', error);
+      toast({
+        title: 'Update Failed',
+        description: 'Failed to update theme in the database.',
+        variant: 'destructive',
+      });
+    }
   };
 
   const handlePriceAdjust = async () => {
@@ -436,6 +465,27 @@ const AdminDashboard = () => {
           </CardContent>
         </Card>
 
+        {/* Visual Branding & Theme Selector */}
+        <Card className="bg-black/40 backdrop-blur-xl border-white/10 md:col-span-2">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2 font-cinzel">
+              <div className="w-8 h-8 rounded-lg bg-neon-cyan/20 flex items-center justify-center">
+                <Settings className="h-5 w-5 text-neon-cyan" />
+              </div>
+              Menu Branding & Themes
+            </CardTitle>
+            <CardDescription className="text-slate-300">
+              Personalize the look and feel of your menu. Changes reflect instantly on your public menu and print exports.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ThemeSelector
+              currentTheme={venueData?.theme || 'elegant-classic'}
+              onThemeSelect={handleThemeUpdate}
+            />
+          </CardContent>
+        </Card>
+
         {/* Actions */}
         <Card className="bg-black/40 backdrop-blur-xl border-white/10">
           <CardHeader>
@@ -478,6 +528,7 @@ const AdminDashboard = () => {
         venueSubtitle={currentVenue.subtitle || undefined}
         logoText={currentVenue.logo_text || undefined}
         logoSubtext={currentVenue.logo_subtext || undefined}
+        venueSlug={slug || 'live'}
       />
       <QRCodeGenerator isOpen={isQRCodeOpen} onClose={() => setIsQRCodeOpen(false)} />
       <SwiggyZomatoManager isOpen={isSwiggyManagerOpen} onClose={() => setIsSwiggyManagerOpen(false)} />

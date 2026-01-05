@@ -8,7 +8,9 @@ import { PremiumBorderFrame, PremiumSectionHeader } from "@/components/premium";
 import { useMenu } from "@/contexts/MenuContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { getVenueConfig } from "@/config/venueConfig";
+import { getThemeForVenue, MenuTheme } from "@/config/menuThemes";
 import { supabase } from "@/integrations/supabase/client";
+import { hexToHsl } from "@/lib/utils";
 
 interface VenueData {
   id: string;
@@ -18,7 +20,9 @@ interface VenueData {
   subtitle: string | null;
   logo_text: string | null;
   logo_subtext: string | null;
-  city: string | null;
+  city?: string | null;
+  logo_image_url?: string | null;
+  theme?: string;
 }
 
 const getSectionIntro = (title: string): string => {
@@ -77,7 +81,14 @@ const Index = () => {
     subtitle: defaultVenue.subtitle,
     logo_text: defaultVenue.logoText,
     logo_subtext: defaultVenue.logoSubtext,
-  };
+    theme: slug === 'live' || !slug ? 'cyberpunk-tech' : 'elegant-classic',
+    tagline: null,
+    logo_image_url: null,
+    id: 'default'
+  } as VenueData;
+
+  const themeConfig = getThemeForVenue(slug, currentVenue.theme as MenuTheme);
+  const accentColor = themeConfig.colors.primary;
 
   const sections = [
     { key: "snacks", data: menuData.snacksAndStarters, variant: "cyan" as const, title: "SNACKS & STARTERS" },
@@ -87,11 +98,32 @@ const Index = () => {
   ];
 
   const activeData = sections.find(s => s.key === activeSection);
-  const accentColor = activeData?.variant === "cyan" ? "#00f0ff" : activeData?.variant === "magenta" ? "#ff00ff" : "#ffd700";
 
   return (
-    <div className="min-h-screen bg-background relative">
-      <BackgroundEffects />
+    <div
+      className="min-h-screen relative overflow-x-hidden"
+      style={{
+        backgroundColor: themeConfig.colors.background,
+        color: themeConfig.colors.text,
+        fontFamily: themeConfig.fonts.body,
+        // Override global CSS variables with theme colors
+        // @ts-ignore
+        '--background': hexToHsl(themeConfig.colors.background),
+        '--foreground': hexToHsl(themeConfig.colors.text),
+        '--primary': hexToHsl(themeConfig.colors.primary),
+        '--secondary': hexToHsl(themeConfig.colors.secondary),
+        '--accent': hexToHsl(themeConfig.colors.accent),
+        '--border': hexToHsl(themeConfig.colors.border),
+      } as React.CSSProperties}
+    >
+      {/* Dynamic Background Effects - Only for Cyberpunk */}
+      {themeConfig.id === 'cyberpunk-tech' && <BackgroundEffects />}
+
+      {/* Background patterns for other themes */}
+      {themeConfig.id === 'elegant-classic' && (
+        <div className="fixed inset-0 pointer-events-none opacity-[0.03]"
+          style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/handmade-paper.png")' }} />
+      )}
 
       {/* Admin Button */}
       <Link
@@ -103,21 +135,20 @@ const Index = () => {
       </Link>
 
       <div className="relative z-10">
-        {/* Premium Header with Tagline - Only for LIVE venue */}
-        {(!slug || slug === 'live') && (
+        {/* Dynamic Tagline - Display only if exists in DB */}
+        {currentVenue.tagline && (
           <div className="pt-3 pb-2 text-center relative z-10">
             <div className="flex items-center justify-center gap-4">
-              <div className="w-20 h-[2px]" style={{ background: `linear-gradient(90deg, transparent, ${accentColor})` }} />
-              <span className="text-[11px] tracking-[0.4em] uppercase font-bold"
+              <div className="w-12 md:w-20 h-[2px]" style={{ background: `linear-gradient(90deg, transparent, ${themeConfig.colors.accent})` }} />
+              <span className="text-[10px] md:text-[11px] tracking-[0.3em] uppercase font-bold px-2"
                 style={{
-                  fontFamily: "'Orbitron', sans-serif",
-                  background: "linear-gradient(90deg, #00f0ff, #ff00ff)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent"
+                  fontFamily: themeConfig.fonts.accent,
+                  color: themeConfig.colors.accent,
+                  textShadow: `0 0 10px ${themeConfig.colors.accent}40`
                 }}>
-                EAT • DRINK • CODE • REPEAT
+                {currentVenue.tagline}
               </span>
-              <div className="w-20 h-[2px]" style={{ background: `linear-gradient(-90deg, transparent, ${accentColor})` }} />
+              <div className="w-12 md:w-20 h-[2px]" style={{ background: `linear-gradient(-90deg, transparent, ${themeConfig.colors.accent})` }} />
             </div>
           </div>
         )}
@@ -128,6 +159,8 @@ const Index = () => {
           logoText={currentVenue.logo_text || undefined}
           logoSubtext={currentVenue.logo_subtext || undefined}
           venueSlug={slug}
+          themeConfig={themeConfig}
+          logoUrl={currentVenue.logo_image_url || undefined}
         />
 
         {/* Premium Navigation Tabs */}
@@ -137,10 +170,23 @@ const Index = () => {
               <button
                 key={section.key}
                 onClick={() => setActiveSection(section.key)}
-                className={`px-6 py-3 rounded-lg font-orbitron text-sm tracking-wider uppercase transition-all duration-300 ${activeSection === section.key
-                  ? 'bg-gradient-to-r from-neon-cyan/20 to-neon-magenta/20 border-2 border-neon-cyan text-white shadow-[0_0_20px_rgba(0,240,255,0.3)]'
-                  : 'bg-background/40 border border-border/30 text-muted-foreground hover:border-neon-cyan/50 hover:text-foreground'
-                  }`}
+                className={`px-6 py-3 rounded-lg text-sm tracking-wider uppercase transition-all duration-300 border backdrop-blur-sm`}
+                style={{
+                  fontFamily: themeConfig.fonts.heading,
+                  backgroundColor: activeSection === section.key
+                    ? `${themeConfig.colors.primary}20`
+                    : `${themeConfig.colors.background}60`,
+                  borderColor: activeSection === section.key
+                    ? themeConfig.colors.primary
+                    : `${themeConfig.colors.border}`,
+                  color: activeSection === section.key
+                    ? (themeConfig.id === 'cyberpunk-tech' ? '#fff' : themeConfig.colors.primary)
+                    : themeConfig.colors.text,
+                  boxShadow: activeSection === section.key && themeConfig.id === 'cyberpunk-tech'
+                    ? `0 0 20px ${themeConfig.colors.primary}40`
+                    : 'none',
+                  opacity: activeSection === section.key ? 1 : 0.7
+                }}
               >
                 {section.title}
               </button>

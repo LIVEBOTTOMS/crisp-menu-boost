@@ -74,6 +74,7 @@ interface PrintPreviewProps {
   venueSubtitle?: string;
   logoText?: string;
   logoSubtext?: string;
+  venueSlug?: string;
 }
 
 const MenuItemRow = ({ item, isEven }: { item: MenuItem; isEven: boolean }) => {
@@ -259,7 +260,8 @@ const CoverPage = ({
   venueName,
   venueSubtitle,
   logoText,
-  logoSubtext
+  logoSubtext,
+  venueSlug
 }: {
   pageRef: React.RefObject<HTMLDivElement>;
   variant: "cyan" | "magenta" | "gold";
@@ -267,9 +269,12 @@ const CoverPage = ({
   venueSubtitle?: string;
   logoText?: string;
   logoSubtext?: string;
+  venueSlug?: string;
 }) => {
   const accentColor = variant === "cyan" ? "#00f0ff" : variant === "magenta" ? "#ff00ff" : "#ffd700";
-  const isDefaultVenue = !logoText || logoText === "LIVE";
+  const normalizedSlug = venueSlug?.toLowerCase() || '';
+  const isDefaultVenue = !normalizedSlug || normalizedSlug === 'live';
+  const isMoonWalk = normalizedSlug.includes('moonwalk');
 
   return (
     <div
@@ -307,7 +312,14 @@ const CoverPage = ({
       {/* Logo Section */}
       <div className="relative z-10 flex flex-col items-center">
         <div className="relative mb-8 text-center">
-          {isDefaultVenue ? (
+          {isMoonWalk ? (
+            <img
+              src="/moonwalk-logo.jpg"
+              alt="Moon Walk NX"
+              className="relative w-[500px] h-auto drop-shadow-2xl rounded-lg"
+              style={{ filter: "brightness(1.1) contrast(1.1)" }}
+            />
+          ) : isDefaultVenue ? (
             <img
               src="/live_main_logo.jpg"
               alt="LIVE - Bar & Kitchen"
@@ -382,24 +394,28 @@ const CoverPage = ({
               Menu • {new Date().getFullYear()}
             </p>
 
-            {/* Tagline from Logo */}
-            <p className="text-[10px] tracking-[0.4em] font-bold uppercase"
-              style={{
-                fontFamily: "'Orbitron', sans-serif",
-                background: "linear-gradient(90deg, #00f0ff, #ff00ff)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent"
-              }}>
-              Eat • Drink • Code • Repeat
-            </p>
+            {/* Tagline from Logo - Only for LIVE */}
+            {isDefaultVenue && (
+              <p className="text-[10px] tracking-[0.4em] font-bold uppercase"
+                style={{
+                  fontFamily: "'Orbitron', sans-serif",
+                  background: "linear-gradient(90deg, #00f0ff, #ff00ff)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent"
+                }}>
+                Eat • Drink • Code • Repeat
+              </p>
+            )}
           </div>
 
-          {/* Binary Footer */}
-          <div className="absolute bottom-6 left-0 right-0 text-center opacity-30">
-            <p className="text-[6px] tracking-[0.8em] text-cyan-500 font-mono">
-              01001100 01001001 01010110 01000101
-            </p>
-          </div>
+          {/* Binary Footer - Only for LIVE */}
+          {isDefaultVenue && (
+            <div className="absolute bottom-6 left-0 right-0 text-center opacity-30">
+              <p className="text-[6px] tracking-[0.8em] text-cyan-500 font-mono">
+                01001100 01001001 01010110 01000101
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -419,7 +435,8 @@ const PrintablePage = ({
   venueName,
   venueSubtitle,
   logoText,
-  logoSubtext
+  logoSubtext,
+  venueSlug
 }: {
   section: MenuSectionType;
   pageRef: React.RefObject<HTMLDivElement>;
@@ -434,8 +451,11 @@ const PrintablePage = ({
   venueSubtitle?: string;
   logoText?: string;
   logoSubtext?: string;
+  venueSlug?: string;
 }) => {
   const accentColor = variant === "cyan" ? "#00f0ff" : variant === "magenta" ? "#ff00ff" : "#ffd700";
+  const normalizedSlug = venueSlug?.toLowerCase() || '';
+  const isDefaultVenue = !normalizedSlug || normalizedSlug === 'live';
 
   // Render cover page
   if (isCover) {
@@ -447,6 +467,7 @@ const PrintablePage = ({
         venueSubtitle={venueSubtitle}
         logoText={logoText}
         logoSubtext={logoSubtext}
+        venueSlug={venueSlug}
       />
     );
   }
@@ -502,7 +523,10 @@ const PrintablePage = ({
             </h2>
             <div className="relative p-4 rounded-lg border border-white/5 bg-black/40">
               <p className="text-gray-200 text-[13px] leading-7 tracking-wide font-light italic" style={{ fontFamily: "'Playfair Display', serif" }}>
-                "Food is the universal language that connects us all. It transcends borders, cultures, and differences, bringing us together around a shared table. At LIVE, we believe in the power of this connection. Every dish we serve is a chapter in our story, crafted with passion, tradition, and a touch of innovation. We invite you to savor the moment, share the joy, and create memories that linger long after the last bite. Here's to good food, great company, and the beautiful tapestry of life woven one meal at a time."
+                {isDefaultVenue
+                  ? `"Food is the universal language that connects us all. It transcends borders, cultures, and differences, bringing us together around a shared table. At LIVE, we believe in the power of this connection. Every dish we serve is a chapter in our story, crafted with passion, tradition, and a touch of innovation. We invite you to savor the moment, share the joy, and create memories that linger long after the last bite. Here's to good food, great company, and the beautiful tapestry of life woven one meal at a time."`
+                  : `"Excellence is not a destination, it's a journey. We believe in crafting every meal with the finest ingredients and a passion for flavor. Each dish is a testament to our commitment to quality and service. We invite you to experience the harmony of taste and ambiance, creating moments that stay with you. Thank you for being part of our story."`
+                }
               </p>
             </div>
           </div>
@@ -534,23 +558,34 @@ const PrintablePage = ({
 
           {/* Reservations & Social - Compact */}
           <div className="w-full mb-4">
-            <div className="pb-4 border-b border-gray-700/50 mb-4">
-              <h3 className="text-lg font-bold tracking-[0.2em] mb-2" style={{ color: accentColor, fontFamily: "'Orbitron', sans-serif" }}>RESERVATIONS</h3>
-              <p className="text-xl font-light tracking-widest text-white mb-1">+91 7507066880</p>
-              <p className="text-cyan-400 text-sm font-semibold tracking-wide" style={{ fontFamily: "'Orbitron', sans-serif" }}>www.thelive.bar</p>
-            </div>
-            <div>
-              <p className="text-gray-400 text-sm mb-2">Follow our journey</p>
-              <h3 className="text-xl font-bold tracking-[0.2em]" style={{ color: accentColor, fontFamily: "'Orbitron', sans-serif" }}>Live.lounge.wakad</h3>
-            </div>
+            {isDefaultVenue ? (
+              <>
+                <div className="pb-4 border-b border-gray-700/50 mb-4">
+                  <h3 className="text-lg font-bold tracking-[0.2em] mb-2" style={{ color: accentColor, fontFamily: "'Orbitron', sans-serif" }}>RESERVATIONS</h3>
+                  <p className="text-xl font-light tracking-widest text-white mb-1">+91 7507066880</p>
+                  <p className="text-cyan-400 text-sm font-semibold tracking-wide" style={{ fontFamily: "'Orbitron', sans-serif" }}>www.thelive.bar</p>
+                </div>
+                <div>
+                  <p className="text-gray-400 text-sm mb-2">Follow our journey</p>
+                  <h3 className="text-xl font-bold tracking-[0.2em]" style={{ color: accentColor, fontFamily: "'Orbitron', sans-serif" }}>Live.lounge.wakad</h3>
+                </div>
+              </>
+            ) : (
+              <div className="pb-4 border-b border-gray-700/50 mb-4">
+                <h3 className="text-lg font-bold tracking-[0.2em] mb-2" style={{ color: accentColor, fontFamily: "'Orbitron', sans-serif" }}>RESERVATIONS</h3>
+                <p className="text-xl font-light tracking-widest text-white mb-1">Please Ask Our Staff</p>
+              </div>
+            )}
           </div>
 
 
 
-          {/* Tagline */}
-          <div className="mt-4">
-            <p className="text-[10px] tracking-[0.4em] text-cyan-400/60 font-semibold uppercase">Eat • Drink • Code • Repeat</p>
-          </div>
+          {/* Tagline - Only for LIVE */}
+          {isDefaultVenue && (
+            <div className="mt-4">
+              <p className="text-[10px] tracking-[0.4em] text-cyan-400/60 font-semibold uppercase">Eat • Drink • Code • Repeat</p>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -608,10 +643,19 @@ const PrintablePage = ({
         {/* Side Circuit Lines */}
         <div className="absolute top-1/2 left-[20px] w-[40px] h-[2px] -translate-y-1/2" style={{ background: `linear-gradient(90deg, ${accentColor}80, transparent)` }} />
         <div className="absolute top-1/2 right-[20px] w-[40px] h-[2px] -translate-y-1/2" style={{ background: `linear-gradient(-90deg, ${accentColor}80, transparent)` }} />
+
+        {/* Binary Code Watermark Footer - Only for LIVE */}
+        {isDefaultVenue && (
+          <div className="absolute bottom-1 left-0 right-0 text-center opacity-20 pointer-events-none">
+            <p className="text-[5px] tracking-[1.5em] text-cyan-500 font-mono">
+              01001100 01001001 01010110 01000101
+            </p>
+          </div>
+        )}
       </div>
 
       {/* ENHANCED HEADER - Tagline Only for LIVE */}
-      {(!logoText || logoText === 'LIVE') && (
+      {isDefaultVenue && (
         <div className="pt-3 pb-2 text-center relative z-10 flex-shrink-0">
           <div className="flex items-center justify-center gap-4">
             <div className="w-20 h-[2px]" style={{ background: `linear-gradient(90deg, transparent, ${accentColor})` }} />
@@ -820,18 +864,11 @@ const PrintablePage = ({
           </svg>
         </div>
       )}
-
-      {/* Binary Code Watermark Footer */}
-      <div className="absolute bottom-1 left-0 right-0 text-center opacity-20 pointer-events-none">
-        <p className="text-[5px] tracking-[1.5em] text-cyan-500 font-mono">
-          01001100 01001001 01010110 01000101
-        </p>
-      </div>
     </div >
   );
 };
 
-export const PrintPreview = ({ isOpen, onClose, venueName, venueSubtitle, logoText, logoSubtext }: PrintPreviewProps) => {
+export const PrintPreview = ({ isOpen, onClose, venueName, venueSubtitle, logoText, logoSubtext, venueSlug }: PrintPreviewProps) => {
   const { menuData } = useMenu();
   const [currentPage, setCurrentPage] = useState(0);
   const [isExporting, setIsExporting] = useState(false);
@@ -1068,6 +1105,9 @@ export const PrintPreview = ({ isOpen, onClose, venueName, venueSubtitle, logoTe
 
     const page = pages[index];
     const accentColor = page.variant === "cyan" ? "#00f0ff" : page.variant === "magenta" ? "#ff00ff" : "#ffd700";
+    const normalizedSlug = venueSlug?.toLowerCase() || '';
+    const isDefaultVenue = !normalizedSlug || normalizedSlug === 'live';
+    const isMoonWalk = normalizedSlug.includes('moonwalk');
 
     // Auto-detect Veg/Non-Veg for PDF generation
     const isVeg = page.section.title.includes("VEG") && !page.section.title.includes("NON");
@@ -1113,7 +1153,7 @@ export const PrintPreview = ({ isOpen, onClose, venueName, venueSubtitle, logoTe
           <!-- Logo Section -->
           <div style="position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;">
             <div style="position: relative; margin-bottom: 32px;">
-              ${logoText === 'MOON WALK NX' ?
+              ${isMoonWalk ?
           `<img src="/moonwalk-logo.jpg" alt="Moon Walk NX" style="width: 500px; height: auto; display: block; filter: brightness(1.1) contrast(1.1);" />`
           :
           `<img src="/live_main_logo.jpg" alt="LIVE - Bar & Kitchen" style="width: 500px; height: auto; display: block; filter: brightness(1.1) contrast(1.1);" />`
@@ -1149,19 +1189,25 @@ export const PrintPreview = ({ isOpen, onClose, venueName, venueSubtitle, logoTe
 
               <!-- Contact Information -->
               <div style="padding-top: 24px; border-top: 1px solid rgba(55, 65, 81, 0.5);">
-                <p style="font-size: 14px; color: #22d3ee; letter-spacing: 0.1em; font-family: 'Orbitron', sans-serif; margin: 0 0 12px 0;">
-                  www.thelive.bar
-                </p>
-                <p style="font-size: 10px; color: #22d3ee; letter-spacing: 0.1em; font-family: 'Orbitron', sans-serif; margin: 0; font-weight: bold; text-transform: uppercase;">
-                  For booking contact:<br/> 7507066880 / 9881241411 / 9172792591
-                </p>
+                ${isDefaultVenue ? `
+                  <p style="font-size: 14px; color: #22d3ee; letter-spacing: 0.1em; font-family: 'Orbitron', sans-serif; margin: 0 0 12px 0;">
+                    www.thelive.bar
+                  </p>
+                  <p style="font-size: 10px; color: #22d3ee; letter-spacing: 0.1em; font-family: 'Orbitron', sans-serif; margin: 0; font-weight: bold; text-transform: uppercase;">
+                    For booking contact:<br/> 7507066880 / 9881241411 / 9172792591
+                  </p>
+                ` : `
+                  <p style="font-size: 10px; color: #22d3ee; letter-spacing: 0.1em; font-family: 'Orbitron', sans-serif; margin: 0; font-weight: bold; text-transform: uppercase;">
+                    FOR RESERVATIONS, PLEASE ASK OUR STAFF
+                  </p>
+                `}
               </div>
 
               <div style="padding-top: 32px; padding-bottom: 24px;">
                 <p style="font-size: 12px; letter-spacing: 0.25em; color: #4b5563; text-transform: uppercase; margin: 0 0 16px 0;">
                   Menu • ${new Date().getFullYear()}
                 </p>
-                ${(!logoText || logoText === 'LIVE') ? `
+                ${isDefaultVenue ? `
                   <!-- Tagline (Only for LIVE) -->
                   <p style="font-size: 10px; letter-spacing: 0.4em; font-weight: bold; text-transform: uppercase; font-family: 'Orbitron', sans-serif; background: linear-gradient(90deg, #00f0ff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0;">
                     Eat • Drink • Code • Repeat
@@ -1169,12 +1215,14 @@ export const PrintPreview = ({ isOpen, onClose, venueName, venueSubtitle, logoTe
                 ` : ''}
               </div>
 
-              <!-- Binary Footer -->
-              <div style="position: absolute; bottom: 24px; left: 0; right: 0; text-align: center; opacity: 0.3;">
-                <p style="font-size: 6px; letter-spacing: 0.8em; color: #06b6d4; font-family: monospace; margin: 0;">
-                  01001100 01001001 01010110 01000101
-                </p>
-              </div>
+              ${isDefaultVenue ? `
+                <!-- Binary Footer (Only for LIVE) -->
+                <div style="position: absolute; bottom: 24px; left: 0; right: 0; text-align: center; opacity: 0.3;">
+                  <p style="font-size: 6px; letter-spacing: 0.8em; color: #06b6d4; font-family: monospace; margin: 0;">
+                    01001100 01001001 01010110 01000101
+                  </p>
+                </div>
+              ` : ''}
             </div>
           </div>
         </div>
@@ -1722,6 +1770,7 @@ export const PrintPreview = ({ isOpen, onClose, venueName, venueSubtitle, logoTe
                   venueSubtitle={venueSubtitle}
                   logoText={logoText}
                   logoSubtext={logoSubtext}
+                  venueSlug={venueSlug}
                 />
               </div>
             </div>
@@ -1901,6 +1950,7 @@ export const PrintPreview = ({ isOpen, onClose, venueName, venueSubtitle, logoTe
               venueSubtitle={venueSubtitle}
               logoText={logoText}
               logoSubtext={logoSubtext}
+              venueSlug={venueSlug}
             />
           </div>
         ))}
