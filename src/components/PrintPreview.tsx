@@ -1113,7 +1113,11 @@ export const PrintPreview = ({ isOpen, onClose, venueName, venueSubtitle, logoTe
           <!-- Logo Section -->
           <div style="position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;">
             <div style="position: relative; margin-bottom: 32px;">
-              <img src="/live_main_logo.jpg" alt="LIVE - Bar & Kitchen" style="width: 500px; height: auto; display: block; filter: brightness(1.1) contrast(1.1);" />
+              ${logoText === 'MOON WALK NX' ?
+          `<img src="/moonwalk-logo.jpg" alt="Moon Walk NX" style="width: 500px; height: auto; display: block; filter: brightness(1.1) contrast(1.1);" />`
+          :
+          `<img src="/live_main_logo.jpg" alt="LIVE - Bar & Kitchen" style="width: 500px; height: auto; display: block; filter: brightness(1.1) contrast(1.1);" />`
+        }
             </div>
 
             <!-- Divider -->
@@ -1153,15 +1157,16 @@ export const PrintPreview = ({ isOpen, onClose, venueName, venueSubtitle, logoTe
                 </p>
               </div>
 
-              <!-- Year -->
               <div style="padding-top: 32px; padding-bottom: 24px;">
                 <p style="font-size: 12px; letter-spacing: 0.25em; color: #4b5563; text-transform: uppercase; margin: 0 0 16px 0;">
                   Menu • ${new Date().getFullYear()}
                 </p>
-                <!-- Tagline -->
-                <p style="font-size: 10px; letter-spacing: 0.4em; font-weight: bold; text-transform: uppercase; font-family: 'Orbitron', sans-serif; background: linear-gradient(90deg, #00f0ff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0;">
-                  Eat • Drink • Code • Repeat
-                </p>
+                ${(!logoText || logoText === 'LIVE') ? `
+                  <!-- Tagline (Only for LIVE) -->
+                  <p style="font-size: 10px; letter-spacing: 0.4em; font-weight: bold; text-transform: uppercase; font-family: 'Orbitron', sans-serif; background: linear-gradient(90deg, #00f0ff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0;">
+                    Eat • Drink • Code • Repeat
+                  </p>
+                ` : ''}
               </div>
 
               <!-- Binary Footer -->
