@@ -75,6 +75,7 @@ interface PrintPreviewProps {
   logoText?: string;
   logoSubtext?: string;
   venueSlug?: string;
+  logoUrl?: string;
 }
 
 const MenuItemRow = ({ item, isEven }: { item: MenuItem; isEven: boolean }) => {
@@ -312,18 +313,11 @@ const CoverPage = ({
       {/* Logo Section */}
       <div className="relative z-10 flex flex-col items-center">
         <div className="relative mb-8 text-center">
-          {isMoonWalk ? (
+          {logoUrl || isDefaultVenue ? (
             <img
-              src="/moonwalk-logo.jpg"
-              alt="Moon Walk NX"
+              src={logoUrl || "/live_main_logo.jpg"}
+              alt={venueName}
               className="relative w-[500px] h-auto drop-shadow-2xl rounded-lg"
-              style={{ filter: "brightness(1.1) contrast(1.1)" }}
-            />
-          ) : isDefaultVenue ? (
-            <img
-              src="/live_main_logo.jpg"
-              alt="LIVE - Bar & Kitchen"
-              className="relative w-[500px] h-auto drop-shadow-2xl"
               style={{ filter: "brightness(1.1) contrast(1.1)" }}
             />
           ) : (
@@ -868,7 +862,7 @@ const PrintablePage = ({
   );
 };
 
-export const PrintPreview = ({ isOpen, onClose, venueName, venueSubtitle, logoText, logoSubtext, venueSlug }: PrintPreviewProps) => {
+export const PrintPreview = ({ isOpen, onClose, venueName, venueSubtitle, logoText, logoSubtext, venueSlug, logoUrl }: PrintPreviewProps) => {
   const { menuData } = useMenu();
   const [currentPage, setCurrentPage] = useState(0);
   const [isExporting, setIsExporting] = useState(false);
@@ -1153,10 +1147,13 @@ export const PrintPreview = ({ isOpen, onClose, venueName, venueSubtitle, logoTe
           <!-- Logo Section -->
           <div style="position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;">
             <div style="position: relative; margin-bottom: 32px;">
-              ${isMoonWalk ?
-          `<img src="/moonwalk-logo.jpg" alt="Moon Walk NX" style="width: 500px; height: auto; display: block; filter: brightness(1.1) contrast(1.1);" />`
+              ${logoUrl || isDefaultVenue ?
+          `<img src="${logoUrl || '/live_main_logo.jpg'}" alt="${venueName}" style="width: 500px; height: auto; display: block; filter: brightness(1.1) contrast(1.1);" />`
           :
-          `<img src="/live_main_logo.jpg" alt="LIVE - Bar & Kitchen" style="width: 500px; height: auto; display: block; filter: brightness(1.1) contrast(1.1);" />`
+          `<div style="padding: 20px 40px; border: 1px solid rgba(0, 240, 255, 0.3); background: rgba(0, 0, 0, 0.5); border-radius: 8px;">
+                  <h1 style="font-family: 'Orbitron', sans-serif; font-size: 72px; font-weight: 900; letter-spacing: 0.15em; color: white; margin: 0; text-align: center;">${logoText || venueName}</h1>
+                  ${logoSubtext ? `<p style="font-family: 'Rajdhani', sans-serif; font-size: 24px; letter-spacing: 0.5em; color: rgba(34, 211, 238, 0.8); margin-top: 16px; text-align: center; text-transform: uppercase;">${logoSubtext}</p>` : ''}
+                 </div>`
         }
             </div>
 

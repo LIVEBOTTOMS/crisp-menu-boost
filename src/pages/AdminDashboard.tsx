@@ -529,6 +529,7 @@ const AdminDashboard = () => {
         logoText={currentVenue.logo_text || undefined}
         logoSubtext={currentVenue.logo_subtext || undefined}
         venueSlug={slug || 'live'}
+        logoUrl={currentVenue.logo_image_url || undefined}
       />
       <QRCodeGenerator isOpen={isQRCodeOpen} onClose={() => setIsQRCodeOpen(false)} />
       <SwiggyZomatoManager isOpen={isSwiggyManagerOpen} onClose={() => setIsSwiggyManagerOpen(false)} />
