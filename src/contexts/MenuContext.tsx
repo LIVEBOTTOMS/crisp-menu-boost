@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { MenuItem, MenuSection, snacksAndStarters, foodMenu, beveragesMenu, sideItems } from "@/data/menuData";
 import { useMenuDatabase, sectionKeyToType } from "@/hooks/useMenuDatabase";
+import { getVenueConfig } from "@/config/venueConfig";
 
 interface MenuData {
   snacksAndStarters: MenuSection;
@@ -145,9 +146,13 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const adjustPrices = async (percentage: number, sectionKey?: string, categoryIndex?: number, venueSlug?: string) => {
-    // Archive current menu before price adjustment - ONLY for LIVE (default) and Moonwalk
-    const normalizedSlug = venueSlug?.toLowerCase() || '';
-    const shouldArchive = !normalizedSlug || normalizedSlug === 'live' || normalizedSlug.includes('moonwalk');
+    // Archive current menu before price adjustment - ONLY for LIVE
+    // We check both the passed slug AND the configured venue name to be safe
+    const config = getVenueConfig();
+    const identifier = (venueSlug || config.name).toLowerCase();
+
+    // Strictly archive only for LIVE venues
+    const shouldArchive = identifier.includes('live');
 
     if (shouldArchive) {
       await archiveCurrentMenu(`Price adjustment: ${percentage > 0 ? '+' : ''}${percentage}%`);
