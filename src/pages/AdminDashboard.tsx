@@ -87,6 +87,7 @@ const AdminDashboard = () => {
     logo_image_url: null,
     tagline: null,
     theme: 'cyberpunk-tech',
+    id: 'default',
   };
 
   useEffect(() => {
