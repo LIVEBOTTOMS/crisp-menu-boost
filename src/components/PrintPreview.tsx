@@ -896,6 +896,9 @@ export const PrintPreview = ({ isOpen, onClose, venueName, venueSubtitle, logoTe
     };
   };
 
+  if (!isOpen) return null;
+
+
   // Optimized A4 page layout - 9 pages total (1 cover + 8 menu pages)
   const pages = [
     // Page 0: COVER PAGE
