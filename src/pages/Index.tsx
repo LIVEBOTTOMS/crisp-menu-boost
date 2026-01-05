@@ -103,22 +103,24 @@ const Index = () => {
       </Link>
 
       <div className="relative z-10">
-        {/* Premium Header with Tagline */}
-        <div className="pt-3 pb-2 text-center relative z-10">
-          <div className="flex items-center justify-center gap-4">
-            <div className="w-20 h-[2px]" style={{ background: `linear-gradient(90deg, transparent, ${accentColor})` }} />
-            <span className="text-[11px] tracking-[0.4em] uppercase font-bold"
-              style={{
-                fontFamily: "'Orbitron', sans-serif",
-                background: "linear-gradient(90deg, #00f0ff, #ff00ff)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent"
-              }}>
-              EAT • DRINK • CODE • REPEAT
-            </span>
-            <div className="w-20 h-[2px]" style={{ background: `linear-gradient(-90deg, transparent, ${accentColor})` }} />
+        {/* Premium Header with Tagline - Only for LIVE venue */}
+        {(!slug || slug === 'live') && (
+          <div className="pt-3 pb-2 text-center relative z-10">
+            <div className="flex items-center justify-center gap-4">
+              <div className="w-20 h-[2px]" style={{ background: `linear-gradient(90deg, transparent, ${accentColor})` }} />
+              <span className="text-[11px] tracking-[0.4em] uppercase font-bold"
+                style={{
+                  fontFamily: "'Orbitron', sans-serif",
+                  background: "linear-gradient(90deg, #00f0ff, #ff00ff)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent"
+                }}>
+                EAT • DRINK • CODE • REPEAT
+              </span>
+              <div className="w-20 h-[2px]" style={{ background: `linear-gradient(-90deg, transparent, ${accentColor})` }} />
+            </div>
           </div>
-        </div>
+        )}
 
         <MenuHeader
           venueName={currentVenue.name}
@@ -135,8 +137,8 @@ const Index = () => {
                 key={section.key}
                 onClick={() => setActiveSection(section.key)}
                 className={`px-6 py-3 rounded-lg font-orbitron text-sm tracking-wider uppercase transition-all duration-300 ${activeSection === section.key
-                    ? 'bg-gradient-to-r from-neon-cyan/20 to-neon-magenta/20 border-2 border-neon-cyan text-white shadow-[0_0_20px_rgba(0,240,255,0.3)]'
-                    : 'bg-background/40 border border-border/30 text-muted-foreground hover:border-neon-cyan/50 hover:text-foreground'
+                  ? 'bg-gradient-to-r from-neon-cyan/20 to-neon-magenta/20 border-2 border-neon-cyan text-white shadow-[0_0_20px_rgba(0,240,255,0.3)]'
+                  : 'bg-background/40 border border-border/30 text-muted-foreground hover:border-neon-cyan/50 hover:text-foreground'
                   }`}
               >
                 {section.title}
