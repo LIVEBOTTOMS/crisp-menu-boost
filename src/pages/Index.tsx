@@ -127,6 +127,7 @@ const Index = () => {
           venueSubtitle={currentVenue.subtitle || undefined}
           logoText={currentVenue.logo_text || undefined}
           logoSubtext={currentVenue.logo_subtext || undefined}
+          venueSlug={slug}
         />
 
         {/* Premium Navigation Tabs */}

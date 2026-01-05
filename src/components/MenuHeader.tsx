@@ -6,9 +6,10 @@ interface MenuHeaderProps {
   venueSubtitle?: string;
   logoText?: string;
   logoSubtext?: string;
+  venueSlug?: string; // Add slug to determine which logo to show
 }
 
-export const MenuHeader = ({ venueName, venueSubtitle, logoText, logoSubtext }: MenuHeaderProps = {}) => {
+export const MenuHeader = ({ venueName, venueSubtitle, logoText, logoSubtext, venueSlug }: MenuHeaderProps = {}) => {
   const defaultVenue = getVenueConfig();
 
   // Use props if provided, otherwise use default config
@@ -21,26 +22,45 @@ export const MenuHeader = ({ venueName, venueSubtitle, logoText, logoSubtext }: 
     establishedYear: defaultVenue.establishedYear,
   };
 
+  // Determine if venue has a logo image
+  const hasLogoImage = venueSlug === 'moonwalk-nx';
+  const logoImagePath = hasLogoImage ? '/moonwalk-logo.jpg' : null;
+
   return (
     <header className="relative py-12 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Main header layout */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12">
-          {/* Logo - Enhanced with better glow effect */}
+          {/* Logo - Image or Text */}
           <div className="relative group">
-            <CircuitBorder className="px-10 py-5 hover:scale-105 transition-transform duration-300">
-              <h1 className="font-orbitron text-4xl md:text-5xl font-black tracking-[0.15em] gradient-text animate-pulse-glow drop-shadow-[0_0_15px_rgba(0,240,255,0.3)]">
-                {venue.logoText}
-              </h1>
-              <p className="font-rajdhani text-xs tracking-[0.3em] text-foreground/80 mt-2 text-center uppercase">
-                {venue.logoSubtext}
-              </p>
-            </CircuitBorder>
-            {/* Subtle corner accents */}
-            <div className="absolute -top-2 -left-2 w-4 h-4 border-l-2 border-t-2 border-neon-cyan/40" />
-            <div className="absolute -top-2 -right-2 w-4 h-4 border-r-2 border-t-2 border-neon-magenta/40" />
-            <div className="absolute -bottom-2 -left-2 w-4 h-4 border-l-2 border-b-2 border-neon-magenta/40" />
-            <div className="absolute -bottom-2 -right-2 w-4 h-4 border-r-2 border-b-2 border-neon-cyan/40" />
+            {logoImagePath ? (
+              // Image Logo (for Moon Walk NX)
+              <div className="relative">
+                <img
+                  src={logoImagePath}
+                  alt={venue.name}
+                  className="w-64 md:w-80 h-auto rounded-lg shadow-2xl"
+                  style={{ filter: "drop-shadow(0 0 20px rgba(255,215,0,0.3))" }}
+                />
+              </div>
+            ) : (
+              // Text Logo (for LIVE and others)
+              <>
+                <CircuitBorder className="px-10 py-5 hover:scale-105 transition-transform duration-300">
+                  <h1 className="font-orbitron text-4xl md:text-5xl font-black tracking-[0.15em] gradient-text animate-pulse-glow drop-shadow-[0_0_15px_rgba(0,240,255,0.3)]">
+                    {venue.logoText}
+                  </h1>
+                  <p className="font-rajdhani text-xs tracking-[0.3em] text-foreground/80 mt-2 text-center uppercase">
+                    {venue.logoSubtext}
+                  </p>
+                </CircuitBorder>
+                {/* Subtle corner accents */}
+                <div className="absolute -top-2 -left-2 w-4 h-4 border-l-2 border-t-2 border-neon-cyan/40" />
+                <div className="absolute -top-2 -right-2 w-4 h-4 border-r-2 border-t-2 border-neon-magenta/40" />
+                <div className="absolute -bottom-2 -left-2 w-4 h-4 border-l-2 border-b-2 border-neon-magenta/40" />
+                <div className="absolute -bottom-2 -right-2 w-4 h-4 border-r-2 border-b-2 border-neon-cyan/40" />
+              </>
+            )}
           </div>
 
           {/* MENU title - Enhanced with premium styling */}

@@ -1,0 +1,3 @@
+// This file will be replaced with the actual Moon Walk logo image
+// The user has provided: uploaded_image_1_1767596973936.jpg
+// This should be saved as /public/moonwalk-logo.jpg
