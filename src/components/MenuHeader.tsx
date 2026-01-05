@@ -1,7 +1,27 @@
 import qrCode from "@/assets/qr-code.png";
 import { CircuitBorder } from "./CircuitBorder";
+import { getVenueConfig } from "@/config/venueConfig";
 
-export const MenuHeader = () => {
+interface MenuHeaderProps {
+  venueName?: string;
+  venueSubtitle?: string;
+  logoText?: string;
+  logoSubtext?: string;
+}
+
+export const MenuHeader = ({ venueName, venueSubtitle, logoText, logoSubtext }: MenuHeaderProps = {}) => {
+  const defaultVenue = getVenueConfig();
+
+  // Use props if provided, otherwise use default config
+  const venue = {
+    name: venueName || defaultVenue.name,
+    subtitle: venueSubtitle || defaultVenue.subtitle,
+    logoText: logoText || defaultVenue.logoText,
+    logoSubtext: logoSubtext || defaultVenue.logoSubtext,
+    qrCodeLabel: defaultVenue.qrCodeLabel,
+    established: defaultVenue.established,
+  };
+
   return (
     <header className="relative py-12 px-4">
       <div className="max-w-6xl mx-auto">
@@ -11,10 +31,10 @@ export const MenuHeader = () => {
           <div className="relative group">
             <CircuitBorder className="px-10 py-5 hover:scale-105 transition-transform duration-300">
               <h1 className="font-orbitron text-4xl md:text-5xl font-black tracking-[0.15em] gradient-text animate-pulse-glow drop-shadow-[0_0_15px_rgba(0,240,255,0.3)]">
-                LIVE
+                {venue.logoText}
               </h1>
               <p className="font-rajdhani text-xs tracking-[0.3em] text-foreground/80 mt-2 text-center uppercase">
-                Eat • Drink • Code • Repeat
+                {venue.logoSubtext}
               </p>
             </CircuitBorder>
             {/* Subtle corner accents */}
@@ -48,7 +68,7 @@ export const MenuHeader = () => {
 
               {/* Subtitle / Tagline */}
               <p className="font-orbitron text-sm md:text-base tracking-[0.4em] text-neon-cyan mt-4 uppercase font-bold drop-shadow-md animate-pulse-glow">
-                Eat.Drink.Code.Repeat
+                {venue.tagline}
               </p>
             </div>
           </div>
@@ -57,13 +77,13 @@ export const MenuHeader = () => {
           <div className="flex flex-col items-center md:items-end gap-4">
             <div className="text-center md:text-right">
               <h3 className="font-cinzel text-2xl md:text-3xl font-bold tracking-[0.2em] text-foreground drop-shadow-lg">
-                LIVE BAR
+                {venue.name}
               </h3>
               <p className="font-rajdhani text-sm tracking-[0.15em] text-muted-foreground mt-2">
-                FINE DINING • PUNE
+                {venue.subtitle}
               </p>
               <p className="font-rajdhani text-xs tracking-[0.1em] text-muted-foreground/70 mt-1">
-                Est. 2024
+                Est. {venue.establishedYear}
               </p>
             </div>
 
@@ -73,13 +93,13 @@ export const MenuHeader = () => {
               <div className="relative bg-white p-2 rounded-xl shadow-2xl">
                 <img
                   src={qrCode}
-                  alt="Scan for location"
+                  alt={venue.qrCodeLabel || "Scan for location"}
                   className="w-24 h-24 md:w-28 md:h-28"
                 />
               </div>
             </div>
             <p className="font-rajdhani text-xs text-muted-foreground tracking-[0.15em] uppercase">
-              Scan for Location
+              {venue.qrCodeLabel || "Scan for Location"}
             </p>
           </div>
         </div>

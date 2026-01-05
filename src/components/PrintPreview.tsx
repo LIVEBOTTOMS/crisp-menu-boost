@@ -70,6 +70,10 @@ const getCategoryIconSvg = (title: string, color: string): string => {
 interface PrintPreviewProps {
   isOpen: boolean;
   onClose: () => void;
+  venueName?: string;
+  venueSubtitle?: string;
+  logoText?: string;
+  logoSubtext?: string;
 }
 
 const MenuItemRow = ({ item, isEven }: { item: MenuItem; isEven: boolean }) => {
@@ -251,12 +255,21 @@ const CategoryBlock = ({
 // Cover Page Component
 const CoverPage = ({
   pageRef,
-  variant
+  variant,
+  venueName,
+  venueSubtitle,
+  logoText,
+  logoSubtext
 }: {
   pageRef: React.RefObject<HTMLDivElement>;
   variant: "cyan" | "magenta" | "gold";
+  venueName?: string;
+  venueSubtitle?: string;
+  logoText?: string;
+  logoSubtext?: string;
 }) => {
   const accentColor = variant === "cyan" ? "#00f0ff" : variant === "magenta" ? "#ff00ff" : "#ffd700";
+  const isDefaultVenue = !logoText || logoText === "LIVE";
 
   return (
     <div
@@ -293,13 +306,26 @@ const CoverPage = ({
 
       {/* Logo Section */}
       <div className="relative z-10 flex flex-col items-center">
-        <div className="relative mb-8">
-          <img
-            src="/live_main_logo.jpg"
-            alt="LIVE - Bar & Kitchen"
-            className="relative w-[500px] h-auto drop-shadow-2xl"
-            style={{ filter: "brightness(1.1) contrast(1.1)" }}
-          />
+        <div className="relative mb-8 text-center">
+          {isDefaultVenue ? (
+            <img
+              src="/live_main_logo.jpg"
+              alt="LIVE - Bar & Kitchen"
+              className="relative w-[500px] h-auto drop-shadow-2xl"
+              style={{ filter: "brightness(1.1) contrast(1.1)" }}
+            />
+          ) : (
+            <div className="px-10 py-5 border border-cyan-500/30 bg-black/50 backdrop-blur-sm rounded-lg">
+              <h1 className="font-orbitron text-7xl font-black tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 drop-shadow-[0_0_25px_rgba(0,240,255,0.5)]">
+                {logoText || venueName}
+              </h1>
+              {logoSubtext && (
+                <p className="font-rajdhani text-2xl tracking-[0.5em] text-cyan-400/80 mt-4 text-center uppercase font-bold">
+                  {logoSubtext}
+                </p>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Divider */}
@@ -312,30 +338,42 @@ const CoverPage = ({
         {/* Restaurant Info */}
         <div className="text-center space-y-6">
           <h2 className="text-3xl font-bold tracking-[0.3em] text-white uppercase" style={{ fontFamily: "'Cinzel', serif" }}>
-            Bar & Kitchen
+            {venueSubtitle && !isDefaultVenue ? venueName : "Bar & Kitchen"}
           </h2>
 
           <div className="space-y-2">
             <p className="text-base tracking-[0.2em] text-gray-300 uppercase font-medium">
-              Premium Dining & Spirits
+              {venueSubtitle || "Premium Dining & Spirits"}
             </p>
-            <p className="text-[11px] text-gray-400 tracking-wider">
-              Opp Pune Bakery, Wakad, Pune
-            </p>
+            {isDefaultVenue && (
+              <p className="text-[11px] text-gray-400 tracking-wider">
+                Opp Pune Bakery, Wakad, Pune
+              </p>
+            )}
             {/* Address QR Code */}
-            <div className="my-4 flex justify-center">
-              <img src="/address_qr.png" alt="Location QR" className="w-20 h-20 rounded shadow-lg border border-cyan-500/30" />
-            </div>
+            {isDefaultVenue && (
+              <div className="my-4 flex justify-center">
+                <img src="/address_qr.png" alt="Location QR" className="w-20 h-20 rounded shadow-lg border border-cyan-500/30" />
+              </div>
+            )}
           </div>
 
           {/* Contact Information */}
           <div className="pt-6 space-y-3 border-t border-gray-700/50">
-            <p className="text-sm text-cyan-400 tracking-wider" style={{ fontFamily: "'Orbitron', sans-serif" }}>
-              www.thelive.bar
-            </p>
-            <p className="text-[10px] text-cyan-400 tracking-wide font-bold uppercase mt-1" style={{ fontFamily: "'Orbitron', sans-serif" }}>
-              For booking contact: 7507066880 / 9881241411 / 9172792591
-            </p>
+            {isDefaultVenue ? (
+              <>
+                <p className="text-sm text-cyan-400 tracking-wider" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+                  www.thelive.bar
+                </p>
+                <p className="text-[10px] text-cyan-400 tracking-wide font-bold uppercase mt-1" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+                  For booking contact: 7507066880 / 9881241411 / 9172792591
+                </p>
+              </>
+            ) : (
+              <p className="text-[10px] text-cyan-400 tracking-wide font-bold uppercase mt-1" style={{ fontFamily: "'Orbitron', sans-serif" }}>
+                For Reservations, Please Ask Our Staff
+              </p>
+            )}
           </div>
 
           {/* QR Code Placeholder (Optional) */}
@@ -377,7 +415,11 @@ const PrintablePage = ({
   isCover = false,
   isBackCover = false,
   proverb,
-  twoColumn = false
+  twoColumn = false,
+  venueName,
+  venueSubtitle,
+  logoText,
+  logoSubtext
 }: {
   section: MenuSectionType;
   pageRef: React.RefObject<HTMLDivElement>;
@@ -388,12 +430,25 @@ const PrintablePage = ({
   isBackCover?: boolean;
   proverb?: string;
   twoColumn?: boolean;
+  venueName?: string;
+  venueSubtitle?: string;
+  logoText?: string;
+  logoSubtext?: string;
 }) => {
   const accentColor = variant === "cyan" ? "#00f0ff" : variant === "magenta" ? "#ff00ff" : "#ffd700";
 
   // Render cover page
   if (isCover) {
-    return <CoverPage pageRef={pageRef} variant={variant} />;
+    return (
+      <CoverPage
+        pageRef={pageRef}
+        variant={variant}
+        venueName={venueName}
+        venueSubtitle={venueSubtitle}
+        logoText={logoText}
+        logoSubtext={logoSubtext}
+      />
+    );
   }
 
   // Render back cover page
@@ -774,7 +829,7 @@ const PrintablePage = ({
   );
 };
 
-export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
+export const PrintPreview = ({ isOpen, onClose, venueName, venueSubtitle, logoText, logoSubtext }: PrintPreviewProps) => {
   const { menuData } = useMenu();
   const [currentPage, setCurrentPage] = useState(0);
   const [isExporting, setIsExporting] = useState(false);
@@ -1656,6 +1711,10 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
                   isBackCover={(pages[currentPage] as any).isBackCover}
                   proverb={(pages[currentPage] as any).proverb}
                   twoColumn={(pages[currentPage] as any).twoColumn}
+                  venueName={venueName}
+                  venueSubtitle={venueSubtitle}
+                  logoText={logoText}
+                  logoSubtext={logoSubtext}
                 />
               </div>
             </div>
@@ -1831,6 +1890,10 @@ export const PrintPreview = ({ isOpen, onClose }: PrintPreviewProps) => {
               isBackCover={(page as any).isBackCover}
               proverb={(page as any).proverb}
               twoColumn={(page as any).twoColumn}
+              venueName={venueName}
+              venueSubtitle={venueSubtitle}
+              logoText={logoText}
+              logoSubtext={logoSubtext}
             />
           </div>
         ))}

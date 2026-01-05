@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
 import { Settings } from "lucide-react";
 import { MenuHeader } from "@/components/MenuHeader";
 import { MenuNavigation } from "@/components/MenuNavigation";
@@ -7,11 +7,64 @@ import { MenuSection } from "@/components/MenuSection";
 import { BackgroundEffects } from "@/components/BackgroundEffects";
 import { useMenu } from "@/contexts/MenuContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { getVenueConfig } from "@/config/venueConfig";
+import { supabase } from "@/integrations/supabase/client";
+
+interface VenueData {
+  id: string;
+  name: string;
+  slug: string;
+  tagline: string | null;
+  subtitle: string | null;
+  logo_text: string | null;
+  logo_subtext: string | null;
+  city: string | null;
+}
 
 const Index = () => {
+  const { slug } = useParams<{ slug?: string }>();
   const [activeSection, setActiveSection] = useState("snacks");
   const { menuData, isLoading } = useMenu();
   const { user } = useAuth();
+  const [venueData, setVenueData] = useState<VenueData | null>(null);
+  const [isLoadingVenue, setIsLoadingVenue] = useState(false);
+
+  // For default LIVE menu (no slug in URL)
+  const defaultVenue = getVenueConfig();
+
+  useEffect(() => {
+    if (slug) {
+      // Load venue-specific data
+      loadVenueData(slug);
+    }
+  }, [slug]);
+
+  const loadVenueData = async (venueSlug: string) => {
+    setIsLoadingVenue(true);
+    try {
+      const { data, error } = await supabase
+        .from('venues')
+        .select('*')
+        .eq('slug', venueSlug)
+        .eq('is_active', true)
+        .single();
+
+      if (error) throw error;
+      setVenueData(data);
+    } catch (error) {
+      console.error('Error loading venue:', error);
+    } finally {
+      setIsLoadingVenue(false);
+    }
+  };
+
+  // Use venue data if available, otherwise use default
+  const currentVenue = venueData || {
+    name: defaultVenue.name,
+    subtitle: defaultVenue.subtitle,
+    logo_text: defaultVenue.logoText,
+    logo_subtext: defaultVenue.logoSubtext,
+  };
 
   const renderActiveSection = () => {
     switch (activeSection) {
@@ -42,7 +95,12 @@ const Index = () => {
       </Link>
 
       <div className="relative z-10">
-        <MenuHeader />
+        <MenuHeader
+          venueName={currentVenue.name}
+          venueSubtitle={currentVenue.subtitle || undefined}
+          logoText={currentVenue.logo_text || undefined}
+          logoSubtext={currentVenue.logo_subtext || undefined}
+        />
         <MenuNavigation
           activeSection={activeSection}
           onSectionChange={setActiveSection}
@@ -62,7 +120,7 @@ const Index = () => {
         <footer className="border-t border-border/30 py-8 mt-12">
           <div className="max-w-6xl mx-auto px-4 text-center">
             <p className="font-rajdhani text-muted-foreground text-sm tracking-wide">
-              © 2024 LIVE BAR • Fine Dining & Premium Spirits
+              © {new Date().getFullYear()} {currentVenue.name} • {currentVenue.subtitle}
             </p>
             <div className="flex items-center justify-center gap-2 mt-3">
               <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-neon-cyan/50" />

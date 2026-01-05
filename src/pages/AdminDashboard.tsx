@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useMenu } from '@/contexts/MenuContext';
 import { Button } from '@/components/ui/button';
@@ -16,12 +16,29 @@ import { SwiggyZomatoManager } from '@/components/SwiggyZomatoManager';
 import { QRCodeGenerator } from '@/components/QRCodeGenerator';
 import { BackgroundEffects } from '@/components/BackgroundEffects';
 import { ArchivedMenus } from '@/components/ArchivedMenus';
+import { supabase } from '@/integrations/supabase/client';
+import { getVenueConfig } from '@/config/venueConfig';
+
+interface VenueData {
+  id: string;
+  name: string;
+  slug: string;
+  tagline: string | null;
+  subtitle: string | null;
+  logo_text: string | null;
+  logo_subtext: string | null;
+}
 
 const AdminDashboard = () => {
+  const { slug } = useParams<{ slug?: string }>();
   const { user, isAdmin, isLoading, signOut } = useAuth();
   const { menuData, setIsEditMode, isEditMode, adjustPrices, resetDatabase } = useMenu();
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  const [venueData, setVenueData] = useState<VenueData | null>(null);
+  const [isLoadingVenue, setIsLoadingVenue] = useState(false);
+  const defaultVenue = getVenueConfig();
 
   const [pricePercent, setPricePercent] = useState("");
   const [priceScope, setPriceScope] = useState("all");
@@ -32,6 +49,40 @@ const AdminDashboard = () => {
   const [isArchivedMenusOpen, setIsArchivedMenusOpen] = useState(false);
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
   const [showPDFPrompt, setShowPDFPrompt] = useState(false);
+
+  // Load venue data if slug is provided
+  useEffect(() => {
+    if (slug) {
+      loadVenueData(slug);
+    }
+  }, [slug]);
+
+  const loadVenueData = async (venueSlug: string) => {
+    setIsLoadingVenue(true);
+    try {
+      const { data, error } = await supabase
+        .from('venues')
+        .select('*')
+        .eq('slug', venueSlug)
+        .eq('is_active', true)
+        .single();
+
+      if (error) throw error;
+      setVenueData(data);
+    } catch (error) {
+      console.error('Error loading venue:', error);
+    } finally {
+      setIsLoadingVenue(false);
+    }
+  };
+
+  // Use venue data if available, otherwise use default
+  const currentVenue = venueData || {
+    name: defaultVenue.name,
+    subtitle: defaultVenue.subtitle,
+    logo_text: defaultVenue.logoText,
+    logo_subtext: defaultVenue.logoSubtext,
+  };
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -145,17 +196,19 @@ const AdminDashboard = () => {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
           <div>
             <h1 className="text-4xl md:text-5xl font-black text-white font-orbitron tracking-widest drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
-              LIVE <span className="text-neon-cyan">ADMIN</span>
+              {currentVenue.logo_text || currentVenue.name} <span className="text-neon-cyan">ADMIN</span>
             </h1>
             <div className="flex items-center gap-3 mt-2">
               <div className="h-[1px] w-12 bg-neon-cyan/50" />
-              <p className="text-neon-cyan font-orbitron text-[10px] tracking-[0.3em] uppercase font-bold">Eat.Drink.Code.Repeat</p>
+              <p className="text-neon-cyan font-orbitron text-[10px] tracking-[0.3em] uppercase font-bold">
+                {currentVenue.logo_subtext || currentVenue.subtitle}
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <Button
               variant="outline"
-              onClick={() => navigate('/')}
+              onClick={() => navigate(slug ? `/menu/${slug}` : '/')}
               className="border-slate-600 text-slate-300 hover:bg-slate-700"
             >
               <Home className="h-4 w-4 mr-2" />
@@ -418,7 +471,14 @@ const AdminDashboard = () => {
         </Card>
       </div>
 
-      <PrintPreview isOpen={isPrintPreviewOpen} onClose={() => setIsPrintPreviewOpen(false)} />
+      <PrintPreview
+        isOpen={isPrintPreviewOpen}
+        onClose={() => setIsPrintPreviewOpen(false)}
+        venueName={currentVenue.name}
+        venueSubtitle={currentVenue.subtitle || undefined}
+        logoText={currentVenue.logo_text || undefined}
+        logoSubtext={currentVenue.logo_subtext || undefined}
+      />
       <QRCodeGenerator isOpen={isQRCodeOpen} onClose={() => setIsQRCodeOpen(false)} />
       <SwiggyZomatoManager isOpen={isSwiggyManagerOpen} onClose={() => setIsSwiggyManagerOpen(false)} />
       <ArchivedMenus isOpen={isArchivedMenusOpen} onClose={() => setIsArchivedMenusOpen(false)} />
