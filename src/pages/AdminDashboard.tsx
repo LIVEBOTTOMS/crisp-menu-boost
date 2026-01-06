@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useSubscription } from '@/contexts/SubscriptionContext';
 import { useMenu } from '@/contexts/MenuContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,13 +14,14 @@ import { Loader2, LogOut, Menu, Users, Settings, ShieldCheck, ShieldX, Home, Per
 import { useToast } from '@/hooks/use-toast';
 import { PrintPreview } from '@/components/PrintPreview';
 import { SwiggyZomatoManager } from '@/components/SwiggyZomatoManager';
-import { QRCodeGenerator } from '@/components/QRCodeGenerator';
+import { QRCodeCustomizer } from '@/components/QRCodeCustomizer';
 import { BackgroundEffects } from '@/components/BackgroundEffects';
 import { ArchivedMenus } from '@/components/ArchivedMenus';
 import { ThemeSelector } from '@/components/ThemeSelector';
+import { UpgradePrompt } from '@/components/UpgradePrompt';
 import { supabase } from '@/integrations/supabase/client';
 import { getVenueConfig } from '@/config/venueConfig';
-import { MenuTheme } from '@/config/menuThemes';
+import { MenuTheme, menuThemes } from '@/config/menuThemes';
 
 interface VenueData {
   id: string;
@@ -36,11 +38,11 @@ interface VenueData {
 const AdminDashboard = () => {
   const { slug } = useParams<{ slug?: string }>();
   const { user, isAdmin, isLoading, signOut } = useAuth();
-  const { menuData, setIsEditMode, isEditMode, adjustPrices, resetDatabase } = useMenu();
+  const { canAccess, isPremium, isPremiumPlus, plan } = useSubscription();
+  const { menuData, venueData, setIsEditMode, isEditMode, adjustPrices, resetDatabase, setActiveVenueSlug } = useMenu();
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const [venueData, setVenueData] = useState<VenueData | null>(null);
   const [isLoadingVenue, setIsLoadingVenue] = useState(false);
   const defaultVenue = getVenueConfig();
 
@@ -48,7 +50,7 @@ const AdminDashboard = () => {
   const [priceScope, setPriceScope] = useState("all");
   const [isPriceDialogOpen, setIsPriceDialogOpen] = useState(false);
   const [isPrintPreviewOpen, setIsPrintPreviewOpen] = useState(false);
-  const [isQRCodeOpen, setIsQRCodeOpen] = useState(false);
+  const [isQRCodeCustomizerOpen, setIsQRCodeCustomizerOpen] = useState(false);
   const [isSwiggyManagerOpen, setIsSwiggyManagerOpen] = useState(false);
   const [isArchivedMenusOpen, setIsArchivedMenusOpen] = useState(false);
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
@@ -56,29 +58,8 @@ const AdminDashboard = () => {
 
   // Load venue data if slug is provided
   useEffect(() => {
-    if (slug) {
-      loadVenueData(slug);
-    }
-  }, [slug]);
-
-  const loadVenueData = async (venueSlug: string) => {
-    setIsLoadingVenue(true);
-    try {
-      const { data, error } = await (supabase
-        .from('venues' as any) as any)
-        .select('*')
-        .eq('slug', venueSlug)
-        .eq('is_active', true)
-        .single();
-
-      if (error) throw error;
-      setVenueData(data);
-    } catch (error) {
-      console.error('Error loading venue:', error);
-    } finally {
-      setIsLoadingVenue(false);
-    }
-  };
+    setActiveVenueSlug(slug || 'live');
+  }, [slug, setActiveVenueSlug]);
 
   // Use venue data if available, otherwise use default
   const currentVenue = venueData || {
@@ -152,8 +133,6 @@ const AdminDashboard = () => {
         .eq('id', venueData.id);
 
       if (error) throw error;
-
-      setVenueData(prev => prev ? { ...prev, theme: themeId } : null);
 
       toast({
         title: 'Theme Updated',
@@ -273,22 +252,35 @@ const AdminDashboard = () => {
                   {user.email}
                 </CardDescription>
               </div>
-              <Badge
-                variant={isAdmin ? "default" : "secondary"}
-                className={isAdmin ? "bg-green-600" : "bg-slate-600"}
-              >
-                {isAdmin ? (
-                  <>
-                    <ShieldCheck className="h-3 w-3 mr-1" />
-                    Admin
-                  </>
-                ) : (
-                  <>
-                    <ShieldX className="h-3 w-3 mr-1" />
-                    User
-                  </>
-                )}
-              </Badge>
+              <div className="flex gap-2">
+                <Badge
+                  variant={isAdmin ? "default" : "secondary"}
+                  className={isAdmin ? "bg-green-600" : "bg-slate-600"}
+                >
+                  {isAdmin ? (
+                    <>
+                      <ShieldCheck className="h-3 w-3 mr-1" />
+                      Admin
+                    </>
+                  ) : (
+                    <>
+                      <ShieldX className="h-3 w-3 mr-1" />
+                      User
+                    </>
+                  )}
+                </Badge>
+                <Badge
+                  className={
+                    isPremiumPlus
+                      ? "bg-gradient-to-r from-purple-500 to-pink-600"
+                      : isPremium
+                        ? "bg-gradient-to-r from-cyan-500 to-blue-600"
+                        : "bg-slate-600"
+                  }
+                >
+                  {plan?.name || 'Freemium'}
+                </Badge>
+              </div>
             </div>
           </CardHeader>
         </Card>
@@ -377,18 +369,29 @@ const AdminDashboard = () => {
                 </DialogContent>
               </Dialog>
 
-              {/* Edit Menu */}
-              <Button
-                onClick={toggleEditMode}
-                disabled={!isAdmin}
-                variant="outline"
-                className={isEditMode
-                  ? "border-purple-500 bg-purple-500/20 text-purple-300"
-                  : "border-purple-500/50 text-purple-400 hover:bg-purple-500/10"}
-              >
-                <Edit className="w-4 h-4 mr-2" />
-                {isEditMode ? 'Exit Edit' : 'Edit Menu'}
-              </Button>
+              {/* Edit Menu - Premium Feature */}
+              {canAccess('edit_access') ? (
+                <Button
+                  onClick={toggleEditMode}
+                  disabled={!isAdmin}
+                  variant="outline"
+                  className={isEditMode
+                    ? "border-purple-500 bg-purple-500/20 text-purple-300"
+                    : "border-purple-500/50 text-purple-400 hover:bg-purple-500/10"}
+                >
+                  <Edit className="w-4 h-4 mr-2" />
+                  {isEditMode ? 'Exit Edit' : 'Edit Menu'}
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => navigate('/pricing')}
+                  variant="outline"
+                  className="border-purple-500/50 text-purple-400 hover:bg-purple-500/10"
+                >
+                  <Edit className="w-4 h-4 mr-2" />
+                  Edit Menu (Premium)
+                </Button>
+              )}
 
               {/* Sync Database */}
               <Dialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
@@ -438,15 +441,26 @@ const AdminDashboard = () => {
                 Download / Print
               </Button>
 
-              {/* QR Code Generator */}
-              <Button
-                variant="outline"
-                onClick={() => setIsQRCodeOpen(true)}
-                className="border-green-500/50 text-green-400 hover:bg-green-500/10"
-              >
-                <QrCode className="w-4 h-4 mr-2" />
-                Generate QR Code
-              </Button>
+              {/* QR Code Designer - Premium Feature */}
+              {canAccess('qr_codes') ? (
+                <Button
+                  variant="outline"
+                  onClick={() => setIsQRCodeCustomizerOpen(true)}
+                  className="border-green-500/50 text-green-400 hover:bg-green-500/10"
+                >
+                  <QrCode className="w-4 h-4 mr-2" />
+                  QR Code Designer
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => navigate('/pricing')}
+                  variant="outline"
+                  className="border-green-500/50 text-green-400 hover:bg-green-500/10"
+                >
+                  <QrCode className="w-4 h-4 mr-2" />
+                  QR Code Designer (Premium)
+                </Button>
+              )}
 
               {/* Swiggy/Zomato Menu */}
               <Button
@@ -459,7 +473,7 @@ const AdminDashboard = () => {
               </Button>
 
               {/* Archived Menus - Hidden for MoonWalk */}
-              {!currentVenue.name.toLowerCase().includes('moonwalk') && (
+              {!(slug && slug.toLowerCase().includes('moonwalk')) && !currentVenue.name?.toLowerCase().includes('moonwalk') && (
                 <Button
                   variant="outline"
                   onClick={() => setIsArchivedMenusOpen(true)}
@@ -539,7 +553,13 @@ const AdminDashboard = () => {
         venueSlug={slug || 'live'}
         logoUrl={currentVenue.logo_image_url || undefined}
       />
-      <QRCodeGenerator isOpen={isQRCodeOpen} onClose={() => setIsQRCodeOpen(false)} />
+      <QRCodeCustomizer
+        isOpen={isQRCodeCustomizerOpen}
+        onClose={() => setIsQRCodeCustomizerOpen(false)}
+        defaultUrl={`${window.location.origin}/menu/${slug || 'live'}`}
+        venueName={currentVenue.name}
+        venueTheme={currentVenue.theme ? menuThemes[currentVenue.theme as MenuTheme] : undefined}
+      />
       <SwiggyZomatoManager isOpen={isSwiggyManagerOpen} onClose={() => setIsSwiggyManagerOpen(false)} />
       <ArchivedMenus isOpen={isArchivedMenusOpen} onClose={() => setIsArchivedMenusOpen(false)} />
 
@@ -563,7 +583,7 @@ const AdminDashboard = () => {
               <Download className="w-4 h-4 mr-2" />
               Download PDF
             </Button>
-            {!currentVenue.name.toLowerCase().includes('moonwalk') && (
+            {!(slug && slug.toLowerCase().includes('moonwalk')) && !currentVenue.name?.toLowerCase().includes('moonwalk') && (
               <Button
                 variant="outline"
                 onClick={() => {

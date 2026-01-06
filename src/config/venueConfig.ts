@@ -98,7 +98,7 @@ export const venueConfig: VenueConfig = {
     },
 
     // Footer
-    copyrightText: "© 2024 LIVE BAR • Fine Dining & Premium Spirits",
+    copyrightText: "© 2024 MenuX Prime • World Class Menu Solutions",
 };
 
 /**

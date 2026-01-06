@@ -432,7 +432,8 @@ const PrintablePage = ({
   venueSubtitle,
   logoText,
   logoSubtext,
-  venueSlug
+  venueSlug,
+  logoUrl
 }: {
   section: MenuSectionType;
   pageRef: React.RefObject<HTMLDivElement>;
@@ -448,6 +449,7 @@ const PrintablePage = ({
   logoText?: string;
   logoSubtext?: string;
   venueSlug?: string;
+  logoUrl?: string;
 }) => {
   const accentColor = variant === "cyan" ? "#00f0ff" : variant === "magenta" ? "#ff00ff" : "#ffd700";
   const normalizedSlug = venueSlug?.toLowerCase() || '';
@@ -456,7 +458,8 @@ const PrintablePage = ({
   // Render cover page
   if (isCover) {
     return (
-      <CoverPage logoUrl={logoUrl}
+      <CoverPage
+        logoUrl={logoUrl}
         pageRef={pageRef}
         variant={variant}
         venueName={venueName}
@@ -1773,6 +1776,7 @@ export const PrintPreview = ({ isOpen, onClose, venueName, venueSubtitle, logoTe
                   logoText={logoText}
                   logoSubtext={logoSubtext}
                   venueSlug={venueSlug}
+                  logoUrl={logoUrl}
                 />
               </div>
             </div>

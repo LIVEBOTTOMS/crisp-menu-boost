@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, Search, Edit, Copy, Trash2, ExternalLink, ArrowLeft } from "lucide-react";
+import { Plus, Search, Edit, Copy, ExternalLink, ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { BackgroundEffects } from "@/components/BackgroundEffects";
 import { toast } from "sonner";
@@ -13,7 +13,7 @@ interface Venue {
     subtitle: string | null;
     city: string | null;
     created_at: string;
-    updated_at: string;
+    logo_image_url?: string | null;
 }
 
 const MenusListPage = () => {
@@ -25,6 +25,16 @@ const MenusListPage = () => {
 
     useEffect(() => {
         fetchVenues();
+
+        // Real-time synchronization for the menus list
+        const channel = supabase
+            .channel('venues-list-sync')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'venues' }, () => fetchVenues())
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }, []);
 
     useEffect(() => {
@@ -43,15 +53,70 @@ const MenusListPage = () => {
     const fetchVenues = async () => {
         setIsLoading(true);
         try {
-            const { data, error } = await supabase
-                .from('venues')
+            // Fetch venues from database
+            const { data, error } = await (supabase
+                .from('venues' as any) as any)
                 .select('*')
                 .eq('is_active', true)
-                .order('updated_at', { ascending: false });
+                .order('created_at', { ascending: true });
 
             if (error) throw error;
-            setVenues(data || []);
-            setFilteredVenues(data || []);
+
+            // Default venues (LIVE and MoonWalk)
+            const defaultVenues: Venue[] = [
+                {
+                    id: 'live-default',
+                    name: 'LIVE BAR',
+                    slug: 'live',
+                    subtitle: 'FINE DINING • PUNE',
+                    city: 'Pune',
+                    created_at: new Date('2024-01-01').toISOString(),
+                    logo_image_url: null,
+                    tagline: 'Eat.Drink.Code.Repeat'
+                },
+                {
+                    id: 'moonwalk-default',
+                    name: 'MoonWalk NX',
+                    slug: 'moonwalk-nx',
+                    subtitle: 'FINE DINING • PUNE',
+                    city: 'Pune',
+                    created_at: new Date('2024-01-02').toISOString(),
+                    logo_image_url: '/lovable-uploads/44cfff7f-ac94-4f62-8ebe-1ac4f6fc0df9.png',
+                    tagline: 'Where Culinary Art Meets Innovation'
+                }
+            ];
+
+            // Seed default venues to database if they don't exist
+            for (const venue of defaultVenues) {
+                const exists = data?.find((v: any) => v.slug === venue.slug);
+                if (!exists) {
+                    await (supabase.from('venues' as any) as any).insert({
+                        name: venue.name,
+                        slug: venue.slug,
+                        tagline: venue.tagline,
+                        subtitle: venue.subtitle,
+                        city: venue.city,
+                        logo_image_url: venue.logo_image_url,
+                        logo_text: venue.slug === 'live' ? 'LIVE' : 'MOONWALK',
+                        logo_subtext: venue.slug === 'live' ? 'Eat • Drink • Code • Repeat' : 'NX • Premium Dining',
+                        theme: venue.slug === 'live' ? 'cyberpunk-tech' : 'elegant-classic',
+                        is_active: true
+                    });
+                }
+            }
+
+            // Merge database venues with defaults (remove duplicates by slug)
+            const dbVenues = data || [];
+            const allVenues = [...defaultVenues];
+
+            dbVenues.forEach((dbVenue: any) => {
+                if (!defaultVenues.find(dv => dv.slug === dbVenue.slug)) {
+                    allVenues.push(dbVenue);
+                }
+            });
+
+            setVenues(allVenues);
+            setFilteredVenues(allVenues);
         } catch (error) {
             console.error('Error fetching venues:', error);
             toast.error('Failed to load menus');
@@ -62,10 +127,10 @@ const MenusListPage = () => {
 
     const handleDuplicate = async (venue: Venue) => {
         try {
-            // Create a copy with new name
+            // 1. Create a copy of the venue
             const newSlug = `${venue.slug}-copy-${Date.now()}`;
-            const { data, error } = await supabase
-                .from('venues')
+            const { data: newVenue, error: venueError } = await (supabase
+                .from('venues' as any) as any)
                 .insert({
                     name: `${venue.name} (Copy)`,
                     slug: newSlug,
@@ -76,24 +141,80 @@ const MenusListPage = () => {
                 .select()
                 .single();
 
-            if (error) throw error;
+            if (venueError) throw venueError;
 
-            // Copy menu items
-            const { data: menuItems } = await supabase
-                .from('venue_menu_items')
+            // 2. Copy menu sections
+            const { data: sections } = await supabase
+                .from('menu_sections')
                 .select('*')
                 .eq('venue_id', venue.id);
 
-            if (menuItems && menuItems.length > 0) {
-                const copiedItems = menuItems.map(item => ({
-                    ...item,
-                    id: undefined,
-                    venue_id: data.id,
-                    created_at: undefined,
-                    updated_at: undefined,
-                }));
+            if (sections && sections.length > 0) {
+                for (const section of sections) {
+                    const { data: newSection } = await supabase
+                        .from('menu_sections')
+                        .insert({
+                            venue_id: newVenue.id,
+                            type: section.type,
+                            title: section.title,
+                            display_order: section.display_order
+                        })
+                        .select()
+                        .single();
 
-                await supabase.from('venue_menu_items').insert(copiedItems);
+                    if (newSection) {
+                        // 3. Copy categories
+                        const { data: categories } = await supabase
+                            .from('menu_categories')
+                            .select('*')
+                            .eq('section_id', section.id);
+
+                        if (categories) {
+                            for (const category of categories) {
+                                const { data: newCategory } = await supabase
+                                    .from('menu_categories')
+                                    .insert({
+                                        section_id: newSection.id,
+                                        title: category.title,
+                                        icon: category.icon,
+                                        display_order: category.display_order
+                                    })
+                                    .select()
+                                    .single();
+
+                                if (newCategory) {
+                                    // 4. Copy items
+                                    const { data: items } = await supabase
+                                        .from('menu_items')
+                                        .select('*')
+                                        .eq('category_id', category.id);
+
+                                    if (items) {
+                                        const itemsToInsert = (items as any[]).map(item => ({
+                                            category_id: newCategory.id,
+                                            name: item.name,
+                                            description: item.description,
+                                            price: item.price,
+                                            half_price: item.half_price,
+                                            full_price: item.full_price,
+                                            sizes: item.sizes,
+                                            display_order: item.display_order,
+                                            image_url: item.image_url,
+                                            is_best_seller: item.is_best_seller,
+                                            is_chef_special: item.is_chef_special,
+                                            is_new: item.is_new,
+                                            is_veg: item.is_veg,
+                                            is_spicy: item.is_spicy,
+                                            is_premium: item.is_premium,
+                                            is_top_shelf: item.is_top_shelf
+                                        }));
+                                        await supabase.from('menu_items').insert(itemsToInsert);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             toast.success('Menu duplicated successfully');
@@ -110,8 +231,8 @@ const MenusListPage = () => {
         }
 
         try {
-            const { error } = await supabase
-                .from('venues')
+            const { error } = await (supabase
+                .from('venues' as any) as any)
                 .update({ is_active: false })
                 .eq('id', id);
 
@@ -213,11 +334,10 @@ const MenusListPage = () => {
 
                                     <div className="flex items-center justify-between text-xs text-muted-foreground/70 mb-4">
                                         <span>Created {new Date(venue.created_at).toLocaleDateString()}</span>
-                                        <span>Updated {new Date(venue.updated_at).toLocaleDateString()}</span>
                                     </div>
 
                                     {/* Action Buttons */}
-                                    <div className="grid grid-cols-4 gap-2">
+                                    <div className="grid grid-cols-3 gap-2">
                                         <button
                                             onClick={() => navigate(`/menu/${venue.slug}`)}
                                             className="flex items-center justify-center gap-1 px-3 py-2 rounded-lg bg-neon-cyan/10 border border-neon-cyan/30 text-neon-cyan hover:bg-neon-cyan/20 transition-colors"
@@ -240,14 +360,6 @@ const MenusListPage = () => {
                                             title="Duplicate Menu"
                                         >
                                             <Copy className="w-4 h-4" />
-                                        </button>
-
-                                        <button
-                                            onClick={() => handleDelete(venue.id, venue.name)}
-                                            className="flex items-center justify-center gap-1 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-500 hover:bg-red-500/20 transition-colors"
-                                            title="Delete Menu"
-                                        >
-                                            <Trash2 className="w-4 h-4" />
                                         </button>
                                     </div>
                                 </div>

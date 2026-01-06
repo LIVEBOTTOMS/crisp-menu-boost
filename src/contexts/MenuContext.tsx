@@ -12,8 +12,11 @@ interface MenuData {
 
 interface MenuContextType {
   menuData: MenuData;
+  venueData: any | null;
   isEditMode: boolean;
   isLoading: boolean;
+  activeVenueSlug: string | null;
+  setActiveVenueSlug: (slug: string | null) => void;
   setIsEditMode: (value: boolean) => void;
   updateMenuItem: (sectionKey: string, categoryIndex: number, itemIndex: number, updatedItem: MenuItem) => void;
   addMenuItem: (sectionKey: string, categoryIndex: number, newItem: MenuItem) => void;
@@ -62,22 +65,46 @@ const getDefaultMenuData = (): MenuData => ({
 
 export const MenuProvider = ({ children }: { children: ReactNode }) => {
   const [menuData, setMenuData] = useState<MenuData>(getDefaultMenuData);
+  const [venueData, setVenueData] = useState<any | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeVenueSlug, setActiveVenueSlug] = useState<string | null>(null);
 
-  const { fetchMenuData, updateMenuItem: dbUpdateMenuItem, checkAndSeed, archiveCurrentMenu, resetDatabase: dbResetDatabase, restoreDatabase: dbRestoreDatabase, adjustPricesInDb } = useMenuDatabase();
+  const {
+    fetchMenuData,
+    updateMenuItem: dbUpdateMenuItem,
+    checkAndSeed,
+    archiveCurrentMenu,
+    resetDatabase: dbResetDatabase,
+    restoreDatabase: dbRestoreDatabase,
+    adjustPricesInDb,
+    supabase
+  } = useMenuDatabase();
 
   const refreshMenu = async () => {
-    setIsLoading(true);
-    const data = await fetchMenuData();
+    const data = await fetchMenuData(activeVenueSlug || undefined);
     if (data) {
       setMenuData(data);
     }
-    setIsLoading(false);
+  };
+
+  const refreshVenue = async () => {
+    if (!activeVenueSlug || activeVenueSlug === 'live') {
+      setVenueData(null);
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from('venues' as any)
+      .select('*')
+      .eq('slug', activeVenueSlug)
+      .single();
+
+    if (data) setVenueData(data);
   };
 
   const resetDatabase = async () => {
-    const success = await dbResetDatabase(false); // Force overwrite prices from code
+    const success = await dbResetDatabase(false);
     if (success) {
       await refreshMenu();
     }
@@ -92,11 +119,28 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
     return success;
   };
 
+  // Real-time Sync Effect
+  useEffect(() => {
+    const channel = supabase
+      .channel('menu-global-sync')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'menu_items' }, () => refreshMenu())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'menu_categories' }, () => refreshMenu())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'menu_sections' }, () => refreshMenu())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'venues' }, () => refreshVenue())
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [activeVenueSlug]);
+
   useEffect(() => {
     const init = async () => {
+      setIsLoading(true);
       try {
         await checkAndSeed();
         await refreshMenu();
+        await refreshVenue();
       } catch (error) {
         console.error("Failed to initialize menu database:", error);
       } finally {
@@ -104,10 +148,9 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
       }
     };
     init();
-  }, []);
+  }, [activeVenueSlug]);
 
   const updateMenuItem = async (sectionKey: string, categoryIndex: number, itemIndex: number, updatedItem: MenuItem) => {
-    // Update local state immediately
     setMenuData(prev => {
       const newData = deepClone(prev);
       const section = newData[sectionKey as keyof MenuData];
@@ -117,7 +160,6 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
       return newData;
     });
 
-    // Update in database
     await dbUpdateMenuItem(sectionKeyToType(sectionKey), categoryIndex, itemIndex, updatedItem);
   };
 
@@ -130,7 +172,6 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
       }
       return newData;
     });
-    // TODO: Add to database
   };
 
   const deleteMenuItem = (sectionKey: string, categoryIndex: number, itemIndex: number) => {
@@ -142,16 +183,11 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
       }
       return newData;
     });
-    // TODO: Delete from database
   };
 
   const adjustPrices = async (percentage: number, sectionKey?: string, categoryIndex?: number, venueSlug?: string) => {
-    // Archive current menu before price adjustment - ONLY for LIVE
-    // We check both the passed slug AND the configured venue name to be safe
     const config = getVenueConfig();
-    const identifier = (venueSlug || config.name).toLowerCase();
-
-    // Strictly archive only for LIVE venues
+    const identifier = (venueSlug || activeVenueSlug || config.name).toLowerCase();
     const shouldArchive = identifier.includes('live');
 
     if (shouldArchive) {
@@ -162,7 +198,6 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
 
     setMenuData(prev => {
       const newData = deepClone(prev);
-
       const adjustSection = (section: MenuSection, catIndex?: number) => {
         section.categories.forEach((category, idx) => {
           if (catIndex === undefined || catIndex === idx) {
@@ -173,28 +208,25 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
 
       if (sectionKey) {
         const section = newData[sectionKey as keyof MenuData];
-        if (section) {
-          adjustSection(section, categoryIndex);
-        }
+        if (section) adjustSection(section, categoryIndex);
       } else {
         (Object.keys(newData) as Array<keyof MenuData>).forEach(key => adjustSection(newData[key]));
       }
-
       return newData;
     });
 
-    // Persistent update in database
     await adjustPricesInDb(percentage, sectionKey ? sectionKeyToType(sectionKey) : undefined);
-
-    // Refresh to ensure everything is synced
     await refreshMenu();
   };
 
   return (
     <MenuContext.Provider value={{
       menuData,
+      venueData,
       isEditMode,
       isLoading,
+      activeVenueSlug,
+      setActiveVenueSlug,
       setIsEditMode,
       updateMenuItem,
       addMenuItem,

@@ -41,7 +41,7 @@ const getSectionIntro = (title: string): string => {
 const Index = () => {
   const { slug } = useParams<{ slug?: string }>();
   const [activeSection, setActiveSection] = useState("snacks");
-  const { menuData, isLoading } = useMenu();
+  const { menuData, isLoading, setActiveVenueSlug } = useMenu();
   const { user } = useAuth();
   const [venueData, setVenueData] = useState<VenueData | null>(null);
   const [isLoadingVenue, setIsLoadingVenue] = useState(false);
@@ -50,17 +50,20 @@ const Index = () => {
   const defaultVenue = getVenueConfig();
 
   useEffect(() => {
+    // Set active venue in context to trigger real-time sync for this specific venue
+    setActiveVenueSlug(slug || 'live');
+
     if (slug) {
       // Load venue-specific data
       loadVenueData(slug);
     }
-  }, [slug]);
+  }, [slug, setActiveVenueSlug]);
 
   const loadVenueData = async (venueSlug: string) => {
     setIsLoadingVenue(true);
     try {
-      const { data, error } = await supabase
-        .from('venues')
+      const { data, error } = await (supabase
+        .from('venues' as any) as any)
         .select('*')
         .eq('slug', venueSlug)
         .eq('is_active', true)

@@ -1,0 +1,275 @@
+/* Mobile-First UX Enhancements */
+
+/* Touch-optimized buttons - minimum 44px touch targets */
+.touch-target {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 12px;
+}
+
+/* Smooth momentum scrolling on iOS */
+.smooth-scroll {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+}
+
+/* Safe area padding for notched devices */
+.pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+.pt-safe {
+    padding-top: env(safe-area-inset-top);
+}
+
+/* Glassmorphism effects */
+.glass {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-dark {
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Neumorphism effects */
+.neomorphic {
+    background: #1a1a1a;
+    box-shadow:
+        8px 8px 16px rgba(0, 0, 0, 0.4),
+        -8px -8px 16px rgba(255, 255, 255, 0.05);
+}
+
+.neomorphic-inset {
+    background: #1a1a1a;
+    box-shadow:
+        inset 4px 4px 8px rgba(0, 0, 0, 0.4),
+        inset -4px -4px 8px rgba(255, 255, 255, 0.05);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Container queries for better responsive behavior */
+@container (min-width: 400px) {
+    .container-card {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@container (min-width: 600px) {
+    .container-card {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Mobile-optimized cards */
+.mobile-card {
+    border-radius: 16px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mobile-card:active {
+    transform: scale(0.98);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Sticky sections */
+.sticky-section {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+/* Progressive disclosure */
+.disclosure-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.disclosure-content.open {
+    max-height: 1000px;
+}
+
+/* Swipe gesture indicators */
+.swipe-indicator {
+    position: relative;
+}
+
+.swipe-indicator::after {
+    content: '';
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+}
+
+/* Floating action button */
+.fab {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #22d3ee 0%, #3b82f6 100%);
+    box-shadow: 0 4px 12px rgba(34, 211, 238, 0.4);
+    display: flex;
+    align-items: center;
+    justify-center;
+    z-index: 40;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.fab:active {
+    transform: scale(0.9);
+    box-shadow: 0 2px 8px rgba(34, 211, 238, 0.3);
+}
+
+/* Custom scrollbar for webkit browsers */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(34, 211, 238, 0.3);
+    border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(34, 211, 238, 0.5);
+}
+
+/* Particle effect container */
+.particles-container {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+/* Animated gradient background */
+@keyframes gradient-shift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.animated-gradient {
+    background: linear-gradient(-45deg,
+            #22d3ee,
+            #3b82f6,
+            #8b5cf6,
+            #ec4899);
+    background-size: 400% 400%;
+    animation: gradient-shift 15s ease infinite;
+}
+
+/* Ripple effect */
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    width: 20px;
+    height: 20px;
+    animation: ripple 0.6s ease-out;
+    pointer-events: none;
+}
+
+/* Skeleton loading with shimmer */
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+.skeleton-shimmer {
+    background: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.05) 0%,
+            rgba(255, 255, 255, 0.1) 50%,
+            rgba(255, 255, 255, 0.05) 100%);
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
+}
+
+/* Pull-to-refresh indicator */
+.pull-indicator {
+    display: flex;
+    align-items: center;
+    justify-center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+}
+
+/* Voice search pulse */
+@keyframes voice-pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scale(1.1);
+    }
+}
+
+.voice-active {
+    animation: voice-pulse 1.5s ease-in-out infinite;
+}

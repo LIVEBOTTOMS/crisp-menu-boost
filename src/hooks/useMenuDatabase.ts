@@ -85,8 +85,29 @@ export const useMenuDatabase = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSeeded, setIsSeeded] = useState(false);
 
-  const fetchMenuData = async () => {
-    const { data: sections, error } = await supabase
+  const fetchMenuData = async (venueSlug?: string) => {
+    let venueId: string | null = null;
+
+    // Resolve venueId from slug
+    if (venueSlug && venueSlug !== 'live') {
+      const { data: venue } = await supabase
+        .from('venues' as any)
+        .select('id')
+        .eq('slug', venueSlug)
+        .eq('is_active', true)
+        .single();
+      venueId = venue?.id || null;
+    } else {
+      // Default to LIVE venueId if slug is 'live' or missing
+      const { data: venue } = await supabase
+        .from('venues' as any)
+        .select('id')
+        .eq('slug', 'live')
+        .single();
+      venueId = venue?.id || null;
+    }
+
+    let query = supabase
       .from("menu_sections")
       .select(`
         id, type, title, display_order,
@@ -97,10 +118,15 @@ export const useMenuDatabase = () => {
             is_best_seller, is_chef_special, is_new, is_veg, is_spicy, is_premium, is_top_shelf
           )
         )
-      `)
-      .order("display_order");
+      `);
 
-    const typedSections: any = sections;
+    if (venueId) {
+      query = query.eq('venue_id', venueId);
+    } else {
+      query = query.is('venue_id', null);
+    }
+
+    const { data: sections, error } = await query.order("display_order");
 
     if (error) {
       console.error("Error fetching menu:", error);
@@ -111,6 +137,7 @@ export const useMenuDatabase = () => {
       return null;
     }
 
+    const typedSections: any = sections;
     const sectionMap: Record<MenuSectionType, MenuSection | null> = {
       snacks: null,
       food: null,
@@ -130,7 +157,7 @@ export const useMenuDatabase = () => {
     };
   };
 
-  const seedDatabase = async (priceMap?: Map<string, any>, sourceData?: any) => {
+  const seedDatabase = async (priceMap?: Map<string, any>, sourceData?: any, venueId?: string) => {
     const sectionsData: { type: MenuSectionType; title: string; display_order: number; data: MenuSection }[] = sourceData ? [
       { type: 'snacks' as MenuSectionType, title: sourceData.snacksAndStarters?.title || "ARTISAN APPETIZERS", display_order: 0, data: sourceData.snacksAndStarters },
       { type: 'food' as MenuSectionType, title: sourceData.foodMenu?.title || "GLOBAL MAINS", display_order: 1, data: sourceData.foodMenu },
@@ -147,7 +174,12 @@ export const useMenuDatabase = () => {
       // Insert section
       const { data: sectionResult, error: sectionError } = await supabase
         .from("menu_sections")
-        .insert({ type: section.type, title: section.title, display_order: section.display_order })
+        .insert({
+          type: section.type,
+          title: section.title,
+          display_order: section.display_order,
+          venue_id: venueId || null
+        })
         .select()
         .single();
 
@@ -470,6 +502,7 @@ export const useMenuDatabase = () => {
     adjustPricesInDb,
     isLoading,
     isSeeded,
+    supabase,
   };
 };
 
