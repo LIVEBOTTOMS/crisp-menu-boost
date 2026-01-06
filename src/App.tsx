@@ -17,6 +17,7 @@ import CheckoutPage from "./pages/CheckoutPage";
 import PaymentApprovalsPage from "./pages/PaymentApprovalsPage";
 import UserManagementPage from "./pages/UserManagementPage";
 import AdminDashboard from "./pages/AdminDashboard";
+import FeatureTestPage from "./pages/FeatureTestPage";
 import NotFound from "./pages/NotFound";
 
 import { ParticleBackground } from "@/components/ui/ParticleBackground";
@@ -57,6 +58,9 @@ const App = () => (
                 <Route path="/admin/:slug" element={<AdminDashboard />} />
                 <Route path="/admin/payments" element={<PaymentApprovalsPage />} />
                 <Route path="/admin/users" element={<UserManagementPage />} />
+
+                {/* Test Route */}
+                <Route path="/test-features" element={<FeatureTestPage />} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />

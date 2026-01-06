@@ -81,7 +81,7 @@ const MenusListPage = () => {
                     subtitle: 'FINE DINING • PUNE',
                     city: 'Pune',
                     created_at: new Date('2024-01-02').toISOString(),
-                    logo_image_url: '/lovable-uploads/44cfff7f-ac94-4f62-8ebe-1ac4f6fc0df9.png',
+                    logo_image_url: null,
                     tagline: 'Where Culinary Art Meets Innovation'
                 }
             ];
