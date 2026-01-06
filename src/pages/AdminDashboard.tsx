@@ -39,7 +39,7 @@ const AdminDashboard = () => {
   const { slug } = useParams<{ slug?: string }>();
   const { user, isAdmin, isLoading, signOut } = useAuth();
   const { canAccess, isPremium, isPremiumPlus, plan } = useSubscription();
-  const { menuData, venueData, setIsEditMode, isEditMode, adjustPrices, resetDatabase, setActiveVenueSlug } = useMenu();
+  const { menuData, venueData, setIsEditMode, isEditMode, adjustPrices, resetDatabase, setActiveVenueSlug, refreshMenu } = useMenu();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -114,13 +114,21 @@ const AdminDashboard = () => {
       });
       return;
     }
-    setIsEditMode(!isEditMode);
+
+    const newEditMode = !isEditMode;
+    setIsEditMode(newEditMode);
+
     toast({
-      title: isEditMode ? 'Edit mode disabled' : 'Edit mode enabled',
-      description: isEditMode
-        ? 'You can no longer make changes to the menu.'
-        : 'You can now edit menu items.',
+      title: newEditMode ? 'Edit mode enabled' : 'Edit mode disabled',
+      description: newEditMode
+        ? 'You can now edit menu items.'
+        : 'You can no longer make changes to the menu.',
     });
+
+    // Navigate to menu page when enabling edit mode
+    if (newEditMode) {
+      navigate(slug ? `/menu/${slug}` : '/');
+    }
   };
 
   const handleThemeUpdate = async (themeId: string) => {
@@ -434,7 +442,11 @@ const AdminDashboard = () => {
               {/* Download/Print */}
               <Button
                 variant="outline"
-                onClick={() => setIsPrintPreviewOpen(true)}
+                onClick={async () => {
+                  // Refresh menu data to ensure we have the latest prices
+                  await refreshMenu();
+                  setIsPrintPreviewOpen(true);
+                }}
                 className="border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10"
               >
                 <Download className="w-4 h-4 mr-2" />
@@ -574,8 +586,10 @@ const AdminDashboard = () => {
           </p>
           <div className="flex gap-3 mt-4">
             <Button
-              onClick={() => {
+              onClick={async () => {
                 setShowPDFPrompt(false);
+                // Refresh menu data before opening print preview
+                await refreshMenu();
                 setIsPrintPreviewOpen(true);
               }}
               className="bg-cyan-600 hover:bg-cyan-700"
