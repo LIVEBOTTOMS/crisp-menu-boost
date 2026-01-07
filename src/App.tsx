@@ -17,12 +17,15 @@ import CheckoutPage from "./pages/CheckoutPage";
 import PaymentApprovalsPage from "./pages/PaymentApprovalsPage";
 import UserManagementPage from "./pages/UserManagementPage";
 import AdminDashboard from "./pages/AdminDashboard";
+import MasterAdminDashboard from "./pages/MasterAdminDashboard";
 import FeatureTestPage from "./pages/FeatureTestPage";
 import DebugUser from "./pages/DebugUser";
 import NotFound from "./pages/NotFound";
 
 import { ParticleBackground } from "@/components/ui/ParticleBackground";
 import { CustomCursor } from "@/components/ui/CustomCursor";
+
+import { GlobalShortcuts } from "@/components/GlobalShortcuts";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +40,7 @@ const App = () => (
         <AuthProvider>
           <SubscriptionProvider>
             <MenuProvider>
+              <GlobalShortcuts />
               <Routes>
                 {/* Multi-Menu System Routes */}
                 <Route path="/" element={<HomePage />} />
@@ -59,6 +63,7 @@ const App = () => (
                 <Route path="/admin/:slug" element={<AdminDashboard />} />
                 <Route path="/admin/payments" element={<PaymentApprovalsPage />} />
                 <Route path="/admin/users" element={<UserManagementPage />} />
+                <Route path="/platform-admin/*" element={<MasterAdminDashboard />} />
 
                 {/* Test Route */}
                 <Route path="/test-features" element={<FeatureTestPage />} />

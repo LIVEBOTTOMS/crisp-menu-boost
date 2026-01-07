@@ -29,40 +29,20 @@ export default function UserManagementPage() {
     const fetchUsers = async () => {
         setIsLoading(true);
         try {
-            const { data, error } = await supabase
-                .from('user_roles')
-                .select(`
-          user_id,
-          role,
-          users:auth.users!user_roles_user_id_fkey (
-            id,
-            email,
-            created_at
-          ),
-          user_subscriptions (
-            subscription_plans (
-              name
-            )
-          )
-        `);
-
-            if (error) throw error;
-
-            // Also get users without roles
-            const { data: allUsers, error: usersError } = await supabase.auth.admin.listUsers();
+            // Query the admin_users_view which includes emails
+            const { data: usersData, error: usersError } = await supabase
+                .from('admin_users_view')
+                .select('*');
 
             if (usersError) throw usersError;
 
-            const formattedUsers: UserWithRole[] = allUsers.users.map((u) => {
-                const userRole = data?.find((r: any) => r.user_id === u.id);
-                return {
-                    id: u.id,
-                    email: u.email || '',
-                    role: userRole?.role || null,
-                    plan_name: userRole?.user_subscriptions?.[0]?.subscription_plans?.name || 'Freemium',
-                    created_at: u.created_at,
-                };
-            });
+            const formattedUsers: UserWithRole[] = (usersData || []).map((user: any) => ({
+                id: user.user_id,
+                email: user.email || user.user_id, // Fallback to user_id if email not available
+                role: user.role,
+                plan_name: user.plan_name || 'Freemium',
+                created_at: user.user_created_at || user.role_created_at,
+            }));
 
             setUsers(formattedUsers);
         } catch (error: any) {
