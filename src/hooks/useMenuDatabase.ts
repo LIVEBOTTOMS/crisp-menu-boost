@@ -86,31 +86,13 @@ export const useMenuDatabase = () => {
   const [isSeeded, setIsSeeded] = useState(false);
 
   const fetchMenuData = async (venueSlug?: string) => {
-    let venueId: string | null = null;
+    console.log("📥 [FETCH] Fetching menu data for venueSlug:", venueSlug);
 
-    // Resolve venueId from slug
-    if (venueSlug && venueSlug !== 'live') {
-      const { data: venue } = await supabase
-        .from('venues' as any)
-        .select('id')
-        .eq('slug', venueSlug)
-        .eq('is_active', true)
-        .single();
-      venueId = venue?.id || null;
-    } else {
-      // Default to LIVE venueId if slug is 'live' or missing
-      const { data: venue } = await supabase
-        .from('venues' as any)
-        .select('id')
-        .eq('slug', 'live')
-        .single();
-      venueId = venue?.id || null;
-    }
-
-    let query = supabase
+    // Simple query - get ALL menu sections with their categories and items
+    const { data: sections, error } = await supabase
       .from("menu_sections")
       .select(`
-        id, type, title, display_order,
+        id, type, title, display_order, venue_id,
         menu_categories (
           id, section_id, title, icon, display_order,
           menu_items (
@@ -118,24 +100,26 @@ export const useMenuDatabase = () => {
             is_best_seller, is_chef_special, is_new, is_veg, is_spicy, is_premium, is_top_shelf
           )
         )
-      `);
-
-    if (venueId) {
-      query = query.eq('venue_id', venueId);
-    } else {
-      query = query.is('venue_id', null);
-    }
-
-    const { data: sections, error } = await query.order("display_order");
+      `)
+      .order("display_order");
 
     if (error) {
-      console.error("Error fetching menu:", error);
+      console.error("❌ [FETCH ERROR]", error);
       return null;
     }
 
+    console.log("📥 [FETCH RESULT] Found sections:", sections?.length, sections?.map(s => ({ type: s.type, venue_id: s.venue_id })));
+
     if (!sections || sections.length === 0) {
+      console.log("⚠️ [FETCH] No sections in database - returning null (will use static data)");
       return null;
     }
+
+    // Log first item price to verify data
+    const firstSection = sections[0] as any;
+    const firstCategory = firstSection?.menu_categories?.[0];
+    const firstItem = firstCategory?.menu_items?.[0];
+    console.log("📥 [FETCH SAMPLE] First item:", firstItem?.name, "price:", firstItem?.price);
 
     const typedSections: any = sections;
     const sectionMap: Record<MenuSectionType, MenuSection | null> = {
@@ -149,12 +133,20 @@ export const useMenuDatabase = () => {
       sectionMap[section.type] = dbToMenuSection(section);
     });
 
-    return {
+    const result = {
       snacksAndStarters: sectionMap.snacks || snacksAndStarters,
       foodMenu: sectionMap.food || foodMenu,
       beveragesMenu: sectionMap.beverages || beveragesMenu,
       sideItems: sectionMap.sides || sideItems,
     };
+
+    // Log if we're using static data fallback
+    if (!sectionMap.snacks) console.log("⚠️ [FETCH] Using STATIC snacksAndStarters");
+    if (!sectionMap.food) console.log("⚠️ [FETCH] Using STATIC foodMenu");
+    if (!sectionMap.beverages) console.log("⚠️ [FETCH] Using STATIC beveragesMenu");
+    if (!sectionMap.sides) console.log("⚠️ [FETCH] Using STATIC sideItems");
+
+    return result;
   };
 
   const seedDatabase = async (priceMap?: Map<string, any>, sourceData?: any, venueId?: string) => {
@@ -248,21 +240,35 @@ export const useMenuDatabase = () => {
     sectionType: MenuSectionType,
     categoryIndex: number,
     itemIndex: number,
-    updatedItem: MenuItem
+    updatedItem: MenuItem,
+    venueSlug?: string
   ) => {
-    console.log("updateMenuItem called:", { sectionType, categoryIndex, itemIndex, updatedItem });
+    console.log("🔵 [UPDATE START] updateMenuItem called:", {
+      sectionType,
+      categoryIndex,
+      itemIndex,
+      itemName: updatedItem.name,
+      newPrice: updatedItem.price,
+      venueSlug
+    });
 
-    // Get the section
-    const { data: section } = await supabase
+    // Simple approach: just get the section by type
+    // If there's only one menu, this works. If multiple, we'll need to handle it differently
+    const { data: sections, error: sectionError } = await supabase
       .from("menu_sections")
-      .select("id")
-      .eq("type", sectionType)
-      .single();
+      .select("id, venue_id")
+      .eq("type", sectionType);
 
-    if (!section) {
-      console.error("Section not found for type:", sectionType);
-      return;
+    console.log("🔵 [SECTION QUERY]", { sections, sectionError, sectionType });
+
+    if (sectionError || !sections || sections.length === 0) {
+      console.error("❌ [ERROR] Section not found for type:", sectionType);
+      throw new Error(`Section not found for type: ${sectionType}`);
     }
+
+    // Use first matching section (or filter by venue if needed later)
+    const section = sections[0];
+    console.log("🔵 [USING SECTION]", section);
 
     // Get the category
     const { data: categories } = await supabase
@@ -288,36 +294,39 @@ export const useMenuDatabase = () => {
       return;
     }
 
-    console.log("Updating item ID:", items[itemIndex].id, "with payload:", {
+    const updatePayload = {
+      name: updatedItem.name,
+      description: updatedItem.description || null,
       price: parsePrice(updatedItem.price),
+      half_price: parsePrice(updatedItem.halfPrice),
       full_price: parsePrice(updatedItem.fullPrice),
-    });
+      sizes: updatedItem.sizes || null,
+      image_url: updatedItem.image || null,
+      is_best_seller: updatedItem.isBestSeller || false,
+      is_chef_special: updatedItem.isChefSpecial || false,
+      is_new: updatedItem.isNew || false,
+      is_veg: updatedItem.isVeg || false,
+      is_spicy: updatedItem.isSpicy || false,
+      is_premium: updatedItem.isPremium || false,
+      is_top_shelf: updatedItem.isTopShelf || false,
+    };
+
+    console.log("🔵 [DATABASE UPDATE] Updating item ID:", items[itemIndex].id);
+    console.log("🔵 [UPDATE PAYLOAD]", updatePayload);
 
     // Update the item
-    const { error } = await supabase
+    const { data: updateResult, error } = await supabase
       .from("menu_items")
-      .update({
-        name: updatedItem.name,
-        description: updatedItem.description || null,
-        price: parsePrice(updatedItem.price),
-        half_price: parsePrice(updatedItem.halfPrice),
-        full_price: parsePrice(updatedItem.fullPrice),
-        sizes: updatedItem.sizes || null,
-        image_url: updatedItem.image || null,
-        is_best_seller: updatedItem.isBestSeller || false,
-        is_chef_special: updatedItem.isChefSpecial || false,
-        is_new: updatedItem.isNew || false,
-        is_veg: updatedItem.isVeg || false,
-        is_spicy: updatedItem.isSpicy || false,
-        is_premium: updatedItem.isPremium || false,
-        is_top_shelf: updatedItem.isTopShelf || false,
-      })
-      .eq("id", items[itemIndex].id);
+      .update(updatePayload)
+      .eq("id", items[itemIndex].id)
+      .select(); // Get the updated row back
 
     if (error) {
-      console.error("Error updating item:", error);
+      console.error("❌ [DATABASE ERROR]", error);
+      throw error; // Throw error so context can handle it
     } else {
-      console.log("Item updated successfully");
+      console.log("✅ [DATABASE SUCCESS] Item updated:", updateResult);
+      console.log("✅ [VERIFY] Updated price in DB:", updateResult?.[0]?.price);
     }
   };
 

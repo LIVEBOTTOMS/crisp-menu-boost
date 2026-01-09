@@ -82,9 +82,13 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
   } = useMenuDatabase();
 
   const refreshMenu = async () => {
+    console.log("🔄 [REFRESH] Fetching menu from database for venue:", activeVenueSlug);
     const data = await fetchMenuData(activeVenueSlug || undefined);
     if (data) {
+      console.log("🔄 [REFRESH] Setting new menu data");
       setMenuData(data);
+    } else {
+      console.log("⚠️ [REFRESH] No data returned from fetchMenuData");
     }
   };
 
@@ -151,16 +155,48 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
   }, [activeVenueSlug]);
 
   const updateMenuItem = async (sectionKey: string, categoryIndex: number, itemIndex: number, updatedItem: MenuItem) => {
+    console.log("🟢 [CONTEXT] updateMenuItem called", {
+      sectionKey,
+      categoryIndex,
+      itemIndex,
+      itemName: updatedItem.name,
+      newPrice: updatedItem.price,
+      activeVenueSlug
+    });
+
+    // First update local state for immediate UI feedback
     setMenuData(prev => {
       const newData = deepClone(prev);
       const section = newData[sectionKey as keyof MenuData];
       if (section && section.categories[categoryIndex]) {
+        const oldItem = section.categories[categoryIndex].items[itemIndex];
         section.categories[categoryIndex].items[itemIndex] = updatedItem;
+        console.log("🟢 [LOCAL STATE] Updated:", {
+          from: { name: oldItem.name, price: oldItem.price },
+          to: { name: updatedItem.name, price: updatedItem.price }
+        });
       }
       return newData;
     });
 
-    await dbUpdateMenuItem(sectionKeyToType(sectionKey), categoryIndex, itemIndex, updatedItem);
+    // Then update database with venue context
+    try {
+      console.log("🟢 [CALLING DB] Sending to database...");
+      await dbUpdateMenuItem(
+        sectionKeyToType(sectionKey),
+        categoryIndex,
+        itemIndex,
+        updatedItem,
+        activeVenueSlug || undefined
+      );
+      console.log("✅ [CONTEXT SUCCESS] Database update completed");
+    } catch (error) {
+      console.error("❌ [CONTEXT ERROR] Failed to update menu item in database:", error);
+      // Revert the local state change if database update fails
+      console.log("🔄 [REVERTING] Refreshing from database...");
+      await refreshMenu();
+      throw error; // Re-throw so calling component can show error
+    }
   };
 
   const addMenuItem = (sectionKey: string, categoryIndex: number, newItem: MenuItem) => {

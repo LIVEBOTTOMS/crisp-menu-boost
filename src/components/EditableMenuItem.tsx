@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Check, X, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface EditableMenuItemProps {
   item: MenuItemType;
@@ -32,9 +33,15 @@ export const EditableMenuItem = ({
   const hasMultiplePrices = item.halfPrice && item.fullPrice;
   const hasSizes = item.sizes && item.sizes.length > 0;
 
-  const handleSave = () => {
-    updateMenuItem(sectionKey, categoryIndex, itemIndex, editedItem);
-    setIsEditing(false);
+  const handleSave = async () => {
+    try {
+      await updateMenuItem(sectionKey, categoryIndex, itemIndex, editedItem);
+      setIsEditing(false);
+      toast.success("Menu item updated successfully!");
+    } catch (error) {
+      console.error("Failed to save menu item:", error);
+      toast.error("Failed to save changes. Please try again.");
+    }
   };
 
   const handleCancel = () => {

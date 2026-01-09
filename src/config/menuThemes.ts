@@ -137,14 +137,19 @@ export const menuThemes: Record<MenuTheme, ThemeConfig> = {
 };
 
 export const getThemeForVenue = (venueSlug?: string, customTheme?: MenuTheme): ThemeConfig => {
-    // Default theme based on venue
+    // Custom theme override
     if (customTheme) {
         return menuThemes[customTheme];
     }
 
-    // LIVE uses cyberpunk-tech by default
+    // LIVE uses cyberpunk-tech by default (futuristic neon aesthetic)
     if (!venueSlug || venueSlug === 'live') {
         return menuThemes['cyberpunk-tech'];
+    }
+
+    // MOON WALK uses vibrant-playful theme (bold, modern, energetic)
+    if (venueSlug.toLowerCase().includes('moonwalk') || venueSlug.toLowerCase().includes('moon-walk')) {
+        return menuThemes['vibrant-playful'];
     }
 
     // Other venues default to elegant-classic
