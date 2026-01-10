@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Settings } from "lucide-react";
 import { MenuHeader } from "@/components/MenuHeader";
+import { LanguageToggle } from "@/components/LanguageToggle";
+import { ShareMenu } from "@/components/ShareMenu";
 import { MenuSection } from "@/components/MenuSection";
 import { BackgroundEffects } from "@/components/BackgroundEffects";
 import { PremiumBorderFrame, PremiumSectionHeader } from "@/components/premium";
@@ -140,14 +142,36 @@ const Index = () => {
         </svg>
       </Link>
 
-      {/* Admin Button */}
-      <Link
-        to={user ? `/admin/${slug || ''}` : "/auth"}
-        className="fixed top-4 right-4 z-50 p-2 rounded-lg bg-background/80 backdrop-blur-sm border border-neon-cyan/30 hover:border-neon-cyan hover:bg-neon-cyan/10 transition-all duration-300"
-        title="Admin Settings"
-      >
-        <Settings className="w-5 h-5 text-neon-cyan" />
-      </Link>
+      {/* Top Right Tools */}
+      <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
+        <LanguageToggle />
+
+        <div className="hidden md:block">
+          <ShareMenu
+            menuUrl={`/menu/${slug || 'live'}`}
+            menuName={currentVenue.name}
+            description={currentVenue.subtitle || "Check out our menu!"}
+          />
+        </div>
+
+        {/* Mobile Share Button (Simpler version if needed, or just use same component) */}
+        <div className="md:hidden">
+          <ShareMenu
+            menuUrl={`/menu/${slug || 'live'}`}
+            menuName={currentVenue.name}
+            description={currentVenue.subtitle || undefined}
+          />
+        </div>
+
+        {/* Admin Button */}
+        <Link
+          to={user ? `/admin/${slug || ''}` : "/auth"}
+          className="p-2 rounded-lg bg-background/80 backdrop-blur-sm border border-neon-cyan/30 hover:border-neon-cyan hover:bg-neon-cyan/10 transition-all duration-300"
+          title="Admin Settings"
+        >
+          <Settings className="w-5 h-5 text-neon-cyan" />
+        </Link>
+      </div>
 
       <div className="relative z-10">
         {/* Dynamic Tagline - Display only if exists in DB */}

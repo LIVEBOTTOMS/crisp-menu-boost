@@ -1,3 +1,6 @@
+export type SpiceLevel = 'none' | 'mild' | 'medium' | 'hot' | 'extra-hot';
+export type DietaryType = 'veg' | 'non-veg' | 'vegan' | 'gluten-free' | 'dairy-free';
+
 export interface MenuItem {
   name: string;
   price?: string;
@@ -11,8 +14,17 @@ export interface MenuItem {
   isPremium?: boolean;
   isTopShelf?: boolean;
   isNew?: boolean;
-  isVeg?: boolean;
-  isSpicy?: boolean;
+
+  // New Enhanced Fields
+  dietary?: DietaryType;
+  spice_level?: SpiceLevel;
+  calories?: number;
+  protein?: number;
+  carbs?: number;
+  fat?: number;
+  discount_percent?: number;
+  original_price?: number;
+  badge?: 'new' | 'bestseller' | 'chef-special' | 'limited';
 }
 
 export interface MenuCategory {

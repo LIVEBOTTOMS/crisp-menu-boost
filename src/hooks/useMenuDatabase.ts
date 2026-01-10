@@ -22,6 +22,16 @@ interface DbMenuItem {
   is_spicy: boolean;
   is_premium: boolean;
   is_top_shelf: boolean;
+  // New Fields
+  dietary: string | null;
+  spice_level: string | null;
+  calories: number | null;
+  protein: number | null;
+  carbs: number | null;
+  fat: number | null;
+  discount_percent: number | null;
+  original_price: number | null;
+  badge: string | null;
 }
 
 interface DbCategory {
@@ -66,6 +76,16 @@ const dbToMenuItem = (item: DbMenuItem): MenuItem => ({
   isSpicy: item.is_spicy,
   isPremium: item.is_premium,
   isTopShelf: item.is_top_shelf,
+  // New Mappings
+  dietary: item.dietary as any || undefined,
+  spice_level: item.spice_level as any || undefined,
+  calories: item.calories || undefined,
+  protein: item.protein || undefined,
+  carbs: item.carbs || undefined,
+  fat: item.fat || undefined,
+  discount_percent: item.discount_percent || undefined,
+  original_price: item.original_price || undefined,
+  badge: item.badge as any || undefined,
 });
 
 const dbToMenuSection = (section: DbSection): MenuSection => ({
@@ -110,7 +130,8 @@ export const useMenuDatabase = () => {
           id, section_id, title, icon, display_order,
           menu_items (
             id, category_id, name, description, price, half_price, full_price, sizes, display_order, image_url,
-            is_best_seller, is_chef_special, is_new, is_veg, is_spicy, is_premium, is_top_shelf
+            is_best_seller, is_chef_special, is_new, is_veg, is_spicy, is_premium, is_top_shelf,
+            dietary, spice_level, calories, protein, carbs, fat, discount_percent, original_price, badge
           )
         )
       `)
@@ -245,6 +266,15 @@ export const useMenuDatabase = () => {
             is_spicy: item.isSpicy || false,
             is_premium: item.isPremium || false,
             is_top_shelf: item.isTopShelf || false,
+            dietary: item.dietary || null,
+            spice_level: item.spice_level || null,
+            calories: item.calories || null,
+            protein: item.protein || null,
+            carbs: item.carbs || null,
+            fat: item.fat || null,
+            discount_percent: item.discount_percent || null,
+            original_price: item.original_price || null,
+            badge: item.badge || null,
           };
         });
 
@@ -351,6 +381,15 @@ export const useMenuDatabase = () => {
       is_spicy: updatedItem.isSpicy || false,
       is_premium: updatedItem.isPremium || false,
       is_top_shelf: updatedItem.isTopShelf || false,
+      dietary: updatedItem.dietary || null,
+      spice_level: updatedItem.spice_level || null,
+      calories: updatedItem.calories || null,
+      protein: updatedItem.protein || null,
+      carbs: updatedItem.carbs || null,
+      fat: updatedItem.fat || null,
+      discount_percent: updatedItem.discount_percent || null,
+      original_price: updatedItem.original_price || null,
+      badge: updatedItem.badge || null,
     };
 
     console.log("🔵 [DATABASE UPDATE] Updating item ID:", items[itemIndex].id);

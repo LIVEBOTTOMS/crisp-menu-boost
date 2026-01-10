@@ -5,8 +5,11 @@ import { useMenu } from "@/contexts/MenuContext";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Check, X, Trash2 } from "lucide-react";
+import { Check, X, Trash2, Flame, Leaf } from "lucide-react";
 import { toast } from "sonner";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { type SpiceLevel, type DietaryType, spiceLevels, dietaryTypes, badges, calculateDiscount, formatCaloriesDisplay } from "@/types/menuItem";
 
 interface EditableMenuItemProps {
   item: MenuItemType;
@@ -78,43 +81,126 @@ export const EditableMenuItem = ({
           />
 
           {/* Tags / Badges Toggles */}
-          <div className="flex flex-wrap gap-4 py-2 border-y border-white/10 my-1">
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id={`chef-${index}`}
-                checked={editedItem.isChefSpecial}
-                onCheckedChange={(c) => setEditedItem({ ...editedItem, isChefSpecial: c as boolean })}
-                className="border-secondary data-[state=checked]:bg-secondary"
-              />
-              <Label htmlFor={`chef-${index}`} className="text-[10px] uppercase tracking-wider text-secondary font-bold cursor-pointer">Chef's Special</Label>
+          <div className="space-y-4 border-y border-white/10 py-4 my-1">
+            <div className="flex flex-wrap gap-4">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id={`chef-${index}`}
+                  checked={editedItem.isChefSpecial}
+                  onCheckedChange={(c) => setEditedItem({ ...editedItem, isChefSpecial: c as boolean })}
+                  className="border-secondary data-[state=checked]:bg-secondary"
+                />
+                <Label htmlFor={`chef-${index}`} className="text-[10px] uppercase tracking-wider text-secondary font-bold cursor-pointer">Chef's Special</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id={`best-${index}`}
+                  checked={editedItem.isBestSeller}
+                  onCheckedChange={(c) => setEditedItem({ ...editedItem, isBestSeller: c as boolean })}
+                  className="border-primary data-[state=checked]:bg-primary"
+                />
+                <Label htmlFor={`best-${index}`} className="text-[10px] uppercase tracking-wider text-primary font-bold cursor-pointer">Best Seller</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id={`premium-${index}`}
+                  checked={editedItem.isPremium}
+                  onCheckedChange={(c) => setEditedItem({ ...editedItem, isPremium: c as boolean })}
+                  className="border-accent data-[state=checked]:bg-accent"
+                />
+                <Label htmlFor={`premium-${index}`} className="text-[10px] uppercase tracking-wider text-accent font-bold cursor-pointer">Premium</Label>
+              </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id={`best-${index}`}
-                checked={editedItem.isBestSeller}
-                onCheckedChange={(c) => setEditedItem({ ...editedItem, isBestSeller: c as boolean })}
-                className="border-primary data-[state=checked]:bg-primary"
-              />
-              <Label htmlFor={`best-${index}`} className="text-[10px] uppercase tracking-wider text-primary font-bold cursor-pointer">Best Seller</Label>
+
+            {/* New Enhanced Fields Grid */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <Label className="text-xs text-gray-400">Dietary</Label>
+                <Select
+                  value={editedItem.dietary || 'bg-transparent'}
+                  onValueChange={(value) => setEditedItem({ ...editedItem, dietary: value as DietaryType })}
+                >
+                  <SelectTrigger className="h-8 bg-black/20 border-white/10 text-xs">
+                    <SelectValue placeholder="Dietary" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-slate-900 border-slate-700">
+                    {Object.entries(dietaryTypes).map(([key, config]) => (
+                      <SelectItem key={key} value={key} className="focus:bg-slate-800">
+                        <span className="flex items-center gap-2">
+                          <span>{config.icon}</span>
+                          <span>{config.label}</span>
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs text-gray-400">Spice Level</Label>
+                <Select
+                  value={editedItem.spice_level || 'none'}
+                  onValueChange={(value) => setEditedItem({ ...editedItem, spice_level: value as SpiceLevel })}
+                >
+                  <SelectTrigger className="h-8 bg-black/20 border-white/10 text-xs text-white">
+                    <SelectValue placeholder="Spice" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-slate-900 border-slate-700">
+                    {Object.entries(spiceLevels).map(([key, config]) => (
+                      <SelectItem key={key} value={key} className="focus:bg-slate-800">
+                        <span className="flex items-center gap-2">
+                          <span>{config.emoji}</span>
+                          <span>{config.label}</span>
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id={`premium-${index}`}
-                checked={editedItem.isPremium}
-                onCheckedChange={(c) => setEditedItem({ ...editedItem, isPremium: c as boolean })}
-                className="border-accent data-[state=checked]:bg-accent"
-              />
-              <Label htmlFor={`premium-${index}`} className="text-[10px] uppercase tracking-wider text-accent font-bold cursor-pointer">Premium</Label>
+
+            <div className="grid grid-cols-3 gap-2">
+              <div className="space-y-1">
+                <Label className="text-xs text-gray-400">Calories</Label>
+                <Input
+                  type="number"
+                  value={editedItem.calories || ''}
+                  onChange={(e) => setEditedItem({ ...editedItem, calories: e.target.value ? parseInt(e.target.value) : undefined })}
+                  placeholder="250"
+                  className="h-8 bg-black/20 border-white/10 text-xs text-white px-2"
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs text-gray-400">Orig. Price</Label>
+                <Input
+                  type="number"
+                  value={editedItem.original_price || ''}
+                  onChange={(e) => setEditedItem({ ...editedItem, original_price: e.target.value ? parseFloat(e.target.value) : undefined })}
+                  placeholder="500"
+                  className="h-8 bg-black/20 border-white/10 text-xs text-white px-2"
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs text-gray-400">Discount %</Label>
+                <Input
+                  type="number"
+                  value={editedItem.discount_percent || ''}
+                  onChange={(e) => setEditedItem({ ...editedItem, discount_percent: e.target.value ? parseInt(e.target.value) : undefined })}
+                  placeholder="20"
+                  className="h-8 bg-black/20 border-white/10 text-xs text-white px-2"
+                />
+              </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id={`top-${index}`}
-                checked={editedItem.isTopShelf}
-                onCheckedChange={(c) => setEditedItem({ ...editedItem, isTopShelf: c as boolean })}
-                className="border-purple-500 data-[state=checked]:bg-purple-500"
-              />
-              <Label htmlFor={`top-${index}`} className="text-[10px] uppercase tracking-wider text-purple-400 font-bold cursor-pointer">Top Shelf</Label>
-            </div>
+
+            {editedItem.discount_percent && (
+              <div className="text-xs text-green-400 bg-green-900/20 p-2 rounded flex justify-between items-center">
+                <span>{editedItem.discount_percent}% OFF</span>
+                {editedItem.original_price && (
+                  <span className="opacity-70">
+                    Calc: ₹{Math.round(editedItem.original_price * (1 - (editedItem.discount_percent || 0) / 100))}
+                  </span>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="flex gap-2 items-center">
@@ -229,73 +315,120 @@ export const EditableMenuItem = ({
               </span>
 
               {/* Badges */}
-              {item.isChefSpecial && (
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-secondary/10 text-secondary tracking-widest uppercase border border-secondary/20">
-                  Chef's Special
-                </span>
-              )}
-              {item.isBestSeller && (
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-primary/10 text-primary tracking-widest uppercase border border-primary/20">
-                  Best Seller
-                </span>
-              )}
-              {item.isPremium && (
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-accent/10 text-accent tracking-widest uppercase border border-accent/20">
-                  Premium
-                </span>
-              )}
-              {item.isTopShelf && (
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-400 tracking-widest uppercase border border-purple-500/20">
-                  Top Shelf
-                </span>
-              )}
-              {item.name.toLowerCase().includes('signature') && (
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-white/10 text-slate-300 tracking-widest uppercase border border-white/20">
-                  Signature
-                </span>
+              <div className="flex flex-wrap gap-1.5 mt-1">
+                {item.isChefSpecial && (
+                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-secondary/10 text-secondary tracking-widest uppercase border border-secondary/20">
+                    Chef's Special
+                  </span>
+                )}
+                {item.isBestSeller && (
+                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-primary/10 text-primary tracking-widest uppercase border border-primary/20">
+                    Best Seller
+                  </span>
+                )}
+                {item.isPremium && (
+                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-accent/10 text-accent tracking-widest uppercase border border-accent/20">
+                    Premium
+                  </span>
+                )}
+                {item.isTopShelf && (
+                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-400 tracking-widest uppercase border border-purple-500/20">
+                    Top Shelf
+                  </span>
+                )}
+                {item.badge && badges[item.badge] && (
+                  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded tracking-widest uppercase border ${badges[item.badge].bgColor} bg-opacity-10 text-white border-white/20`}>
+                    {badges[item.badge].label}
+                  </span>
+                )}
+                {item.discount_percent && item.discount_percent > 0 && (
+                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-red-500/20 text-red-400 tracking-widest uppercase border border-red-500/30 animate-pulse">
+                    {item.discount_percent}% OFF
+                  </span>
+                )}
+              </div>
+
+              {/* Description & New Indicators */}
+              <div className="mt-1.5 space-y-1">
+                {item.description && (
+                  <p className="text-sm text-muted-foreground/80 font-montserrat leading-relaxed tracking-wide group-hover:text-muted-foreground transition-colors">
+                    {item.description}
+                  </p>
+                )}
+
+                {/* Meta Row: Dietary, Spice, Calories */}
+                {(item.dietary || item.spice_level !== 'none' || item.calories) && (
+                  <div className="flex items-center gap-3 pt-1">
+                    {item.dietary && (
+                      <div className="flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider text-muted-foreground/70" title={dietaryTypes[item.dietary].label}>
+                        <span className="text-xs">{dietaryTypes[item.dietary].icon}</span>
+                        <span>{dietaryTypes[item.dietary].label}</span>
+                      </div>
+                    )}
+                    {item.spice_level && item.spice_level !== 'none' && (
+                      <div className={`flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider ${spiceLevels[item.spice_level].color}`} title={spiceLevels[item.spice_level].label}>
+                        <Flame className="w-3 h-3" />
+                        <span>{spiceLevels[item.spice_level].emoji}</span>
+                      </div>
+                    )}
+                    {item.calories && (
+                      <div className="flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider text-muted-foreground/70">
+                        <span>{formatCaloriesDisplay(item.calories)}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Price(s) */}
+            <div className="flex-shrink-0 text-right self-start pt-0.5">
+              {hasSizes ? (
+                <div className={`flex items-center gap-4 text-sm font-orbitron font-semibold ${accentColor === 'cyan' ? 'text-primary' : 'text-secondary'
+                  }`}>
+                  {item.sizes!.map((size, i) => (
+                    <div key={i} className="flex flex-col items-end group/price">
+                      <span className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5 opacity-60">
+                        {i === 0 ? '30ml' : i === 1 ? '60ml' : i === 2 ? '90ml' : '180ml'}
+                      </span>
+                      <span className="tracking-wide text-base group-hover:text-white transition-colors">{size}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : hasMultiplePrices ? (
+                <div className="flex items-center gap-4 font-orbitron">
+                  <div className="flex flex-col items-end">
+                    <span className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5">Half</span>
+                    <span className="text-accent font-bold tracking-wide text-base">{item.halfPrice}</span>
+                  </div>
+                  <div className="w-px h-6 bg-white/10" />
+                  <div className="flex flex-col items-end">
+                    <span className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5">Full</span>
+                    <span className="text-accent font-bold tracking-wide text-base">{item.fullPrice}</span>
+                  </div>
+                </div>
+              ) : (
+                item.discount_percent && item.price ? (
+                  <div className="flex flex-col items-end">
+                    {item.original_price && (
+                      <span className="text-xs text-muted-foreground line-through decoration-red-500/50 mr-1">
+                        ₹{item.original_price}
+                      </span>
+                    )}
+                    <span className="font-orbitron text-lg font-bold text-red-400 tracking-wide whitespace-nowrap drop-shadow-[0_0_8px_rgba(248,113,113,0.3)] group-hover:scale-105 transition-transform inline-block">
+                      {item.price}
+                    </span>
+                  </div>
+                ) : (
+                  <span className="font-orbitron text-lg font-bold text-accent tracking-wide whitespace-nowrap drop-shadow-[0_0_8px_rgba(255,215,0,0.3)] group-hover:scale-105 transition-transform inline-block">
+                    {item.price}
+                  </span>
+                )
               )}
             </div>
-            {item.description && (
-              <p className="text-sm text-muted-foreground/80 mt-1.5 font-montserrat leading-relaxed tracking-wide group-hover:text-muted-foreground transition-colors">
-                {item.description}
-              </p>
-            )}
-          </div>
-
-          {/* Price(s) */}
-          <div className="flex-shrink-0 text-right self-start pt-0.5">
-            {hasSizes ? (
-              <div className={`flex items-center gap-4 text-sm font-orbitron font-semibold ${accentColor === 'cyan' ? 'text-primary' : 'text-secondary'
-                }`}>
-                {item.sizes!.map((size, i) => (
-                  <div key={i} className="flex flex-col items-end group/price">
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5 opacity-60">
-                      {i === 0 ? '30ml' : i === 1 ? '60ml' : i === 2 ? '90ml' : '180ml'}
-                    </span>
-                    <span className="tracking-wide text-base group-hover:text-white transition-colors">{size}</span>
-                  </div>
-                ))}
-              </div>
-            ) : hasMultiplePrices ? (
-              <div className="flex items-center gap-4 font-orbitron">
-                <div className="flex flex-col items-end">
-                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5">Half</span>
-                  <span className="text-accent font-bold tracking-wide text-base">{item.halfPrice}</span>
-                </div>
-                <div className="w-px h-6 bg-white/10" />
-                <div className="flex flex-col items-end">
-                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5">Full</span>
-                  <span className="text-accent font-bold tracking-wide text-base">{item.fullPrice}</span>
-                </div>
-              </div>
-            ) : (
-              <span className="font-orbitron text-lg font-bold text-accent tracking-wide whitespace-nowrap drop-shadow-[0_0_8px_rgba(255,215,0,0.3)] group-hover:scale-105 transition-transform inline-block">
-                {item.price}
-              </span>
-            )}
           </div>
         </div>
-      </div >
-    </div >
+      </div>
+    </div>
   );
 };
