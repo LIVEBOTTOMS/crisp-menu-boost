@@ -17,6 +17,7 @@ import { SwiggyZomatoManager } from '@/components/SwiggyZomatoManager';
 import { QRCodeCustomizer } from '@/components/QRCodeCustomizer';
 import { BackgroundEffects } from '@/components/BackgroundEffects';
 import { ArchivedMenus } from '@/components/ArchivedMenus';
+import { LeadManagement } from '@/components/LeadManagement';
 import { ThemeSelector } from '@/components/ThemeSelector';
 import { UpgradePrompt } from '@/components/UpgradePrompt';
 import { supabase } from '@/integrations/supabase/client';
@@ -53,6 +54,7 @@ const AdminDashboard = () => {
   const [isQRCodeCustomizerOpen, setIsQRCodeCustomizerOpen] = useState(false);
   const [isSwiggyManagerOpen, setIsSwiggyManagerOpen] = useState(false);
   const [isArchivedMenusOpen, setIsArchivedMenusOpen] = useState(false);
+  const [isLeadManagementOpen, setIsLeadManagementOpen] = useState(false);
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
   const [showPDFPrompt, setShowPDFPrompt] = useState(false);
 
@@ -484,6 +486,16 @@ const AdminDashboard = () => {
                 Swiggy/Zomato Menu
               </Button>
 
+              {/* Lead Management */}
+              <Button
+                variant="outline"
+                onClick={() => setIsLeadManagementOpen(true)}
+                className="border-neon-cyan/50 text-neon-cyan hover:bg-neon-cyan/10"
+              >
+                <Users className="w-4 h-4 mr-2" />
+                Customer Leads
+              </Button>
+
               {/* Archived Menus - Hidden for MoonWalk */}
               {!(slug && slug.toLowerCase().includes('moonwalk')) && !currentVenue.name?.toLowerCase().includes('moonwalk') && (
                 <Button
@@ -574,6 +586,7 @@ const AdminDashboard = () => {
       />
       <SwiggyZomatoManager isOpen={isSwiggyManagerOpen} onClose={() => setIsSwiggyManagerOpen(false)} />
       <ArchivedMenus isOpen={isArchivedMenusOpen} onClose={() => setIsArchivedMenusOpen(false)} />
+      <LeadManagement isOpen={isLeadManagementOpen} onClose={() => setIsLeadManagementOpen(false)} />
 
       {/* PDF Prompt Dialog after price adjustment */}
       <Dialog open={showPDFPrompt} onOpenChange={setShowPDFPrompt}>

@@ -8,6 +8,7 @@ ALTER TABLE menu_sections DROP CONSTRAINT IF EXISTS menu_sections_type_key;
 
 -- Create a new compound unique constraint (type + venue_id)
 -- This allows: snacks for venue1, snacks for venue2, etc.
+ALTER TABLE menu_sections DROP CONSTRAINT IF EXISTS menu_sections_type_venue_unique;
 ALTER TABLE menu_sections ADD CONSTRAINT menu_sections_type_venue_unique 
   UNIQUE (type, venue_id);
 
