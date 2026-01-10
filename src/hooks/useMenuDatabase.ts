@@ -88,8 +88,26 @@ export const useMenuDatabase = () => {
   const fetchMenuData = async (venueSlug?: string) => {
     console.log("📥 [FETCH] Fetching menu data for venueSlug:", venueSlug);
 
-    // Simple query - get ALL menu sections with their categories and items
-    const { data: sections, error } = await supabase
+    // Step 1: Resolve venue ID from slug
+    let venueId: string | null = null;
+
+    if (venueSlug) {
+      const { data: venue, error: venueError } = await supabase
+        .from('venues' as any)
+        .select('id')
+        .eq('slug', venueSlug)
+        .single();
+
+      if (venue) {
+        venueId = venue.id;
+        console.log("📥 [VENUE FOUND]", { venueSlug, venueId });
+      } else {
+        console.log("⚠️ [VENUE NOT FOUND]", { venueSlug, venueError });
+      }
+    }
+
+    // Step 2: Query sections filtered by venue_id
+    let query = supabase
       .from("menu_sections")
       .select(`
         id, type, title, display_order, venue_id,
@@ -103,15 +121,25 @@ export const useMenuDatabase = () => {
       `)
       .order("display_order");
 
+    // Apply venue filter
+    if (venueId) {
+      query = query.eq('venue_id', venueId);
+    } else {
+      // If no venue specified, get sections with null venue_id (default/shared)
+      query = query.is('venue_id', null);
+    }
+
+    const { data: sections, error } = await query;
+
     if (error) {
       console.error("❌ [FETCH ERROR]", error);
       return null;
     }
 
-    console.log("📥 [FETCH RESULT] Found sections:", sections?.length, sections?.map(s => ({ type: s.type, venue_id: s.venue_id })));
+    console.log("📥 [FETCH RESULT] Found sections:", sections?.length, "for venue:", venueSlug || "default");
 
     if (!sections || sections.length === 0) {
-      console.log("⚠️ [FETCH] No sections in database - returning null (will use static data)");
+      console.log("⚠️ [FETCH] No sections in database for venue:", venueSlug, "- returning null (will use static data)");
       return null;
     }
 
@@ -141,10 +169,10 @@ export const useMenuDatabase = () => {
     };
 
     // Log if we're using static data fallback
-    if (!sectionMap.snacks) console.log("⚠️ [FETCH] Using STATIC snacksAndStarters");
-    if (!sectionMap.food) console.log("⚠️ [FETCH] Using STATIC foodMenu");
-    if (!sectionMap.beverages) console.log("⚠️ [FETCH] Using STATIC beveragesMenu");
-    if (!sectionMap.sides) console.log("⚠️ [FETCH] Using STATIC sideItems");
+    if (!sectionMap.snacks) console.log("⚠️ [FETCH] Using STATIC snacksAndStarters for venue:", venueSlug);
+    if (!sectionMap.food) console.log("⚠️ [FETCH] Using STATIC foodMenu for venue:", venueSlug);
+    if (!sectionMap.beverages) console.log("⚠️ [FETCH] Using STATIC beveragesMenu for venue:", venueSlug);
+    if (!sectionMap.sides) console.log("⚠️ [FETCH] Using STATIC sideItems for venue:", venueSlug);
 
     return result;
   };
@@ -252,21 +280,46 @@ export const useMenuDatabase = () => {
       venueSlug
     });
 
-    // Simple approach: just get the section by type
-    // If there's only one menu, this works. If multiple, we'll need to handle it differently
-    const { data: sections, error: sectionError } = await supabase
+    // Step 1: Resolve venue ID from slug
+    let venueId: string | null = null;
+
+    if (venueSlug) {
+      const { data: venue, error: venueError } = await supabase
+        .from('venues' as any)
+        .select('id')
+        .eq('slug', venueSlug)
+        .single();
+
+      if (venue) {
+        venueId = venue.id;
+        console.log("🔵 [VENUE FOUND]", { venueSlug, venueId });
+      } else {
+        console.log("⚠️ [VENUE NOT FOUND for update]", { venueSlug, venueError });
+      }
+    }
+
+    // Step 2: Query section filtered by venue_id
+    let sectionQuery = supabase
       .from("menu_sections")
       .select("id, venue_id")
       .eq("type", sectionType);
 
-    console.log("🔵 [SECTION QUERY]", { sections, sectionError, sectionType });
-
-    if (sectionError || !sections || sections.length === 0) {
-      console.error("❌ [ERROR] Section not found for type:", sectionType);
-      throw new Error(`Section not found for type: ${sectionType}`);
+    if (venueId) {
+      sectionQuery = sectionQuery.eq('venue_id', venueId);
+    } else {
+      sectionQuery = sectionQuery.is('venue_id', null);
     }
 
-    // Use first matching section (or filter by venue if needed later)
+    const { data: sections, error: sectionError } = await sectionQuery;
+
+    console.log("🔵 [SECTION QUERY]", { sections, sectionError, sectionType, venueId });
+
+    if (sectionError || !sections || sections.length === 0) {
+      console.error("❌ [ERROR] Section not found for type:", sectionType, "venue:", venueSlug);
+      throw new Error(`Section not found for type: ${sectionType} and venue: ${venueSlug}`);
+    }
+
+    // Use first matching section for this venue
     const section = sections[0];
     console.log("🔵 [USING SECTION]", section);
 
