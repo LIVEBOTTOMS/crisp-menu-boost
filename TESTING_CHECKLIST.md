@@ -1,195 +1,304 @@
-# 🧪 Multi-Menu Platform - Testing Checklist
+# Security & Robustness Testing Guide
 
-## ✅ Pre-Testing Setup
+## 🧪 Pre-Deployment Testing Checklist
 
-### 1. Database Migration
-- [ ] Go to https://supabase.com → Your project
-- [ ] Open SQL Editor
-- [ ] Copy SQL from `supabase/migrations/20260104_multi_venue_system.sql`
-- [ ] Run the SQL
-- [ ] Verify tables created: `venues` and `venue_menu_items`
+### 1. Authentication Flow Testing
+
+#### ✅ Sign Up Flow
+- [ ] **Valid Signup**
+   - Navigate to `/auth` or `/signup`
+   - Enter valid email: `test@example.com`
+   - Enter strong password: `TestPass123`
+   - Confirm password matches
+   - Click "Create Account"
+   - ✅ Should show success message
+   - ✅ Should receive verification email (check Supabase)
+   - ✅ Should auto-create default venue
+
+- [ ] **Invalid Email**
+   - Enter invalid email: `notanemail`
+   - ✅ Should show "Invalid email address" error
+
+- [ ] **Weak Password**
+   - Enter weak password: `pass`
+   - ✅ Should show password requirements error
+   - ✅ Password strength indicator should show "Weak"
+
+- [ ] **Password Mismatch**
+   - Enter password: `TestPass123`
+   - Confirm password: `Different123`
+   - ✅ Should show "Passwords don't match" error
+
+- [ ] **Duplicate Email**
+   - Try signing up with existing email
+   - ✅ Should show "Email already registered" error
+
+#### ✅ Login Flow
+- [ ] **Valid Login**
+   - Navigate to `/login`
+   - Enter registered email and password
+   - Click "Sign In"
+   - ✅ Should redirect to `/menus`
+   - ✅ Should show "Welcome back!" toast
+
+- [ ] **Invalid Credentials**
+   - Enter wrong password
+   - ✅ Should show "Invalid email or password" error
+   - ✅ Should not reveal which field is wrong (security)
+
+- [ ] **Unverified Email**
+   - Login with unverified account
+   - ✅ Should show "Please verify your email" message
+
+### 2. Onboarding Flow Testing
+
+#### ✅ New User Onboarding
+- [ ] **Auto-Venue Creation**
+   - Sign up new account
+   - Navigate to `/menus`
+   - ✅ Should see "My Restaurant" venue
+   - ✅ Venue should have sample menu items
+   - ✅ Should see Starters, Main Course, Beverages
+
+- [ ] **Sample Menu Content**
+   - Click "View Menu" on default venue
+   - ✅ Should see Spring Rolls, Garlic Bread
+   - ✅ Should see Margherita Pizza, Pasta, Chicken
+   - ✅ Should see Fresh Lime Soda, Mango Smoothie, Coffee
+   - ✅ All items should have prices
+
+- [ ] **Edit Default Menu**
+   - Click "Edit" on default venue
+   - ✅ Should open editor
+   - ✅ Can edit item names
+   - ✅ Can edit prices
+   - ✅ Can add new items
+   - ✅ Changes save successfully
+
+### 3. Input Validation Testing
+
+#### ✅ Venue Creation
+- [ ] **Valid Venue**
+   - Name: `Test Restaurant`
+   - Slug: Auto-generated or `test-restaurant`
+   - ✅ Should create successfully
+
+- [ ] **Invalid Name**
+   - Name: `A` (too short)
+   - ✅ Should show "must be at least 2 characters" error
+   
+- [ ] **Invalid Characters**
+   - Name: `<script>alert('xss')</script>`
+   - ✅ Should sanitize or reject
+
+- [ ] **Invalid Slug**
+   - Slug: `TEST Restaurant!`
+   - ✅ Should auto-sanitize to `test-restaurant`
+
+#### ✅ Menu Item Creation
+- [ ] **Valid Item**
+   - Name: `Deluxe Burger`
+   - Price: `350`
+   - Description: `Juicy beef burger with cheese`
+   - ✅ Should create successfully
+
+- [ ] **Invalid Price**
+   - Price: `-100` (negative)
+   - ✅ Should show "Price cannot be negative" error
+
+- [ ] **Long Description**
+   - Description: (1001+ characters)
+   - ✅ Should show "Description is too long" error
+
+- [ ] **XSS Attempt**
+   - Name: `<img src=x onerror=alert('xss')>`
+   - ✅ Should be sanitized/escaped
+
+### 4. Error Handling Testing
+
+#### ✅ Error Boundary
+- [ ] **Trigger Error (Dev Mode)**
+   - Navigate to `/test-features`
+   - Add test button to throw error
+   - ✅ Should show error boundary UI
+   - ✅ Should show error details in dev mode
+   - ✅ "Try Again" button should reset state
+   - ✅ "Go to Homepage" should work
+
+- [ ] **Network Errors**
+   - Disconnect internet
+   - Try to load menu
+   - ✅ Should show offline page (PWA)
+   - ✅ Should show user-friendly error message
+
+#### ✅ Loading States
+- [ ] **Auth Loading**
+   - Click "Sign In"
+   - ✅ Button should show spinner
+   - ✅ Button should be disabled
+   - ✅ Should show "Signing In..." text
+
+- [ ] **Menu Loading**
+   - Navigate to `/menus`
+   - ✅ Should show loading skeleton
+   - ✅ Should not show blank screen
+
+### 5. Security Testing
+
+#### ✅ Session Management
+- [ ] **Token Refresh**
+   - Login
+   - Wait for token to expire (or force in dev tools)
+   - ✅ Should auto-refresh token
+   - ✅ User should stay logged in
+
+- [ ] **Logout**
+   - Click logout
+   - ✅ Should clear session
+   - ✅ Should redirect to login
+   - ✅ Back button should not access protected routes
+
+#### ✅ Authorization
+- [ ] **Own Data Only**
+   - User A creates venue
+   - User B logs in
+   - ✅ User B should NOT see User A's venue
+   - ✅ User B cannot edit User A's menu
+
+- [ ] **Direct URL Access**
+   - Logged out user tries `/menus`
+   - ✅ Should redirect to `/auth`
+   
+   - User A tries to edit User B's venue directly
+   - ✅ Should show error or redirect
+
+#### ✅ SQL Injection Prevention
+-  [ ] **Malicious Input**
+   - Venue name: `'; DROP TABLE venues;--`
+   - ✅ Should be treated as string, not SQL
+   - ✅ Should create venue with that exact name (escaped)
+
+### 6. Mobile Testing
+
+#### ✅ Touch Interactions
+- [ ] **Homepage**
+   - Swipe testimonials left/right
+   - ✅ Should change testimonial
+   - ✅ Should be smooth, no lag
+
+- [ ] **Auth Page**
+   - Tap show/hide password
+   - ✅ Should toggle visibility
+   - ✅ Button should have active state
+
+- [ ] **Menu View**
+   - Scroll through categories
+   - ✅ Should scroll smoothly
+   - ✅ Touch targets should be 44x44px minimum
+
+#### ✅ Responsive Design
+- [ ] **Mobile (< 640px)**
+   - ✅ Navigation should be hamburger menu
+   - ✅ Stats should be 2 columns
+   - ✅ CTAs should be stacked vertically
+   - ✅ Text should be readable
+
+- [ ] **Tablet (640-1024px)**
+   - ✅ Features should be 2 columns
+   - ✅ Stats should be 4 columns
+   - ✅ Layout should not break
+
+- [ ] **Desktop (> 1024px)**
+   - ✅ Hero should be side-by-side
+   - ✅ Features should be 3 columns
+   - ✅ Parallax effects should work
+
+### 7. PWA Testing
+
+#### ✅ Installation
+- [ ] **Desktop Install**
+   - Visit site on Chrome/Edge
+   - Wait 30 seconds
+   - ✅ Install prompt should appear
+   - Click "Install Now"
+   - ✅ App should install
+   - ✅ Should open in standalone window
+
+- [ ] **Mobile Install**
+   - Visit on mobile browser
+   - ✅ Install prompt should appear
+   - ✅ Can add to home screen
+   - ✅ Icon should appear on home screen
+
+#### ✅ Offline Support
+- [ ] **Go Offline**
+   - Load homepage
+   - Turn off WiFi
+   - Navigate to different page
+   - ✅ Should show cached content or offline page
+   - ✅ Should not crash
+
+- [ ] **Back Online**
+   - Turn WiFi back on
+   - ✅ Should auto-reconnect
+   - ✅ Should reload fresh content
+
+### 8. Database Integrity
+
+#### ✅ Auto-Onboarding Trigger
+- [ ] **New User Creation**
+   - Check Supabase Functions
+   - ✅ `create_default_venue_for_user` function exists
+   - ✅ Trigger `on_user_created_create_venue` exists
+   
+- [ ] **Verify Data**
+   - Sign up new user
+   - Check Supabase database
+   - ✅ User in `auth.users`
+   - ✅ Venue in `venues` table
+   - ✅ Sections in `menu_sections`
+   - ✅ Categories in `menu_categories`
+   - ✅ Items in `menu_items`
+   - ✅ All linked with correct venue_id
 
 ---
 
-## 🎯 Testing Steps
+## 🎯 Performance Testing
 
-### Test 1: Homepage
-- [✅] Open http://localhost:5173
-- [✅] Verify you see **"MENU PLATFORM"** header
-- [✅] Verify you see **"Create Menu"** card (left, cyan)
-- [✅] Verify you see **"View Menus"** card (right, magenta)
-- [ ] Click on each card - should navigate correctly
+### Speed Metrics
+- [ ] Homepage loads < 2s
+- [ ] Auth page loads < 1.5s
+- [ ] Menu page loads < 3s (with data)
+- [ ] Animations run at 60fps
 
-### Test 2: Create First Menu
-1. [ ] Click "Create Menu" button
-2. [ ] Should navigate to `/create-menu`
-3. [ ] Fill in the form:
-   - Restaurant Name: "The Garden"
-   - Tagline: "Farm to Fork"
-   - Subtitle: "FINE DINING • MUMBAI"
-   - City: "Mumbai"
-   - (Other fields optional)
-4. [ ] Click "Create Menu" button
-5. [ ] Should show loading state
-6. [ ] Should redirect to edit page
-7. [ ] Verify menu items copied from template
-
-### Test 3: View Menus List
-1. [ ] Go back to homepage (click back or navigate to `/`)
-2. [ ] Click "View Menus"
-3. [ ] Should see "The Garden" in the list
-4. [ ] Verify card shows:
-   - Restaurant name
-   - Subtitle/city
-   - Created date
-   - 4 action buttons (View, Edit, Duplicate, Delete)
-
-### Test 4: Search Functionality
-1. [ ] On menus list page
-2. [ ] Type "Garden" in search box
-3. [ ] Should filter to show only matching menus
-4. [ ] Clear search
-5. [ ] All menus should show again
-
-### Test 5: View Public Menu
-1. [ ] On menus list, click the "View" (eye icon) button
-2. [ ] Should navigate to `/menu/the-garden`
-3. [ ] Should see menu display with:
-   - Restaurant name in header
-   - Menu categories
-   - Menu items with prices
-4. [ ] Verify branding shows "The Garden" not "LIVE BAR"
-
-### Test 6: Edit Menu
-1. [ ] Go back to menus list
-2. [ ] Click "Edit" (pencil icon) button
-3. [ ] Should navigate to `/edit-menu/the-garden`
-4. [ ] Should see admin dashboard
-5. [  ] Try editing an item:
-   - Click on a menu item
-   - Change the price
-   - Save
-6. [ ] Verify change persists
-
-### Test 7: Duplicate Menu
-1. [ ] Go to menus list
-2. [ ] Click "Duplicate" (copy icon) button
-3. [ ] Wait for confirmation toast
-4. [ ] Should see "The Garden (Copy)" in list
-5. [ ] Verify it has all the same menu items
-6. [ ] Verify it has unique slug
-
-### Test 8: Delete Menu
-1. [ ] On menus list
-2. [ ] Click "Delete" (trash icon) on the copy
-3. [ ] Confirm deletion in dialog
-4. [ ] Menu should disappear from list
-5. [ ] (Soft delete - still in database with is_active=false)
-
-### Test 9: Create Second Menu (Different Type)
-1. [ ] Click "Create New Menu" button
-2. [ ] Fill in for a different type:
-   - Name: "Champions Sports Bar"
-   - Tagline: "Where Legends Are Made"
-   - Subtitle: "SPORTS BAR • BANGALORE"
-   - City: "Bangalore"
-3. [ ] Create and customize
-4. [ ] Go to menus list
-5. [ ] Should see both "The Garden" and "Champions Sports Bar"
-
-### Test 10: Multiple Menu Navigation
-1. [ ] View list with 2+ menus
-2. [ ] Click View on different menus
-3. [ ] Each should show different branding
-4. [ ] URLs should be different:
-   - `/menu/the-garden`
-   - `/menu/champions-sports-bar`
+### Lighthouse Scores (Target)
+- [ ] Performance: > 90
+- [ ] Accessibility: > 95
+- [ ] Best Practices: > 95
+- [ ] SEO: > 90
+- [ ] PWA: 100
 
 ---
 
-## 🐛 Common Issues to Check
-
-### Database Issues
-- [ ] If "table doesn't exist" → Run migration
-- [ ] If "permission denied" → Check RLS policies  
-- [ ] If data not saving → Check Supabase logs
-
-### UI Issues
-- [ ] If blank page → Check browser console
-- [ ] If TypeScript errors → Expected (tables not in types yet)
-- [ ] If navigation broken → Check routes in App.tsx
-
-### Performance
-- [ ] Page loads quickly
-- [ ] No lag when creating menus
-- [ ] Search is responsive
-- [ ] List view performs well with 5+ menus
+## ✅ Ready to Deploy When:
+- [ ] All authentication flows tested
+- [ ] Input validation working
+- [ ] Error boundaries catching errors
+- [ ] Auto-onboarding creating venues
+- [ ] No console errors
+- [ ] Mobile experience smooth
+- [ ] PWA installable
+- [ ] Database triggers working
+- [ ] RLS policies protecting data
+- [ ] No security vulnerabilities
 
 ---
 
-## 📊 Expected Results
+## 🐛 If Issues Found:
+1. Document the issue
+2. Create a fix
+3. Re-test the fix
+4. Verify no regressions
+5. Update this checklist
 
-After testing, you should have:
-- [ ] Homepage working with 2 options
-- [ ] At least 2 different menus created
-- [ ] Ability to view each menu publicly
-- [ ] Ability to edit each menu
-- [ ] Search working
-- [ ] Duplicate working
-- [ ] Delete working (soft delete)
-
----
-
-## 🚀 Ready for Git?
-
-Once all tests pass:
-- [ ] All pages load correctly
-- [ ] Can create menus
-- [ ] Can edit menus
-- [ ] Can view menus
-- [ ] Can duplicate/delete
-- [ ] No critical console errors
-- [ ] Database migration documented
-
-Then you're ready to:
-```bash
-git add .
-git commit -m "feat: Multi-menu management platform
-
-- Added homepage with Create/View menu options
-- Created menu creation form
-- Builthomenus list with search
-- Added per-menu view and edit pages
-- Database schema for multiple venues
-- Each menu has unique URL and branding"
-
-git push origin main
-```
-
----
-
-## 📝 Notes
-
-**TypeScript Errors**: You'll see TS errors about `venues` and `venue_menu_items` tables. This is expected - they're not in the Supabase type definitions yet. The code will work fine at runtime once the migration is run.
-
-**Test Data**: Create diverse test data:
-- Different restaurant types (fine dining, sports bar, cafe)
-- Different cities
-- Different price ranges
-- Different menu structures
-
-This will help validate the system works for various use cases.
-
----
-
-## ✅ Success Criteria
-
-✓ Can create unlimited menus  
-✓ Each menu is independent  
-✓ Changes to one don't affect others  
-✓ Each has unique URL  
-✓ Search and filter work  
-✓ Duplicate copies everything  
-✓ Delete is reversible (soft delete)  
-
-**Status**: Ready for local testing! Run the migration and start testing! 🎉
+**Only push to Git when ALL tests pass!** ✅
