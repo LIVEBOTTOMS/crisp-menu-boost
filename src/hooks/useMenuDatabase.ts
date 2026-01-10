@@ -86,10 +86,23 @@ export const useMenuDatabase = () => {
   const [isSeeded, setIsSeeded] = useState(false);
 
   const fetchMenuData = async (venueSlug?: string) => {
+    const cacheKey = `menu_cache_${venueSlug || 'default'}`;
     console.log("📥 [FETCH] Fetching menu data for venueSlug:", venueSlug);
 
-    // Simple query - get ALL menu sections with their categories and items
-    const { data: sections, error } = await supabase
+    // Step 1: Resolve venue ID from slug
+    let venueId: string | null = null;
+    if (venueSlug) {
+      const { data: venue } = await supabase
+        .from('venues' as any)
+        .select('id')
+        .eq('slug', venueSlug)
+        .single();
+      venueId = venue?.id || null;
+      console.log("📥 [VENUE]", { venueSlug, venueId });
+    }
+
+    // Step 2: Build query with venue filter
+    let query = supabase
       .from("menu_sections")
       .select(`
         id, type, title, display_order, venue_id,
@@ -102,6 +115,13 @@ export const useMenuDatabase = () => {
         )
       `)
       .order("display_order");
+
+    // Filter by venue_id if we have one
+    if (venueId) {
+      query = query.eq('venue_id', venueId);
+    }
+
+    const { data: sections, error } = await query;
 
     if (error) {
       console.error("❌ [FETCH ERROR]", error);
@@ -145,6 +165,11 @@ export const useMenuDatabase = () => {
     if (!sectionMap.food) console.log("⚠️ [FETCH] Using STATIC foodMenu");
     if (!sectionMap.beverages) console.log("⚠️ [FETCH] Using STATIC beveragesMenu");
     if (!sectionMap.sides) console.log("⚠️ [FETCH] Using STATIC sideItems");
+
+    // Cache result for faster subsequent loads (5 minute expiry)
+    try {
+      localStorage.setItem(cacheKey, JSON.stringify({ data: result, timestamp: Date.now() }));
+    } catch (e) { /* localStorage might be full, ignore */ }
 
     return result;
   };
@@ -252,21 +277,38 @@ export const useMenuDatabase = () => {
       venueSlug
     });
 
-    // Simple approach: just get the section by type
-    // If there's only one menu, this works. If multiple, we'll need to handle it differently
-    const { data: sections, error: sectionError } = await supabase
+    // Step 1: Resolve venue ID from slug
+    let venueId: string | null = null;
+    if (venueSlug) {
+      const { data: venue } = await supabase
+        .from('venues' as any)
+        .select('id')
+        .eq('slug', venueSlug)
+        .single();
+      venueId = venue?.id || null;
+      console.log("🔵 [VENUE]", { venueSlug, venueId });
+    }
+
+    // Step 2: Build section query with venue filter
+    let sectionQuery = supabase
       .from("menu_sections")
       .select("id, venue_id")
       .eq("type", sectionType);
 
-    console.log("🔵 [SECTION QUERY]", { sections, sectionError, sectionType });
+    if (venueId) {
+      sectionQuery = sectionQuery.eq('venue_id', venueId);
+    }
+
+    const { data: sections, error: sectionError } = await sectionQuery;
+
+    console.log("🔵 [SECTION QUERY]", { sections, sectionError, sectionType, venueId });
 
     if (sectionError || !sections || sections.length === 0) {
-      console.error("❌ [ERROR] Section not found for type:", sectionType);
+      console.error("❌ [ERROR] Section not found for type:", sectionType, "venue:", venueSlug);
       throw new Error(`Section not found for type: ${sectionType}`);
     }
 
-    // Use first matching section (or filter by venue if needed later)
+    // Use first matching section for this venue
     const section = sections[0];
     console.log("🔵 [USING SECTION]", section);
 

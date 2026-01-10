@@ -138,13 +138,21 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
     };
   }, [activeVenueSlug]);
 
+  // Track if initial seed check is done
+  const [seedChecked, setSeedChecked] = useState(false);
+
   useEffect(() => {
     const init = async () => {
       setIsLoading(true);
       try {
-        await checkAndSeed();
-        await refreshMenu();
-        await refreshVenue();
+        // Only check seed once per session
+        if (!seedChecked) {
+          await checkAndSeed();
+          setSeedChecked(true);
+        }
+
+        // Fetch menu and venue data in parallel for speed
+        await Promise.all([refreshMenu(), refreshVenue()]);
       } catch (error) {
         console.error("Failed to initialize menu database:", error);
       } finally {
