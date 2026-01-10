@@ -29,7 +29,10 @@ const translations: Record<Language, Record<string, string>> = {
         'menu.viewDetails': 'View Details',
         'menu.bestseller': 'Bestseller',
         'menu.new': 'New',
-        'menu.chefSpecial': "Chef's Special",
+        'menu.chef-special': "Chef's Special",
+        'menu.premium': 'Premium',
+        'menu.top-shelf': 'Top Shelf',
+        'menu.limited': 'Limited Time',
 
         // Common
         'common.loading': 'Loading...',
@@ -51,19 +54,31 @@ const translations: Record<Language, Record<string, string>> = {
         'category.breads': 'Breads',
         'category.rice': 'Rice',
         'category.snacks': 'Snacks',
+        'category.curries': 'Curries',
+        'category.soups': 'Soups',
+        'category.pasta': 'Pasta',
+        'category.pizza': 'Pizza',
+        'category.burgers': 'Burgers',
+        'category.coffee': 'Coffee',
+        'category.tea': 'Tea',
+        'category.cocktails': 'Cocktails',
+        'category.wine': 'Wine',
+        'category.beer': 'Beer',
+        'category.sides': 'Sides',
+        'category.food': 'Food',
 
         // Dietary
         'dietary.veg': 'Vegetarian',
-        'dietary.nonVeg': 'Non-Vegetarian',
+        'dietary.non-veg': 'Non-Vegetarian',
         'dietary.vegan': 'Vegan',
-        'dietary.glutenFree': 'Gluten Free',
-        'dietary.dairyFree': 'Dairy Free',
+        'dietary.gluten-free': 'Gluten Free',
+        'dietary.dairy-free': 'Dairy Free',
 
         // Spice levels
         'spice.mild': 'Mild',
         'spice.medium': 'Medium',
         'spice.hot': 'Hot',
-        'spice.extraHot': 'Extra Hot',
+        'spice.extra-hot': 'Extra Hot',
 
         // Admin
         'admin.dashboard': 'Dashboard',
@@ -79,6 +94,14 @@ const translations: Record<Language, Record<string, string>> = {
         'share.twitter': 'Share on Twitter',
         'share.copyLink': 'Copy Link',
         'share.copied': 'Link copied!',
+
+        // Lead Capture
+        'lead.welcome': 'Welcome',
+        'lead.subtitle': 'Please enter your details to view our exclusive menu.',
+        'lead.phone': 'Phone Number',
+        'lead.or': 'Or',
+        'lead.email': 'Email Address',
+        'lead.submit': 'View Menu',
     },
 
     hi: {
@@ -96,7 +119,10 @@ const translations: Record<Language, Record<string, string>> = {
         'menu.viewDetails': 'विवरण देखें',
         'menu.bestseller': 'बेस्टसेलर',
         'menu.new': 'नया',
-        'menu.chefSpecial': 'शेफ स्पेशल',
+        'menu.chef-special': 'शेफ स्पेशल',
+        'menu.premium': 'प्रीमियम',
+        'menu.top-shelf': 'टॉप शेल्फ',
+        'menu.limited': 'सीमित समय',
 
         // Common
         'common.loading': 'लोड हो रहा है...',
@@ -118,19 +144,31 @@ const translations: Record<Language, Record<string, string>> = {
         'category.breads': 'रोटियाँ',
         'category.rice': 'चावल',
         'category.snacks': 'नाश्ता',
+        'category.curries': 'करी',
+        'category.soups': 'सूप',
+        'category.pasta': 'पास्ता',
+        'category.pizza': 'पिज़्ज़ा',
+        'category.burgers': 'बर्गर',
+        'category.coffee': 'कॉफी',
+        'category.tea': 'चाय',
+        'category.cocktails': 'कॉकटेल',
+        'category.wine': 'वाइन',
+        'category.beer': 'बीयर',
+        'category.sides': 'साइड्स',
+        'category.food': 'भोजन',
 
         // Dietary
         'dietary.veg': 'शाकाहारी',
-        'dietary.nonVeg': 'मांसाहारी',
+        'dietary.non-veg': 'मांसाहारी',
         'dietary.vegan': 'शुद्ध शाकाहारी',
-        'dietary.glutenFree': 'ग्लूटेन मुक्त',
-        'dietary.dairyFree': 'डेयरी मुक्त',
+        'dietary.gluten-free': 'ग्लूटेन मुक्त',
+        'dietary.dairy-free': 'डेयरी मुक्त',
 
         // Spice levels
         'spice.mild': 'हल्का',
         'spice.medium': 'मध्यम',
         'spice.hot': 'तीखा',
-        'spice.extraHot': 'बहुत तीखा',
+        'spice.extra-hot': 'बहुत तीखा',
 
         // Admin
         'admin.dashboard': 'डैशबोर्ड',
@@ -146,6 +184,14 @@ const translations: Record<Language, Record<string, string>> = {
         'share.twitter': 'ट्विटर पर शेयर करें',
         'share.copyLink': 'लिंक कॉपी करें',
         'share.copied': 'लिंक कॉपी हो गया!',
+
+        // Lead Capture
+        'lead.welcome': 'स्वागत',
+        'lead.subtitle': 'कृपया हमारा विशेष मेनू देखने के लिए अपना विवरण दर्ज करें।',
+        'lead.phone': 'फ़ोन नंबर',
+        'lead.or': 'या',
+        'lead.email': 'ईमेल पता',
+        'lead.submit': 'मेनू देखें',
     },
 };
 

@@ -7,6 +7,7 @@ import { ShareMenu } from "@/components/ShareMenu";
 import { MenuSection } from "@/components/MenuSection";
 import { BackgroundEffects } from "@/components/BackgroundEffects";
 import { PremiumBorderFrame, PremiumSectionHeader } from "@/components/premium";
+import { LeadCaptureDialog } from "@/components/LeadCaptureDialog";
 import { useMenu } from "@/contexts/MenuContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { getVenueConfig } from "@/config/venueConfig";
@@ -45,6 +46,13 @@ const Index = () => {
   const [activeSection, setActiveSection] = useState("snacks");
   const { menuData, isLoading, setActiveVenueSlug } = useMenu();
   const { user } = useAuth();
+  const [showGate, setShowGate] = useState(false);
+
+  useEffect(() => {
+    if (!user && !localStorage.getItem("menux_customer_info")) {
+      setShowGate(true);
+    }
+  }, [user]);
   const [venueData, setVenueData] = useState<VenueData | null>(null);
   const [isLoadingVenue, setIsLoadingVenue] = useState(false);
 
@@ -121,6 +129,9 @@ const Index = () => {
         '--border': hexToHsl(themeConfig.colors.border),
       } as React.CSSProperties}
     >
+      {/* Lead Capture Gate */}
+      {showGate && <LeadCaptureDialog onAccessGranted={() => setShowGate(false)} />}
+
       {/* Dynamic Background Effects - Only for Cyberpunk */}
       {themeConfig.id === 'cyberpunk-tech' && <BackgroundEffects />}
 

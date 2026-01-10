@@ -9,6 +9,7 @@ import { Check, X, Trash2, Flame, Leaf } from "lucide-react";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { type SpiceLevel, type DietaryType, spiceLevels, dietaryTypes, badges, calculateDiscount, formatCaloriesDisplay } from "@/types/menuItem";
 
 interface EditableMenuItemProps {
@@ -29,6 +30,7 @@ export const EditableMenuItem = ({
   itemIndex
 }: EditableMenuItemProps) => {
   const { isEditMode, updateMenuItem, deleteMenuItem } = useMenu();
+  const { t } = useLanguage();
   const [isEditing, setIsEditing] = useState(false);
   const [editedItem, setEditedItem] = useState(item);
   const [imageError, setImageError] = useState(false);
@@ -318,27 +320,27 @@ export const EditableMenuItem = ({
               <div className="flex flex-wrap gap-1.5 mt-1">
                 {item.isChefSpecial && (
                   <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-secondary/10 text-secondary tracking-widest uppercase border border-secondary/20">
-                    Chef's Special
+                    {t('menu.chef-special')}
                   </span>
                 )}
                 {item.isBestSeller && (
                   <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-primary/10 text-primary tracking-widest uppercase border border-primary/20">
-                    Best Seller
+                    {t('menu.bestseller')}
                   </span>
                 )}
                 {item.isPremium && (
                   <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-accent/10 text-accent tracking-widest uppercase border border-accent/20">
-                    Premium
+                    {t('menu.premium')}
                   </span>
                 )}
                 {item.isTopShelf && (
                   <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-400 tracking-widest uppercase border border-purple-500/20">
-                    Top Shelf
+                    {t('menu.top-shelf')}
                   </span>
                 )}
                 {item.badge && badges[item.badge] && (
                   <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded tracking-widest uppercase border ${badges[item.badge].bgColor} bg-opacity-10 text-white border-white/20`}>
-                    {badges[item.badge].label}
+                    {t(`menu.${item.badge}`) || badges[item.badge].label}
                   </span>
                 )}
                 {item.discount_percent && item.discount_percent > 0 && (
@@ -360,13 +362,13 @@ export const EditableMenuItem = ({
                 {(item.dietary || item.spice_level !== 'none' || item.calories) && (
                   <div className="flex items-center gap-3 pt-1">
                     {item.dietary && (
-                      <div className="flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider text-muted-foreground/70" title={dietaryTypes[item.dietary].label}>
+                      <div className="flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider text-muted-foreground/70" title={t(`dietary.${item.dietary}`)}>
                         <span className="text-xs">{dietaryTypes[item.dietary].icon}</span>
-                        <span>{dietaryTypes[item.dietary].label}</span>
+                        <span>{t(`dietary.${item.dietary}`)}</span>
                       </div>
                     )}
                     {item.spice_level && item.spice_level !== 'none' && (
-                      <div className={`flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider ${spiceLevels[item.spice_level].color}`} title={spiceLevels[item.spice_level].label}>
+                      <div className={`flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider ${spiceLevels[item.spice_level].color}`} title={t(`spice.${item.spice_level}`)}>
                         <Flame className="w-3 h-3" />
                         <span>{spiceLevels[item.spice_level].emoji}</span>
                       </div>

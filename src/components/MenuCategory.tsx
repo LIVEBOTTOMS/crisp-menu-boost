@@ -2,6 +2,8 @@ import { useState } from "react";
 import { MenuCategory as MenuCategoryType } from "@/data/menuData";
 import { EditableMenuItem } from "./EditableMenuItem";
 import { useMenu } from "@/contexts/MenuContext";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { getSmartTranslatedTitle } from "@/lib/translationUtils";
 import { Plus, Check, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
@@ -13,6 +15,7 @@ interface MenuCategoryProps {
 
 export const MenuCategory = ({ category, index, sectionKey }: MenuCategoryProps) => {
   const { isEditMode, addMenuItem } = useMenu();
+  const { t } = useLanguage();
   const [isAdding, setIsAdding] = useState(false);
   const [newItem, setNewItem] = useState({ name: "", price: "", description: "" });
 
@@ -48,7 +51,8 @@ export const MenuCategory = ({ category, index, sectionKey }: MenuCategoryProps)
             {category.icon && <span className="text-xl filter drop-shadow-md">{category.icon}</span>}
             <h3 className={`font-orbitron text-lg font-bold tracking-[0.2em] uppercase ${isEven ? "text-primary" : "text-secondary"
               }`}>
-              {category.title}
+              {/* Smart Translation for Categories */}
+              {getSmartTranslatedTitle(category.title, t)}
             </h3>
           </div>
 

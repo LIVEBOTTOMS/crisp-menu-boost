@@ -138,8 +138,12 @@ export const useMenuDatabase = () => {
       .order("display_order");
 
     // Filter by venue_id if we have one
+    // Filter by venue_id strict
     if (venueId) {
       query = query.eq('venue_id', venueId);
+    } else {
+      // If no venue specified, show MASTER menu (where venue_id is null)
+      query = query.is('venue_id', null);
     }
 
     const { data: sections, error } = await query;
@@ -327,6 +331,8 @@ export const useMenuDatabase = () => {
 
     if (venueId) {
       sectionQuery = sectionQuery.eq('venue_id', venueId);
+    } else {
+      sectionQuery = sectionQuery.is('venue_id', null);
     }
 
     const { data: sections, error: sectionError } = await sectionQuery;

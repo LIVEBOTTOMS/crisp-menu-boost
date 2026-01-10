@@ -1,5 +1,7 @@
 import { MenuSection as MenuSectionType } from "@/data/menuData";
 import { MenuCategory } from "./MenuCategory";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { getSmartTranslatedTitle } from "@/lib/translationUtils";
 
 interface MenuSectionProps {
   section: MenuSectionType;
@@ -8,6 +10,8 @@ interface MenuSectionProps {
 }
 
 export const MenuSection = ({ section, sectionKey }: MenuSectionProps) => {
+  const { t } = useLanguage();
+
   return (
     <section className="mb-16 animate-slide-up">
       {/* Elegant Section Title */}
@@ -23,11 +27,11 @@ export const MenuSection = ({ section, sectionKey }: MenuSectionProps) => {
             </div>
             <div className="h-px w-16 bg-gradient-to-l from-transparent to-primary/50" />
           </div>
-          
+
           <h2 className="font-cinzel text-2xl md:text-3xl font-semibold tracking-[0.25em] uppercase text-shimmer">
-            {section.title}
+            {getSmartTranslatedTitle(section.title, t)}
           </h2>
-          
+
           {/* Bottom decorative line */}
           <div className="flex items-center justify-center gap-4 mt-4">
             <div className="h-px w-12 bg-gradient-to-r from-transparent to-border" />
@@ -42,15 +46,15 @@ export const MenuSection = ({ section, sectionKey }: MenuSectionProps) => {
         const hasSizedItems = section.categories.some(cat => cat.items.some(item => item.sizes && item.sizes.length > 0));
         const gridClass = hasSizedItems || section.categories.length <= 2
           ? section.categories.length >= 2 ? "md:grid-cols-2" : "max-w-2xl mx-auto"
-          : section.categories.length >= 3 
-            ? "md:grid-cols-2 lg:grid-cols-3" 
+          : section.categories.length >= 3
+            ? "md:grid-cols-2 lg:grid-cols-3"
             : "max-w-2xl mx-auto";
         return (
           <div className={`grid gap-10 ${gridClass}`}>
             {section.categories.map((category, index) => (
-              <MenuCategory 
-                key={category.title} 
-                category={category} 
+              <MenuCategory
+                key={category.title}
+                category={category}
                 index={index}
                 sectionKey={sectionKey}
               />
