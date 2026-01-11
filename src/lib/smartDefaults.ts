@@ -98,7 +98,7 @@ export const industryTemplates: Record<string, IndustryTemplate> = {
                 description: 'Classic Italian coffee-flavored dessert',
             },
         ],
-        theme: 'elegant-classic',
+        theme: 'cyberpunk-tech',
         venueName: 'Fine Dining Restaurant',
     },
 

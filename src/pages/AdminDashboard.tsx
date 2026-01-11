@@ -526,7 +526,7 @@ const AdminDashboard = () => {
           </CardHeader>
           <CardContent>
             <ThemeSelector
-              currentTheme={(venueData?.theme as MenuTheme) || 'elegant-classic'}
+              currentTheme={(venueData?.theme as MenuTheme) || 'cyberpunk-tech'}
               onThemeSelect={handleThemeUpdate}
             />
           </CardContent>

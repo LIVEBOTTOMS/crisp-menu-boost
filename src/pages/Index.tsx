@@ -94,7 +94,7 @@ const Index = () => {
     subtitle: defaultVenue.subtitle,
     logo_text: defaultVenue.logoText,
     logo_subtext: defaultVenue.logoSubtext,
-    theme: slug === 'live' || !slug ? 'cyberpunk-tech' : 'elegant-classic',
+    theme: 'cyberpunk-tech',
     tagline: null,
     logo_image_url: null,
     id: 'default'

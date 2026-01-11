@@ -99,7 +99,7 @@ const MenusListPage = () => {
                         logo_image_url: venue.logo_image_url,
                         logo_text: venue.slug === 'live' ? 'LIVE' : 'MOONWALK',
                         logo_subtext: venue.slug === 'live' ? 'Eat • Drink • Code • Repeat' : 'NX • Premium Dining',
-                        theme: venue.slug === 'live' ? 'cyberpunk-tech' : 'elegant-classic',
+                        theme: 'cyberpunk-tech',
                         is_active: true
                     });
                 }

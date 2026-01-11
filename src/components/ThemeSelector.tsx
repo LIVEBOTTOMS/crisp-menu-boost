@@ -10,7 +10,7 @@ interface ThemeSelectorProps {
 }
 
 export const ThemeSelector: React.FC<ThemeSelectorProps> = ({
-    currentTheme = 'elegant-classic',
+    currentTheme = 'cyberpunk-tech',
     onThemeSelect
 }) => {
     const [selectedTheme, setSelectedTheme] = useState<MenuTheme>(currentTheme);
@@ -137,8 +137,8 @@ export const ThemeSelector: React.FC<ThemeSelectorProps> = ({
                     onClick={handleSave}
                     disabled={isSaving || selectedTheme === currentTheme}
                     className={`min-w-[140px] font-bold tracking-wide transition-all ${selectedTheme !== currentTheme
-                            ? 'bg-neon-cyan text-black hover:bg-neon-cyan/90 shadow-[0_0_20px_rgba(0,240,255,0.4)] hover:shadow-[0_0_30px_rgba(0,240,255,0.6)]'
-                            : 'bg-white/10 text-white hover:bg-white/20'
+                        ? 'bg-neon-cyan text-black hover:bg-neon-cyan/90 shadow-[0_0_20px_rgba(0,240,255,0.4)] hover:shadow-[0_0_30px_rgba(0,240,255,0.6)]'
+                        : 'bg-white/10 text-white hover:bg-white/20'
                         }`}
                 >
                     {isSaving ? (
