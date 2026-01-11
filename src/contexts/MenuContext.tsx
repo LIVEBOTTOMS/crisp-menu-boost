@@ -172,16 +172,33 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
       activeVenueSlug
     });
 
-    // First update local state for immediate UI feedback
+    // Helper to ensure price is properly formatted
+    const formatPrice = (price: string | undefined): string | undefined => {
+      if (!price) return undefined;
+      // Remove ₹ and commas, then re-format
+      const numPrice = parseFloat(price.replace(/[₹,]/g, ''));
+      if (isNaN(numPrice)) return undefined;
+      return `₹${Math.round(numPrice).toLocaleString("en-IN")}`;
+    };
+
+    // Create properly formatted item for local state
+    const formattedItem = {
+      ...updatedItem,
+      price: formatPrice(updatedItem.price),
+      halfPrice: formatPrice(updatedItem.halfPrice),
+      fullPrice: formatPrice(updatedItem.fullPrice),
+    };
+
+    // Update local state with formatted prices for immediate UI feedback
     setMenuData(prev => {
       const newData = deepClone(prev);
       const section = newData[sectionKey as keyof MenuData];
       if (section && section.categories[categoryIndex]) {
         const oldItem = section.categories[categoryIndex].items[itemIndex];
-        section.categories[categoryIndex].items[itemIndex] = updatedItem;
+        section.categories[categoryIndex].items[itemIndex] = formattedItem;
         console.log("🟢 [LOCAL STATE] Updated:", {
           from: { name: oldItem.name, price: oldItem.price },
-          to: { name: updatedItem.name, price: updatedItem.price }
+          to: { name: formattedItem.name, price: formattedItem.price }
         });
       }
       return newData;
@@ -198,11 +215,7 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
         activeVenueSlug || undefined
       );
       console.log("✅ [CONTEXT SUCCESS] Database update completed");
-
-      // CRITICAL: Refresh from database to get properly formatted prices
-      console.log("🔄 [REFRESHING] Fetching updated data from database...");
-      await refreshMenu();
-      console.log("✅ [REFRESH COMPLETE] Menu data synchronized with database");
+      // No need to refresh - prices are already formatted in local state above
     } catch (error) {
       console.error("❌ [CONTEXT ERROR] Failed to update menu item in database:", error);
       // Revert the local state change if database update fails
