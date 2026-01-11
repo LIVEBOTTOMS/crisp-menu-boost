@@ -32,6 +32,7 @@ import { ParticleBackground } from "@/components/ui/ParticleBackground";
 import { CustomCursor } from "@/components/ui/CustomCursor";
 import { GlobalShortcuts } from "@/components/GlobalShortcuts";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { PageTransition } from "@/components/PageTransition";
 
 // PWA Components
 import { InstallPrompt } from "@/components/InstallPrompt";
@@ -64,12 +65,12 @@ const App = () => {
 
                       <Routes>
                         {/* Multi-Menu System Routes */}
-                        <Route path="/" element={<HomePage />} />
-                        <Route path="/menus" element={<MenusListPage />} />
+                        <Route path="/" element={<PageTransition><HomePage /></PageTransition>} />
+                        <Route path="/menus" element={<PageTransition><MenusListPage /></PageTransition>} />
                         <Route path="/create-menu" element={<CreateMenuPage />} />
 
                         {/* Single Menu Routes */}
-                        <Route path="/menu/:slug" element={<Index />} />
+                        <Route path="/menu/:slug" element={<PageTransition><Index /></PageTransition>} />
                         <Route path="/edit-menu/:slug" element={<AdminDashboard />} />
 
                         {/* Auth Routes - Using Streamlined Auth Page with Social Login */}
@@ -82,7 +83,7 @@ const App = () => {
 
                         {/* Admin Routes */}
                         <Route path="/admin" element={<AdminDashboard />} />
-                        <Route path="/admin/:slug" element={<AdminDashboard />} />
+                        <Route path="/admin/:slug" element={<PageTransition><AdminDashboard /></PageTransition>} />
                         <Route path="/admin/payments" element={<PaymentApprovalsPage />} />
                         <Route path="/admin/users" element={<UserManagementPage />} />
                         <Route path="/platform-admin/*" element={<MasterAdminDashboard />} />
