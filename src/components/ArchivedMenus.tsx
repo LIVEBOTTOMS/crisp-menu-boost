@@ -36,7 +36,7 @@ const escapeHtml = (text: string | undefined | null): string => {
 };
 
 export const ArchivedMenus = ({ isOpen, onClose }: ArchivedMenusProps) => {
-  const { restoreDatabase } = useMenu();
+  const { restoreDatabase, activeVenueSlug } = useMenu();
   const [archivedMenus, setArchivedMenus] = useState<ArchivedMenu[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isExporting, setIsExporting] = useState<string | null>(null);
@@ -67,7 +67,7 @@ export const ArchivedMenus = ({ isOpen, onClose }: ArchivedMenusProps) => {
   const handleRestore = async (archive: ArchivedMenu) => {
     if (confirm("Are you sure you want to restore this version? This will replace your current menu data.")) {
       setIsRestoring(archive.id);
-      const success = await restoreDatabase(archive.menu_data);
+      const success = await restoreDatabase(archive.menu_data, activeVenueSlug || undefined);
       setIsRestoring(null);
 
       if (success) {

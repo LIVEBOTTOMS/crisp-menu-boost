@@ -2,13 +2,21 @@
 -- This script duplicates the master menu (venue_id = NULL) for each venue
 -- Run this in Supabase SQL Editor
 
--- Step 0: Fix the unique constraint on menu_sections.type
--- We need to allow multiple sections with same type (one per venue)
-ALTER TABLE menu_sections DROP CONSTRAINT IF EXISTS menu_sections_type_key;
+-- Step 0: Fix the unique constraint on menu_sections.type safely
+DO $$
+BEGIN
+    -- Drop old global unique constraint if it exists
+    IF EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'menu_sections_type_key') THEN
+        ALTER TABLE menu_sections DROP CONSTRAINT menu_sections_type_key;
+    END IF;
 
--- Create a new compound unique constraint (type + venue_id)
--- This allows: snacks for venue1, snacks for venue2, etc.
-ALTER TABLE menu_sections DROP CONSTRAINT IF EXISTS menu_sections_type_venue_unique;
+    -- Drop new venue-specific constraint if it exists (to recreate cleanly)
+    IF EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'menu_sections_type_venue_unique') THEN
+        ALTER TABLE menu_sections DROP CONSTRAINT menu_sections_type_venue_unique;
+    END IF;
+END $$;
+
+-- Now add the constraint
 ALTER TABLE menu_sections ADD CONSTRAINT menu_sections_type_venue_unique 
   UNIQUE (type, venue_id);
 

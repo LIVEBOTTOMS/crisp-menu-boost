@@ -23,8 +23,8 @@ interface MenuContextType {
   deleteMenuItem: (sectionKey: string, categoryIndex: number, itemIndex: number) => void;
   adjustPrices: (percentage: number, sectionKey?: string, categoryIndex?: number, venueSlug?: string) => Promise<void>;
   refreshMenu: () => Promise<void>;
-  resetDatabase: () => Promise<boolean>;
-  restoreDatabase: (menuData: any) => Promise<boolean>;
+  resetDatabase: (venueSlug?: string) => Promise<boolean>;
+  restoreDatabase: (menuData: any, venueSlug?: string) => Promise<boolean>;
 }
 
 const MenuContext = createContext<MenuContextType | undefined>(undefined);
@@ -107,16 +107,16 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
     if (data) setVenueData(data);
   };
 
-  const resetDatabase = async () => {
-    const success = await dbResetDatabase(false);
+  const resetDatabase = async (venueSlug?: string) => {
+    const success = await dbResetDatabase(venueSlug, false);
     if (success) {
       await refreshMenu();
     }
     return success;
   };
 
-  const restoreDatabase = async (menuData: any) => {
-    const success = await dbRestoreDatabase(menuData);
+  const restoreDatabase = async (menuData: any, venueSlug?: string) => {
+    const success = await dbRestoreDatabase(menuData, venueSlug);
     if (success) {
       await refreshMenu();
     }

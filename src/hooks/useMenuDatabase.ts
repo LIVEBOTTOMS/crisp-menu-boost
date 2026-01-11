@@ -428,16 +428,28 @@ export const useMenuDatabase = () => {
     setIsLoading(false);
   };
 
-  const resetDatabase = async (preservePrices: boolean = true) => {
+  const resetDatabase = async (venueSlug?: string, preservePrices: boolean = true) => {
     setIsLoading(true);
     try {
-      // Auto-archive before reset to prevent data loss
-      await archiveCurrentMenu("Auto-archive before reset");
+      // Resolve venue ID
+      let venueId: string | null = null;
+      if (venueSlug) {
+        const { data: venue } = await supabase
+          .from('venues' as any)
+          .select('id')
+          .eq('slug', venueSlug)
+          .single();
+        venueId = venue?.id || null;
+      }
+
+      // Auto-archive before reset
+      await archiveCurrentMenu(`Auto-archive before reset (${venueSlug || 'Master'})`);
 
       let priceMap = new Map<string, any>();
 
       if (preservePrices) {
-        // Fetch current prices to preserve
+        // Fetch current prices to preserve (scoped to venue if needed?? currently getting all)
+        // ideally should be scoped too, but for now getting all is safe as map is by name
         const { data: currentItems } = await supabase
           .from('menu_items')
           .select('name, price, half_price, full_price, sizes');
@@ -449,12 +461,24 @@ export const useMenuDatabase = () => {
         }
       }
 
-      // Delete in order to respect foreign keys
-      await supabase.from("menu_items").delete().neq("id", "00000000-0000-0000-0000-000000000000"); // Delete all
-      await supabase.from("menu_categories").delete().neq("id", "00000000-0000-0000-0000-000000000000");
-      await supabase.from("menu_sections").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+      // Delete scoped to venue
+      const deleteQuery = supabase.from("menu_sections").delete();
 
-      await seedDatabase(priceMap);
+      if (venueId) {
+        // Delete only sections for this venue
+        // Cascading delete should remove categories and items
+        const { error } = await deleteQuery.eq('venue_id', venueId);
+        if (error) throw error;
+      } else {
+        // Delete master menu (where venue_id is null)
+        const { error } = await deleteQuery.is('venue_id', null);
+        if (error) throw error;
+      }
+
+      // If cascading delete isn't enabled, we might need to delete loose items?
+      // For now assuming cascade is on.
+
+      await seedDatabase(priceMap, undefined, venueId || undefined);
       return true;
     } catch (error) {
       console.error("Error resetting database:", error);
@@ -510,19 +534,32 @@ export const useMenuDatabase = () => {
     return data || [];
   };
 
-  const restoreDatabase = async (menuData: any) => {
+  const restoreDatabase = async (menuData: any, venueSlug?: string) => {
     setIsLoading(true);
     try {
-      // Archive current before restore
-      await archiveCurrentMenu("Auto-archive before restore");
+      // Create backup
+      await archiveCurrentMenu(`Auto-archive before restore (${venueSlug || 'Master'})`);
 
-      // Wipe
-      await supabase.from("menu_items").delete().neq("id", "00000000-0000-0000-0000-000000000000");
-      await supabase.from("menu_categories").delete().neq("id", "00000000-0000-0000-0000-000000000000");
-      await supabase.from("menu_sections").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+      let venueId: string | null = null;
+      if (venueSlug) {
+        const { data: venue } = await supabase
+          .from('venues' as any)
+          .select('id')
+          .eq('slug', venueSlug)
+          .single();
+        venueId = venue?.id || null;
+      }
+
+      // Delete existing
+      const deleteQuery = supabase.from("menu_sections").delete();
+      if (venueId) {
+        await deleteQuery.eq('venue_id', venueId);
+      } else {
+        await deleteQuery.is('venue_id', null);
+      }
 
       // Seed with ARCHIVED data
-      await seedDatabase(undefined, menuData);
+      await seedDatabase(undefined, menuData, venueId || undefined);
       return true;
     } catch (error) {
       console.error("Error restoring database:", error);

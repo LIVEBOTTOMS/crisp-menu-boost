@@ -91,7 +91,7 @@ const AdminDashboard = () => {
   };
 
   const handleResetDatabase = async () => {
-    const success = await resetDatabase();
+    const success = await resetDatabase(slug || 'live');
     if (success) {
       toast({
         title: 'Database Reset',
