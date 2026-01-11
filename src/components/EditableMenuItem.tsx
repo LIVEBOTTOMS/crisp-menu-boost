@@ -9,6 +9,7 @@ import { Check, X, Trash2, Flame, Leaf } from "lucide-react";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { ImageUpload } from "@/components/ImageUpload";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { type SpiceLevel, type DietaryType, spiceLevels, dietaryTypes, badges, calculateDiscount, formatCaloriesDisplay } from "@/types/menuItem";
 
@@ -75,12 +76,20 @@ export const EditableMenuItem = ({
             placeholder="Description (e.g., Artisan preparation with house-made spices)"
             className="h-9 text-sm bg-background/50 border-border/40 text-white"
           />
-          <Input
-            value={editedItem.image || ""}
-            onChange={(e) => setEditedItem({ ...editedItem, image: e.target.value })}
-            placeholder="Image URL (https://...)"
-            className="h-9 text-sm bg-background/50 font-mono text-xs text-muted-foreground"
-          />
+          <div className="flex items-center gap-2">
+            <ImageUpload
+              currentImage={editedItem.image}
+              onImageChange={(url) => setEditedItem({ ...editedItem, image: url })}
+              itemName={editedItem.name}
+            />
+            {editedItem.image && (
+              <span className="text-xs text-green-400 flex items-center gap-1">
+                <Check className="w-3 h-3" />
+                Image set
+              </span>
+            )}
+          </div>
+
 
           {/* Tags / Badges Toggles */}
           <div className="space-y-4 border-y border-white/10 py-4 my-1">
