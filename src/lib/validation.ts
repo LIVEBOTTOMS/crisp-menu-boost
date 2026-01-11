@@ -93,7 +93,7 @@ export const venueSchema = z.object({
         .optional()
         .nullable(),
     theme: z
-        .enum(['cyberpunk-tech', 'elegant-classic', 'vibrant-playful', 'minimal-modern'])
+        .enum(['cyberpunk-tech', 'dark-luxury', 'midnight-blue', 'forest-premium', 'royal-purple', 'crimson-elite', 'slate-modern'])
         .optional()
         .nullable()
 });

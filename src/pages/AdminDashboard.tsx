@@ -19,6 +19,7 @@ import { BackgroundEffects } from '@/components/BackgroundEffects';
 import { ArchivedMenus } from '@/components/ArchivedMenus';
 import { LeadManagement } from '@/components/LeadManagement';
 import { ThemeSelector } from '@/components/ThemeSelector';
+import { ThemeCustomizer } from '@/components/ThemeCustomizer';
 import { UpgradePrompt } from '@/components/UpgradePrompt';
 import { supabase } from '@/integrations/supabase/client';
 import { getVenueConfig } from '@/config/venueConfig';
@@ -531,6 +532,13 @@ const AdminDashboard = () => {
             />
           </CardContent>
         </Card>
+
+        {/* Advanced Theme Customization */}
+        <div className="md:col-span-2">
+          <ThemeCustomizer
+            currentTheme={menuThemes[(venueData?.theme as MenuTheme) || 'cyberpunk-tech']}
+          />
+        </div>
 
         {/* Actions */}
         <Card className="bg-black/40 backdrop-blur-xl border-white/10">
