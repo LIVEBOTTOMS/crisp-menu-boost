@@ -198,6 +198,11 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
         activeVenueSlug || undefined
       );
       console.log("✅ [CONTEXT SUCCESS] Database update completed");
+
+      // CRITICAL: Refresh from database to get properly formatted prices
+      console.log("🔄 [REFRESHING] Fetching updated data from database...");
+      await refreshMenu();
+      console.log("✅ [REFRESH COMPLETE] Menu data synchronized with database");
     } catch (error) {
       console.error("❌ [CONTEXT ERROR] Failed to update menu item in database:", error);
       // Revert the local state change if database update fails
