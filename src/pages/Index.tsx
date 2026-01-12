@@ -8,6 +8,7 @@ import { MenuSection } from "@/components/MenuSection";
 import { BackgroundEffects } from "@/components/BackgroundEffects";
 import { PremiumBorderFrame, PremiumSectionHeader } from "@/components/premium";
 import { LeadCaptureDialog } from "@/components/LeadCaptureDialog";
+import { DayOfWeekSelector } from "@/components/DayOfWeekSelector";
 import { useMenu } from "@/contexts/MenuContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { getVenueConfig } from "@/config/venueConfig";
@@ -212,6 +213,11 @@ const Index = () => {
           themeConfig={themeConfig}
           logoUrl={currentVenue.logo_image_url || undefined}
         />
+
+        {/* Day of Week Selector for Daily Specials */}
+        <div className="max-w-6xl mx-auto px-4 mb-6">
+          <DayOfWeekSelector />
+        </div>
 
         {/* Premium Navigation Tabs */}
         <div className="max-w-6xl mx-auto px-4 mb-8">
