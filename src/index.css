@@ -2,6 +2,7 @@
 
 @import './styles/premium-effects.css';
 @import './styles/mobile-ux.css';
+@import './styles/effects.css';
 
 @tailwind base;
 @tailwind components;
