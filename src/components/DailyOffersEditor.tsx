@@ -18,6 +18,20 @@ interface DailyOffer {
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
+// Quick offer templates for common promotions
+const OFFER_TEMPLATES = [
+    { label: 'Buy 1 Get 1 Free - Curated Drinks', text: 'Buy 1 Get 1 Free on Curated Drinks', type: 'special' as const },
+    { label: '10% Off BYOC', text: '10% Extra Off - Bring Your Own Card (Valid ID)', type: 'discount' as const },
+    { label: 'Ladies Night - Free Drink', text: "Ladies Night - 1st Drink Free (IMFL & Cocktails)", type: 'event' as const },
+    { label: 'Happy Hour 50% Off', text: 'Happy Hour - 50% Off on Selected Items', type: 'discount' as const },
+    { label: 'Unlimited Starters', text: 'Unlimited Starters with Main Course', type: 'special' as const },
+    { label: 'Free Dessert', text: 'Complimentary Dessert with Any Main Course', type: 'special' as const },
+    { label: 'Student Discount', text: '20% Off for Students (Valid ID Required)', type: 'discount' as const },
+    { label: 'Family Brunch', text: 'Family Brunch - Kids Eat Free', type: 'event' as const },
+    { label: 'Couples Special', text: 'Couples Special - 2 Mains + 1 Dessert', type: 'special' as const },
+    { label: 'Live Music Night', text: 'Live Music Night - Free Entry + Special Menu', type: 'event' as const },
+];
+
 const DEFAULT_OFFERS: Record<string, DailyOffer> = {
     Monday: { day_of_week: 'Monday', offer_text: 'Monday Madness - 20% Off', offer_type: 'discount', is_active: true },
     Tuesday: { day_of_week: 'Tuesday', offer_text: 'Taco Tuesday', offer_type: 'special', is_active: true },
@@ -160,8 +174,38 @@ export const DailyOffersEditor = ({ venueId }: DailyOffersEditorProps) => {
                                     </div>
                                 </div>
 
+                                {/* Quick Templates Dropdown */}
+                                <div className="md:col-span-2">
+                                    <Select
+                                        value=""
+                                        onValueChange={(value) => {
+                                            const template = OFFER_TEMPLATES[parseInt(value)];
+                                            if (template) {
+                                                handleOfferChange(day, 'offer_text', template.text);
+                                                handleOfferChange(day, 'offer_type', template.type);
+                                                handleOfferChange(day, 'is_active', true);
+                                            }
+                                        }}
+                                    >
+                                        <SelectTrigger className="bg-purple-500/10 border-purple-500/30 text-purple-300 hover:bg-purple-500/20">
+                                            <SelectValue placeholder="📋 Templates" />
+                                        </SelectTrigger>
+                                        <SelectContent className="bg-slate-900 border-slate-700 max-h-80">
+                                            {OFFER_TEMPLATES.map((template, idx) => (
+                                                <SelectItem
+                                                    key={idx}
+                                                    value={idx.toString()}
+                                                    className="text-white focus:bg-slate-800"
+                                                >
+                                                    {template.label}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
                                 {/* Offer Text */}
-                                <div className="md:col-span-5">
+                                <div className="md:col-span-3">
                                     <Input
                                         value={offer.offer_text}
                                         onChange={(e) => handleOfferChange(day, 'offer_text', e.target.value)}

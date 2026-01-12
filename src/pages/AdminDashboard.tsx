@@ -47,6 +47,7 @@ const AdminDashboard = () => {
   const { toast } = useToast();
 
   const [isLoadingVenue, setIsLoadingVenue] = useState(false);
+  const [fetchedVenueData, setFetchedVenueData] = useState<VenueData | null>(null);
   const defaultVenue = getVenueConfig();
 
   const [pricePercent, setPricePercent] = useState("");
@@ -65,8 +66,41 @@ const AdminDashboard = () => {
     setActiveVenueSlug(slug || 'live');
   }, [slug, setActiveVenueSlug]);
 
-  // Use venue data if available, otherwise use default
-  const currentVenue = venueData || {
+  // Fetch venue data from Supabase if not in context
+  useEffect(() => {
+    const fetchVenue = async () => {
+      if (venueData) {
+        setFetchedVenueData(venueData);
+        return;
+      }
+
+      const venueSlug = slug || 'live';
+      setIsLoadingVenue(true);
+
+      try {
+        const { data, error } = await supabase
+          .from('venues')
+          .select('*')
+          .eq('slug', venueSlug)
+          .single();
+
+        if (error) throw error;
+        if (data) {
+          console.log('✅ Fetched venue:', data);
+          setFetchedVenueData(data as VenueData);
+        }
+      } catch (error) {
+        console.error('❌ Error fetching venue:', error);
+      } finally {
+        setIsLoadingVenue(false);
+      }
+    };
+
+    fetchVenue();
+  }, [slug, venueData]);
+
+  // Use fetched venue, context venue, or default
+  const currentVenue = fetchedVenueData || venueData || {
     name: defaultVenue.name,
     subtitle: defaultVenue.subtitle,
     logo_text: defaultVenue.logoText,
@@ -74,7 +108,7 @@ const AdminDashboard = () => {
     logo_image_url: null,
     tagline: null,
     theme: 'cyberpunk-tech',
-    id: 'default',
+    id: null as any,
   };
 
   useEffect(() => {
@@ -543,7 +577,24 @@ const AdminDashboard = () => {
 
         {/* Daily Offers Management */}
         <div className="md:col-span-2">
-          {venueData?.id && <DailyOffersEditor venueId={venueData.id} />}
+          {isLoadingVenue ? (
+            <Card className="bg-black/40 backdrop-blur-xl border-white/10">
+              <CardContent className="py-12 flex justify-center items-center gap-3">
+                <Loader2 className="w-6 h-6 animate-spin text-neon-cyan" />
+                <span className="text-white">Loading venue data...</span>
+              </CardContent>
+            </Card>
+          ) : currentVenue?.id ? (
+            <DailyOffersEditor venueId={currentVenue.id} />
+          ) : (
+            <Card className="bg-black/40 backdrop-blur-xl border-white/10">
+              <CardContent className="py-6">
+                <p className="text-red-400">
+                  ⚠️ No venue found. Please create a venue first.
+                </p>
+              </CardContent>
+            </Card>
+          )}
         </div>
 
         {/* Actions */}
