@@ -216,7 +216,7 @@ const Index = () => {
 
         {/* Day of Week Selector for Daily Specials */}
         <div className="max-w-6xl mx-auto px-4 mb-6">
-          <DayOfWeekSelector />
+          <DayOfWeekSelector venueId={currentVenue.id} />
         </div>
 
         {/* Premium Navigation Tabs */}

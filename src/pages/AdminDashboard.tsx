@@ -20,6 +20,7 @@ import { ArchivedMenus } from '@/components/ArchivedMenus';
 import { LeadManagement } from '@/components/LeadManagement';
 import { ThemeSelector } from '@/components/ThemeSelector';
 import { ThemeCustomizer } from '@/components/ThemeCustomizer';
+import { DailyOffersEditor } from '@/components/DailyOffersEditor';
 import { UpgradePrompt } from '@/components/UpgradePrompt';
 import { supabase } from '@/integrations/supabase/client';
 import { getVenueConfig } from '@/config/venueConfig';
@@ -538,6 +539,11 @@ const AdminDashboard = () => {
           <ThemeCustomizer
             currentTheme={menuThemes[(venueData?.theme as MenuTheme) || 'cyberpunk-tech']}
           />
+        </div>
+
+        {/* Daily Offers Management */}
+        <div className="md:col-span-2">
+          {venueData?.id && <DailyOffersEditor venueId={venueData.id} />}
         </div>
 
         {/* Actions */}
