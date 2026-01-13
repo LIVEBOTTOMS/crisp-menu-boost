@@ -360,107 +360,101 @@ export const EditableMenuItem = ({
                 )}
               </div>
 
-              {/* Description & New Indicators */}
-              <div className="mt-1.5 space-y-1">
-                {item.description && (
-                  <p className="text-sm text-muted-foreground/80 font-montserrat leading-relaxed tracking-wide group-hover:text-muted-foreground transition-colors">
-                    {item.description}
-                  </p>
-                )}
+              {/* Description & Meta Row */}
+              <div className="mt-1.5 flex items-center justify-between gap-4 flex-wrap">
+                {/* Left: Description + Meta */}
+                <div className="flex-1 min-w-0">
+                  {item.description && (
+                    <p className="text-sm text-muted-foreground/80 font-montserrat leading-relaxed tracking-wide group-hover:text-muted-foreground transition-colors truncate">
+                      {item.description}
+                    </p>
+                  )}
 
-                {/* Meta Row: Dietary, Spice, Calories */}
-                {(item.dietary || item.spice_level !== 'none' || item.calories) && (
-                  <div className="flex items-center gap-3 pt-1">
-                    {item.dietary && (
-                      <div className="flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider text-muted-foreground/70" title={t(`dietary.${item.dietary}`)}>
-                        <span className="text-xs">{dietaryTypes[item.dietary].icon}</span>
-                        <span>{t(`dietary.${item.dietary}`)}</span>
-                      </div>
-                    )}
-                    {item.spice_level && item.spice_level !== 'none' && (
-                      <div className={`flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider ${spiceLevels[item.spice_level].color}`} title={t(`spice.${item.spice_level}`)}>
-                        <Flame className="w-3 h-3" />
-                        <span>{spiceLevels[item.spice_level].emoji}</span>
-                      </div>
-                    )}
-                    {item.calories && (
-                      <div className="flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider text-muted-foreground/70">
-                        <span>{formatCaloriesDisplay(item.calories)}</span>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-
-
-
-              {/* Vote to Discount Button - Only for Beverages */}
-              {venueData?.id && !isEditMode && sectionKey.toLowerCase().includes('beverages') && (
-                <div className="mt-3 max-w-[200px]">
-                  <VoteButton
-                    itemId={item.id || `${sectionKey}_${categoryIndex}_${itemIndex}`}
-                    venueId={venueData.id}
-                    itemName={item.name}
-                    originalPrice={parseFloat(String(item.price || item.fullPrice || '0').replace(/[^\d.]/g, '')) || 0}
-                  />
-                </div>
-              )}
-              {/* DEBUG HELPER */}
-              {!venueData?.id && !isEditMode && (
-                <div className="mt-2 text-[10px] text-yellow-500 bg-black/50 p-1 rounded border border-yellow-500/30">
-                  ⚠ No Venue ID
-                </div>
-              )}
-            </div>
-
-            {/* Price(s) */}
-            <div className="flex-shrink-0 text-right self-start pt-0.5">
-              {hasSizes ? (
-                <div className={`flex items-center gap-4 text-sm font-orbitron font-semibold ${accentColor === 'cyan' ? 'text-primary' : 'text-secondary'
-                  }`}>
-                  {item.sizes!.map((size, i) => (
-                    <div key={i} className="flex flex-col items-end group/price">
-                      <span className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5 opacity-60">
-                        {i === 0 ? '30ml' : i === 1 ? '60ml' : i === 2 ? '90ml' : '180ml'}
-                      </span>
-                      <span className="tracking-wide text-base group-hover:text-white transition-colors">{size}</span>
+                  {/* Meta Row: Dietary, Spice, Calories */}
+                  {(item.dietary || item.spice_level !== 'none' || item.calories) && (
+                    <div className="flex items-center gap-3 pt-1">
+                      {item.dietary && (
+                        <div className="flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider text-muted-foreground/70" title={t(`dietary.${item.dietary}`)}>
+                          <span className="text-xs">{dietaryTypes[item.dietary].icon}</span>
+                          <span>{t(`dietary.${item.dietary}`)}</span>
+                        </div>
+                      )}
+                      {item.spice_level && item.spice_level !== 'none' && (
+                        <div className={`flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider ${spiceLevels[item.spice_level].color}`} title={t(`spice.${item.spice_level}`)}>
+                          <Flame className="w-3 h-3" />
+                          <span>{spiceLevels[item.spice_level].emoji}</span>
+                        </div>
+                      )}
+                      {item.calories && (
+                        <div className="flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider text-muted-foreground/70">
+                          <span>{formatCaloriesDisplay(item.calories)}</span>
+                        </div>
+                      )}
                     </div>
-                  ))}
+                  )}
                 </div>
-              ) : hasMultiplePrices ? (
-                <div className="flex items-center gap-4 font-orbitron">
-                  <div className="flex flex-col items-end">
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5">Half</span>
-                    <span className="text-accent font-bold tracking-wide text-base">{item.halfPrice}</span>
+
+                {/* Center: Vote Button (Beverages Only) */}
+                {venueData?.id && !isEditMode && sectionKey.toLowerCase().includes('beverages') && (
+                  <div className="flex-shrink-0">
+                    <VoteButton
+                      itemId={item.id || `${sectionKey}_${categoryIndex}_${itemIndex}`}
+                      venueId={venueData.id}
+                      itemName={item.name}
+                      originalPrice={parseFloat(String(item.price || item.fullPrice || '0').replace(/[^\d.]/g, '')) || 0}
+                    />
                   </div>
-                  <div className="w-px h-6 bg-white/10" />
-                  <div className="flex flex-col items-end">
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5">Full</span>
-                    <span className="text-accent font-bold tracking-wide text-base">{item.fullPrice}</span>
-                  </div>
-                </div>
-              ) : (
-                item.discount_percent && item.price ? (
-                  <div className="flex flex-col items-end">
-                    {item.original_price && (
-                      <span className="text-xs text-muted-foreground line-through decoration-red-500/50 mr-1">
-                        ₹{item.original_price}
+                )}
+
+                {/* Right: Price */}
+                <div className="flex-shrink-0 text-right">
+                  {hasSizes ? (
+                    <div className={`flex items-center gap-4 text-sm font-orbitron font-semibold ${accentColor === 'cyan' ? 'text-primary' : 'text-secondary'
+                      }`}>
+                      {item.sizes!.map((size, i) => (
+                        <div key={i} className="flex flex-col items-end group/price">
+                          <span className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5 opacity-60">
+                            {i === 0 ? '30ml' : i === 1 ? '60ml' : i === 2 ? '90ml' : '180ml'}
+                          </span>
+                          <span className="tracking-wide text-base group-hover:text-white transition-colors">{size}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : hasMultiplePrices ? (
+                    <div className="flex items-center gap-4 font-orbitron">
+                      <div className="flex flex-col items-end">
+                        <span className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5">Half</span>
+                        <span className="text-accent font-bold tracking-wide text-base">{item.halfPrice}</span>
+                      </div>
+                      <div className="w-px h-6 bg-white/10" />
+                      <div className="flex flex-col items-end">
+                        <span className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5">Full</span>
+                        <span className="text-accent font-bold tracking-wide text-base">{item.fullPrice}</span>
+                      </div>
+                    </div>
+                  ) : (
+                    item.discount_percent && item.price ? (
+                      <div className="flex flex-col items-end">
+                        {item.original_price && (
+                          <span className="text-xs text-muted-foreground line-through decoration-red-500/50 mr-1">
+                            ₹{item.original_price}
+                          </span>
+                        )}
+                        <span className="font-orbitron text-lg font-bold text-red-400 tracking-wide whitespace-nowrap drop-shadow-[0_0_8px_rgba(248,113,113,0.3)] group-hover:scale-105 transition-transform inline-block">
+                          {item.price}
+                        </span>
+                      </div>
+                    ) : (
+                      <span className="font-orbitron text-lg font-bold text-accent tracking-wide whitespace-nowrap drop-shadow-[0_0_8px_rgba(255,215,0,0.3)] group-hover:scale-105 transition-transform inline-block">
+                        {item.price}
                       </span>
-                    )}
-                    <span className="font-orbitron text-lg font-bold text-red-400 tracking-wide whitespace-nowrap drop-shadow-[0_0_8px_rgba(248,113,113,0.3)] group-hover:scale-105 transition-transform inline-block">
-                      {item.price}
-                    </span>
-                  </div>
-                ) : (
-                  <span className="font-orbitron text-lg font-bold text-accent tracking-wide whitespace-nowrap drop-shadow-[0_0_8px_rgba(255,215,0,0.3)] group-hover:scale-105 transition-transform inline-block">
-                    {item.price}
-                  </span>
-                )
-              )}
+                    )
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div >
-    </div >
-  );
+      </div>
+      );
 };
