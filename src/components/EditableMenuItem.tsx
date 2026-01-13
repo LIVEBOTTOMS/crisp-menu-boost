@@ -393,8 +393,9 @@ export const EditableMenuItem = ({
               </div>
 
 
-              {/* Vote to Discount Button */}
-              {venueData?.id && !isEditMode && (
+
+              {/* Vote to Discount Button - Only for Beverages */}
+              {venueData?.id && !isEditMode && sectionKey.toLowerCase().includes('beverages') && (
                 <div className="mt-3 max-w-[200px]">
                   <VoteButton
                     itemId={item.id || `${sectionKey}_${categoryIndex}_${itemIndex}`}

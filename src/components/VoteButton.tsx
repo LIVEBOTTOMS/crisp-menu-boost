@@ -137,21 +137,21 @@ export const VoteButton = ({
             </div>
             {/* Vote Button */}
             <motion.div
-                whileHover={{ scale: hasVoted ? 1 : 1.05 }}
-                whileTap={{ scale: hasVoted ? 1 : 0.95 }}
+                whileHover={{ scale: hasVoted ? 1 : 1.02 }}
+                whileTap={{ scale: hasVoted ? 1 : 0.98 }}
             >
                 <Button
                     onClick={handleVote}
                     disabled={hasVoted || isVoting || discountPercent >= 10}
                     className={`
-            relative overflow-hidden w-full
+            relative overflow-hidden w-full h-8
             ${hasVoted
                             ? 'bg-gradient-to-r from-green-600 to-emerald-600 cursor-not-allowed'
                             : discountPercent >= 10
                                 ? 'bg-gradient-to-r from-purple-600 to-pink-600 cursor-not-allowed'
                                 : 'bg-gradient-to-r from-neon-cyan to-blue-500 hover:from-neon-cyan/90 hover:to-blue-500/90'
                         }
-            text-white font-bold shadow-lg border-0
+            text-white text-xs font-bold shadow-lg border-0
           `}
                     size="sm"
                 >
@@ -170,21 +170,21 @@ export const VoteButton = ({
                         />
                     )}
 
-                    <div className="relative flex items-center gap-2">
+                    <div className="relative flex items-center gap-1.5">
                         {discountPercent >= 10 ? (
                             <>
-                                <Sparkles className="w-4 h-4" />
-                                <span>Max Discount!</span>
+                                <Sparkles className="w-3.5 h-3.5" />
+                                <span className="text-xs">Max Discount!</span>
                             </>
                         ) : hasVoted ? (
                             <>
-                                <ThumbsUp className="w-4 h-4 fill-current" />
-                                <span>Voted</span>
+                                <ThumbsUp className="w-3.5 h-3.5 fill-current" />
+                                <span className="text-xs">Voted</span>
                             </>
                         ) : (
                             <>
-                                <ThumbsUp className="w-4 h-4" />
-                                <span>Vote for Discount</span>
+                                <ThumbsUp className="w-3.5 h-3.5" />
+                                <span className="text-xs">Vote for Discount</span>
                             </>
                         )}
                     </div>
