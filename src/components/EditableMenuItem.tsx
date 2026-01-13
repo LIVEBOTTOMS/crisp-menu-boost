@@ -456,5 +456,6 @@ export const EditableMenuItem = ({
           </div>
         </div>
       </div>
-      );
+    </div>
+  );
 };
