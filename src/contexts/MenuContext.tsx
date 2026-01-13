@@ -93,7 +93,7 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const refreshVenue = async () => {
-    if (!activeVenueSlug || activeVenueSlug === 'live') {
+    if (!activeVenueSlug) {
       setVenueData(null);
       return;
     }

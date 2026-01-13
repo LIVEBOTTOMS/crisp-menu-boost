@@ -3,6 +3,7 @@ import { MenuItem as MenuItemType } from "@/data/menuData";
 import { cn } from "@/lib/utils";
 import { useMenu } from "@/contexts/MenuContext";
 import { Input } from "@/components/ui/input";
+import { VoteButton } from "@/components/VoteButton";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Check, X, Trash2, Flame, Leaf } from "lucide-react";
@@ -30,7 +31,7 @@ export const EditableMenuItem = ({
   categoryIndex,
   itemIndex
 }: EditableMenuItemProps) => {
-  const { isEditMode, updateMenuItem, deleteMenuItem } = useMenu();
+  const { isEditMode, updateMenuItem, deleteMenuItem, venueData } = useMenu();
   const { t } = useLanguage();
   const [isEditing, setIsEditing] = useState(false);
   const [editedItem, setEditedItem] = useState(item);
@@ -390,6 +391,25 @@ export const EditableMenuItem = ({
                   </div>
                 )}
               </div>
+
+
+              {/* Vote to Discount Button */}
+              {venueData?.id && !isEditMode && (
+                <div className="mt-3 max-w-[200px]">
+                  <VoteButton
+                    itemId={item.id || `${sectionKey}_${categoryIndex}_${itemIndex}`}
+                    venueId={venueData.id}
+                    itemName={item.name}
+                    originalPrice={parseFloat(String(item.price || item.fullPrice || '0').replace(/[^\d.]/g, '')) || 0}
+                  />
+                </div>
+              )}
+              {/* DEBUG HELPER */}
+              {!venueData?.id && !isEditMode && (
+                <div className="mt-2 text-[10px] text-yellow-500 bg-black/50 p-1 rounded border border-yellow-500/30">
+                  ⚠ No Venue ID
+                </div>
+              )}
             </div>
 
             {/* Price(s) */}
@@ -439,7 +459,7 @@ export const EditableMenuItem = ({
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };

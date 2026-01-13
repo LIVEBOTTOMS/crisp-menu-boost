@@ -2,6 +2,7 @@ export type SpiceLevel = 'none' | 'mild' | 'medium' | 'hot' | 'extra-hot';
 export type DietaryType = 'veg' | 'non-veg' | 'vegan' | 'gluten-free' | 'dairy-free';
 
 export interface MenuItem {
+  id?: string;
   name: string;
   price?: string;
   description?: string;

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ThumbsUp, TrendingDown, Sparkles } from 'lucide-react';
+import { ThumbsUp, TrendingDown, Sparkles, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { submitVote, hasUserVoted, getVoteCounts } from '@/lib/voteSystem';
 import { toast } from 'sonner';
 
@@ -94,6 +95,46 @@ export const VoteButton = ({
 
     return (
         <div className="flex flex-col gap-2">
+            {/* Help Icon */}
+            <div className="flex items-center justify-between mb-1">
+                <span className="text-xs text-slate-400 font-semibold">Community Discount</span>
+                <Popover>
+                    <PopoverTrigger asChild>
+                        <button className="p-1 hover:bg-white/10 rounded-full transition-colors group">
+                            <HelpCircle className="w-4 h-4 text-slate-400 group-hover:text-neon-cyan transition-colors" />
+                        </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-72 bg-slate-900 border-slate-700 shadow-xl">
+                        <div className="space-y-3">
+                            <div className="flex items-center gap-2 border-b border-slate-700 pb-2">
+                                <ThumbsUp className="w-5 h-5 text-neon-cyan" />
+                                <h3 className="font-bold text-white">How Vote-to-Discount Works</h3>
+                            </div>
+                            <div className="space-y-2 text-sm text-slate-300">
+                                <div className="flex items-start gap-2">
+                                    <span className="text-neon-cyan font-bold">1.</span>
+                                    <p>Click "Vote for Discount" on items you love</p>
+                                </div>
+                                <div className="flex items-start gap-2">
+                                    <span className="text-neon-cyan font-bold">2.</span>
+                                    <p>Every <strong className="text-white">10 votes = 1% discount</strong></p>
+                                </div>
+                                <div className="flex items-start gap-2">
+                                    <span className="text-neon-cyan font-bold">3.</span>
+                                    <p>Maximum discount: <strong className="text-green-400">10% (100 votes)</strong></p>
+                                </div>
+                                <div className="flex items-start gap-2">
+                                    <span className="text-neon-cyan font-bold">4.</span>
+                                    <p>Prices update <strong className="text-white">instantly</strong> for everyone!</p>
+                                </div>
+                            </div>
+                            <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-2 text-xs text-blue-300">
+                                <p>💡 <strong>Tip:</strong> You can only vote once per item. Help the community save!</p>
+                            </div>
+                        </div>
+                    </PopoverContent>
+                </Popover>
+            </div>
             {/* Vote Button */}
             <motion.div
                 whileHover={{ scale: hasVoted ? 1 : 1.05 }}

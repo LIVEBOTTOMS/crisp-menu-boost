@@ -21,6 +21,7 @@ import { LeadManagement } from '@/components/LeadManagement';
 import { ThemeSelector } from '@/components/ThemeSelector';
 import { ThemeCustomizer } from '@/components/ThemeCustomizer';
 import { DailyOffersEditor } from '@/components/DailyOffersEditor';
+import { VoteSystemSettings } from '@/components/VoteSystemSettings';
 import { UpgradePrompt } from '@/components/UpgradePrompt';
 import { supabase } from '@/integrations/supabase/client';
 import { getVenueConfig } from '@/config/venueConfig';
@@ -585,7 +586,10 @@ const AdminDashboard = () => {
               </CardContent>
             </Card>
           ) : currentVenue?.id ? (
-            <DailyOffersEditor venueId={currentVenue.id} />
+            <div className="space-y-8">
+              <DailyOffersEditor venueId={currentVenue.id} />
+              <VoteSystemSettings venueId={currentVenue.id} />
+            </div>
           ) : (
             <Card className="bg-black/40 backdrop-blur-xl border-white/10">
               <CardContent className="py-6">
