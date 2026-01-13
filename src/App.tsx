@@ -1,3 +1,4 @@
+import { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,25 +9,6 @@ import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import { MenuProvider } from "@/contexts/MenuContext";
 import { GuestModeProvider } from "@/contexts/GuestModeContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
-import HomePage from "./pages/HomePage";
-import MenusListPage from "./pages/MenusListPage";
-import CreateMenuPage from "./pages/CreateMenuPage";
-import Index from "./pages/Index";
-import Auth from "./pages/Auth";
-import AuthPage from "./pages/AuthPage";
-import ImprovedAuthPage from "./pages/ImprovedAuthPage";
-import StreamlinedAuthPage from "./pages/StreamlinedAuthPage";
-import ProgressiveOnboarding from "./pages/ProgressiveOnboarding";
-import PricingPage from "./pages/PricingPage";
-import CheckoutPage from "./pages/CheckoutPage";
-import PaymentApprovalsPage from "./pages/PaymentApprovalsPage";
-import UserManagementPage from "./pages/UserManagementPage";
-import AdminDashboard from "./pages/AdminDashboard";
-import MasterAdminDashboard from "./pages/MasterAdminDashboard";
-import SettingsPage from "./pages/SettingsPage";
-import FeatureTestPage from "./pages/FeatureTestPage";
-import DebugUser from "./pages/DebugUser";
-import NotFound from "./pages/NotFound";
 
 import { ParticleBackground } from "@/components/ui/ParticleBackground";
 import { CustomCursor } from "@/components/ui/CustomCursor";
@@ -38,7 +20,59 @@ import { PageTransition } from "@/components/PageTransition";
 import { InstallPrompt } from "@/components/InstallPrompt";
 import { useServiceWorker } from "@/hooks/useServiceWorker";
 
-const queryClient = new QueryClient();
+// Loading Skeleton for lazy-loaded pages
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center bg-background">
+    <div className="flex flex-col items-center gap-4">
+      <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      <p className="text-muted-foreground text-sm animate-pulse">Loading...</p>
+    </div>
+  </div>
+);
+
+// ============================================
+// LAZY LOADED PAGES - Code Splitting
+// ============================================
+
+// Core pages (loaded immediately or with high priority)
+const HomePage = lazy(() => import("./pages/HomePage"));
+const Index = lazy(() => import("./pages/Index"));
+
+// Auth pages (loaded on demand)
+const StreamlinedAuthPage = lazy(() => import("./pages/StreamlinedAuthPage"));
+const ProgressiveOnboarding = lazy(() => import("./pages/ProgressiveOnboarding"));
+
+// Menu management pages
+const MenusListPage = lazy(() => import("./pages/MenusListPage"));
+const CreateMenuPage = lazy(() => import("./pages/CreateMenuPage"));
+
+// Admin pages (heavy, load on demand)
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const MasterAdminDashboard = lazy(() => import("./pages/MasterAdminDashboard"));
+const SettingsPage = lazy(() => import("./pages/SettingsPage"));
+const PaymentApprovalsPage = lazy(() => import("./pages/PaymentApprovalsPage"));
+const UserManagementPage = lazy(() => import("./pages/UserManagementPage"));
+
+// Commerce pages
+const PricingPage = lazy(() => import("./pages/PricingPage"));
+const CheckoutPage = lazy(() => import("./pages/CheckoutPage"));
+
+// Debug/Test pages (rarely used)
+const FeatureTestPage = lazy(() => import("./pages/FeatureTestPage"));
+const DebugUser = lazy(() => import("./pages/DebugUser"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+
+// Query client with optimized cache settings
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      gcTime: 1000 * 60 * 30, // 30 minutes (was cacheTime)
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 const App = () => {
   // Register service worker
@@ -63,39 +97,42 @@ const App = () => {
                       {/* PWA Install Prompt */}
                       <InstallPrompt />
 
-                      <Routes>
-                        {/* Multi-Menu System Routes */}
-                        <Route path="/" element={<PageTransition><HomePage /></PageTransition>} />
-                        <Route path="/menus" element={<PageTransition><MenusListPage /></PageTransition>} />
-                        <Route path="/create-menu" element={<CreateMenuPage />} />
+                      {/* Suspense wrapper for lazy-loaded routes */}
+                      <Suspense fallback={<PageLoader />}>
+                        <Routes>
+                          {/* Multi-Menu System Routes */}
+                          <Route path="/" element={<PageTransition><HomePage /></PageTransition>} />
+                          <Route path="/menus" element={<PageTransition><MenusListPage /></PageTransition>} />
+                          <Route path="/create-menu" element={<CreateMenuPage />} />
 
-                        {/* Single Menu Routes */}
-                        <Route path="/menu/:slug" element={<PageTransition><Index /></PageTransition>} />
-                        <Route path="/edit-menu/:slug" element={<AdminDashboard />} />
+                          {/* Single Menu Routes */}
+                          <Route path="/menu/:slug" element={<PageTransition><Index /></PageTransition>} />
+                          <Route path="/edit-menu/:slug" element={<AdminDashboard />} />
 
-                        {/* Auth Routes - Using Streamlined Auth Page with Social Login */}
-                        <Route path="/auth" element={<StreamlinedAuthPage />} />
-                        <Route path="/login" element={<StreamlinedAuthPage />} />
-                        <Route path="/signup" element={<StreamlinedAuthPage />} />
-                        <Route path="/onboarding" element={<ProgressiveOnboarding />} />
-                        <Route path="/pricing" element={<PricingPage />} />
-                        <Route path="/checkout" element={<CheckoutPage />} />
+                          {/* Auth Routes - Using Streamlined Auth Page with Social Login */}
+                          <Route path="/auth" element={<StreamlinedAuthPage />} />
+                          <Route path="/login" element={<StreamlinedAuthPage />} />
+                          <Route path="/signup" element={<StreamlinedAuthPage />} />
+                          <Route path="/onboarding" element={<ProgressiveOnboarding />} />
+                          <Route path="/pricing" element={<PricingPage />} />
+                          <Route path="/checkout" element={<CheckoutPage />} />
 
-                        {/* Admin Routes */}
-                        <Route path="/admin" element={<AdminDashboard />} />
-                        <Route path="/admin/:slug" element={<PageTransition><AdminDashboard /></PageTransition>} />
-                        <Route path="/admin/payments" element={<PaymentApprovalsPage />} />
-                        <Route path="/admin/users" element={<UserManagementPage />} />
-                        <Route path="/platform-admin/*" element={<MasterAdminDashboard />} />
-                        <Route path="/settings" element={<SettingsPage />} />
+                          {/* Admin Routes */}
+                          <Route path="/admin" element={<AdminDashboard />} />
+                          <Route path="/admin/:slug" element={<PageTransition><AdminDashboard /></PageTransition>} />
+                          <Route path="/admin/payments" element={<PaymentApprovalsPage />} />
+                          <Route path="/admin/users" element={<UserManagementPage />} />
+                          <Route path="/platform-admin/*" element={<MasterAdminDashboard />} />
+                          <Route path="/settings" element={<SettingsPage />} />
 
-                        {/* Test Route */}
-                        <Route path="/test-features" element={<FeatureTestPage />} />
-                        <Route path="/debug-user" element={<DebugUser />} />
+                          {/* Test Route */}
+                          <Route path="/test-features" element={<FeatureTestPage />} />
+                          <Route path="/debug-user" element={<DebugUser />} />
 
-                        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                        <Route path="*" element={<NotFound />} />
-                      </Routes>
+                          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                          <Route path="*" element={<NotFound />} />
+                        </Routes>
+                      </Suspense>
                     </MenuProvider>
                   </GuestModeProvider>
                 </LanguageProvider>
