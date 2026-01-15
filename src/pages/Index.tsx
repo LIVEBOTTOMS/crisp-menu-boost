@@ -4,12 +4,14 @@ import { Settings } from "lucide-react";
 import { MenuHeader } from "@/components/MenuHeader";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { ShareMenu } from "@/components/ShareMenu";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { MenuSection } from "@/components/MenuSection";
 import { BackgroundEffects } from "@/components/BackgroundEffects";
 import { PremiumBorderFrame, PremiumSectionHeader } from "@/components/premium";
 import { LeadCaptureDialog } from "@/components/LeadCaptureDialog";
 import { DayOfWeekSelector } from "@/components/DayOfWeekSelector";
 import { useMenu } from "@/contexts/MenuContext";
+import { secretMenu } from "@/data/menuData";
 import { useAuth } from "@/contexts/AuthContext";
 import { getVenueConfig } from "@/config/venueConfig";
 import { getThemeForVenue, MenuTheme } from "@/config/menuThemes";
@@ -21,6 +23,12 @@ import { ParticleField } from "@/components/ui/ParticleField";
 import { useDynamicTheme } from "@/hooks/useDynamicTheme";
 import { AnimatedButton } from "@/components/ui/AnimatedButton";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSound } from "@/hooks/useSound";
+import { useHaptics } from "@/hooks/useHaptics";
+import { Volume2, VolumeX } from "lucide-react";
+import { DietaryFilters } from "@/components/DietaryFilters";
+import { DietaryType } from "@/types/menuItem";
+import { SocialPulse } from "@/components/SocialPulse";
 
 interface VenueData {
   id: string;
@@ -51,6 +59,7 @@ const getSectionIntro = (title: string): string => {
 const Index = () => {
   const { slug } = useParams<{ slug?: string }>();
   const [activeSection, setActiveSection] = useState("snacks");
+  const { t } = useLanguage();
   const { menuData, isLoading, setActiveVenueSlug } = useMenu();
   const { user } = useAuth();
   const [showGate, setShowGate] = useState(false);
@@ -61,6 +70,12 @@ const Index = () => {
     }
   }, [user]);
   const { currentTheme, getThemeGradient } = useDynamicTheme();
+  const { isMuted, toggleMute, playClick, startAmbient, stopAmbient } = useSound();
+  const haptics = useHaptics();
+  const [activeDietaryFilter, setActiveDietaryFilter] = useState<DietaryType | 'all'>('all');
+  const [isSecretUnlocked, setIsSecretUnlocked] = useState(false);
+  const [showNutritional, setShowNutritional] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
   const [venueData, setVenueData] = useState<VenueData | null>(null);
   const [isLoadingVenue, setIsLoadingVenue] = useState(false);
 
@@ -111,17 +126,30 @@ const Index = () => {
   const themeConfig = getThemeForVenue(slug, currentVenue.theme as MenuTheme);
   const accentColor = themeConfig.colors.primary;
 
+  // Interaction trigger to start ambient sound
+  useEffect(() => {
+    if (hasInteracted && !isMuted) {
+      const freq = themeConfig.id === 'cyberpunk-tech' ? 110 : 164.81; // Lower for tech, higher for others
+      startAmbient(freq);
+    } else {
+      stopAmbient();
+    }
+  }, [hasInteracted, isMuted, themeConfig.id, startAmbient, stopAmbient]);
+
   const sections = [
     { key: "snacks", data: menuData.snacksAndStarters, variant: "cyan" as const, title: "SNACKS & STARTERS" },
     { key: "food", data: menuData.foodMenu, variant: "magenta" as const, title: "FOOD MENU" },
     { key: "beverages", data: menuData.beveragesMenu, variant: "cyan" as const, title: "BEVERAGES & SPIRITS" },
-    { key: "sides", data: menuData.sideItems, variant: "gold" as const, title: "SIDE ITEMS" }
+    { key: "sides", data: menuData.sideItems, variant: "gold" as const, title: "SIDE ITEMS" },
+    ...(isSecretUnlocked ? [{ key: "secret", data: secretMenu, variant: "magenta" as const, title: "CLASSIFIED SELECTIONS" }] : [])
   ];
 
   const activeData = sections.find(s => s.key === activeSection);
 
   return (
     <div
+      onClick={() => !hasInteracted && setHasInteracted(true)}
+      onScroll={() => !hasInteracted && setHasInteracted(true)}
       className="min-h-screen relative overflow-x-hidden"
       style={{
         backgroundColor: themeConfig.colors.background,
@@ -139,6 +167,9 @@ const Index = () => {
     >
       {/* Lead Capture Gate */}
       {showGate && <LeadCaptureDialog onAccessGranted={() => setShowGate(false)} />}
+
+      {/* Stage 3 Social Pulse */}
+      <SocialPulse />
 
       {/* Stage 2 Background Effects */}
       <ParticleField count={60} interactive={true} />
@@ -172,6 +203,33 @@ const Index = () => {
 
       {/* Top Right Tools */}
       <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
+        <button
+          onClick={() => {
+            setShowNutritional(!showNutritional);
+            haptics.light();
+            playClick();
+          }}
+          className={cn(
+            "p-2 rounded-lg backdrop-blur-sm border transition-all duration-300",
+            showNutritional
+              ? "bg-amber-500/20 border-amber-500 text-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.3)]"
+              : "bg-background/80 border-neon-cyan/30 text-gray-400"
+          )}
+          title="Nutritional Mode"
+        >
+          <Flame className={cn("w-5 h-5", showNutritional && "animate-pulse")} />
+        </button>
+
+        <button
+          onClick={() => {
+            toggleMute();
+            haptics.light();
+          }}
+          className="p-2 rounded-lg bg-background/80 backdrop-blur-sm border border-neon-cyan/30 hover:border-neon-cyan hover:bg-neon-cyan/10 transition-all duration-300"
+          title={isMuted ? "Unmute" : "Mute"}
+        >
+          {isMuted ? <VolumeX className="w-5 h-5 text-gray-400" /> : <Volume2 className="w-5 h-5 text-neon-cyan" />}
+        </button>
         <LanguageToggle />
 
         <div className="hidden md:block">
@@ -236,12 +294,16 @@ const Index = () => {
         </div>
 
         {/* Premium Navigation Tabs */}
-        <div className="max-w-6xl mx-auto px-4 mb-8">
+        <div className="max-w-6xl mx-auto px-4 mb-2">
           <div className="flex justify-center gap-2 flex-wrap">
             {sections.map((section) => (
               <button
                 key={section.key}
-                onClick={() => setActiveSection(section.key)}
+                onClick={() => {
+                  setActiveSection(section.key);
+                  playClick();
+                  haptics.light();
+                }}
                 className={`px-6 py-3 rounded-lg text-sm tracking-wider uppercase transition-all duration-300 border backdrop-blur-sm`}
                 style={{
                   fontFamily: themeConfig.fonts.heading,
@@ -260,10 +322,18 @@ const Index = () => {
                   opacity: activeSection === section.key ? 1 : 0.7
                 }}
               >
-                {section.title}
+                {t(`menu.${section.key}`) || section.title}
               </button>
             ))}
           </div>
+        </div>
+
+        {/* Premium Dietary Filters */}
+        <div className="max-w-6xl mx-auto px-4 mb-8">
+          <DietaryFilters
+            activeFilter={activeDietaryFilter}
+            onChange={setActiveDietaryFilter}
+          />
         </div>
 
         <main className="max-w-6xl mx-auto px-4 pb-16">
@@ -282,11 +352,30 @@ const Index = () => {
                     accentColor={accentColor}
                   />
                   <div className="px-12 pb-6">
-                    <MenuSection
-                      section={activeData.data}
-                      variant={activeData.variant}
-                      sectionKey={activeData.key}
-                    />
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={activeSection + activeDietaryFilter}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <MenuSection
+                          section={{
+                            ...activeData.data,
+                            categories: activeData.data.categories.map(cat => ({
+                              ...cat,
+                              items: cat.items.filter(item =>
+                                activeDietaryFilter === 'all' || item.dietary === activeDietaryFilter
+                              )
+                            })).filter(cat => cat.items.length > 0)
+                          }}
+                          variant={activeData.variant}
+                          sectionKey={activeData.key}
+                          showNutritional={showNutritional}
+                        />
+                      </motion.div>
+                    </AnimatePresence>
                   </div>
 
                   {/* Daily Offers Banner */}
@@ -312,7 +401,13 @@ const Index = () => {
         {/* Customer Engagement Section */}
         <div className="relative z-10 py-8">
           {/* Gamification - Win 5% Discount */}
-          <GamificationHub />
+          <GamificationHub
+            onSecretUnlock={() => {
+              setIsSecretUnlocked(true);
+              setActiveSection("secret");
+              haptics.success();
+            }}
+          />
 
           {/* Loyalty Program */}
           <LoyaltyProgram />

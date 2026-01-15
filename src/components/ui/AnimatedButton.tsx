@@ -3,6 +3,8 @@ import { motion, useMotionValue, useSpring, AnimatePresence, HTMLMotionProps } f
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { springConfig } from '@/lib/animations';
+import { useHaptics } from '@/hooks/useHaptics';
+import { useSound } from '@/hooks/useSound';
 
 interface AnimatedButtonProps extends HTMLMotionProps<"button"> {
     variant?: 'primary' | 'secondary' | 'glass' | 'outline';
@@ -27,6 +29,8 @@ export const AnimatedButton = React.forwardRef<HTMLButtonElement, AnimatedButton
     const [ripples, setRipples] = useState<{ x: number, y: number, id: number }[]>([]);
     const buttonRef = useRef<HTMLButtonElement>(null);
     const combinedRef = (ref as any) || buttonRef;
+    const haptics = useHaptics();
+    const { playClick } = useSound();
 
     // Magnetic Effect
     const x = useMotionValue(0);
@@ -75,6 +79,8 @@ export const AnimatedButton = React.forwardRef<HTMLButtonElement, AnimatedButton
             onMouseLeave={handleMouseLeave}
             onClick={(e) => {
                 createRipple(e);
+                haptics.light();
+                playClick();
                 props.onClick?.(e as any);
             }}
             className={cn(

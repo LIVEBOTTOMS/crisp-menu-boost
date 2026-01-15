@@ -446,3 +446,17 @@ export const sideItems: MenuSection = {
     },
   ],
 };
+export const secretMenu: MenuSection = {
+  title: "CLASSIFIED SELECTIONS",
+  categories: [
+    {
+      title: "Winner's Circle",
+      icon: "🏆",
+      items: [
+        { name: "The Alchemist's Brew", price: "₹899", description: "A shifting cocktail that changes color and flavor as you drink. Made with rare botanicals and edible gold.", isPremium: true, isTopShelf: true },
+        { name: "Liquid Nitrogen Sorbet", price: "₹399", description: "Flash-frozen at your table. Intense mango and habanero fusion.", isChefSpecial: true },
+        { name: "Billionaire's Wings", price: "₹1,299", description: "Double-truffle glazed chicken wings dusted with copper flakes.", isPremium: true }
+      ]
+    }
+  ]
+};

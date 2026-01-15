@@ -11,9 +11,10 @@ interface MenuCategoryProps {
   category: MenuCategoryType;
   index: number;
   sectionKey: string;
+  showNutritional?: boolean;
 }
 
-export const MenuCategory = ({ category, index, sectionKey }: MenuCategoryProps) => {
+export const MenuCategory = ({ category, index, sectionKey, showNutritional }: MenuCategoryProps) => {
   const { isEditMode, addMenuItem } = useMenu();
   const { t } = useLanguage();
   const [isAdding, setIsAdding] = useState(false);
@@ -72,6 +73,7 @@ export const MenuCategory = ({ category, index, sectionKey }: MenuCategoryProps)
             sectionKey={sectionKey}
             categoryIndex={index}
             itemIndex={itemIndex}
+            showNutritional={showNutritional}
           />
         ))}
 

@@ -295,7 +295,7 @@ const CocktailMemoryGame = ({ onWin }: { onWin: (percentage: number) => void }) 
 };
 
 // PRO Glass Glide Game
-const GlassGlideGame = ({ onWin }: { onWin: (percentage: number) => void }) => {
+const GlassGlideGame = ({ onWin, onPerfect }: { onWin: (percentage: number) => void, onPerfect?: () => void }) => {
     const [gameState, setGameState] = useState<"select" | "playing" | "result">("select");
     const [position, setPosition] = useState({ x: 5, y: 50 });
     const [isDragging, setIsDragging] = useState(false);
@@ -376,6 +376,7 @@ const GlassGlideGame = ({ onWin }: { onWin: (percentage: number) => void }) => {
 
         if (discount > 0) {
             toast.success(`You reached ${finalX.toFixed(0)}%! Discount: ${discount}%`);
+            if (finalX >= 100 && onPerfect) onPerfect();
             setTimeout(() => onWin(discount), 1000);
         } else {
             toast.error("Smashed! Try again.");
@@ -433,7 +434,42 @@ const GlassGlideGame = ({ onWin }: { onWin: (percentage: number) => void }) => {
     );
 };
 
-export const GamificationHub = () => {
+// Gamification Leaderboard Widget
+const Leaderboard = () => {
+    const scores = [
+        { name: "Rahul S.", score: 100, game: "Glass Glide" },
+        { name: "Priya V.", score: 98.4, game: "Pint Pour" },
+        { name: "Anish K.", score: 15, game: "Mix Recall" },
+        { name: "Sneha M.", score: 96.1, game: "Pint Pour" },
+    ];
+
+    return (
+        <div className="mt-12 pt-8 border-t border-white/5">
+            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 mb-6 text-center">Daily High Scorers</h4>
+            <div className="space-y-3">
+                {scores.map((s, i) => (
+                    <div key={i} className="flex items-center justify-between group">
+                        <div className="flex items-center gap-3">
+                            <span className="text-[10px] font-mono text-gray-600">{i + 1}.</span>
+                            <div className="flex flex-col">
+                                <span className="text-xs font-bold text-gray-300 group-hover:text-amber-400 transition-colors">{s.name}</span>
+                                <span className="text-[8px] uppercase tracking-tighter text-gray-600">{s.game}</span>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <div className="h-1 w-12 bg-white/5 rounded-full overflow-hidden">
+                                <div className="h-full bg-amber-500/30" style={{ width: `${(s.score / (s.game === 'Mix Recall' ? 20 : 100)) * 100}%` }} />
+                            </div>
+                            <span className="text-[10px] font-mono font-bold text-amber-500/80">{s.score}{s.game === 'Mix Recall' ? ' Lvl' : '%'}</span>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+export const GamificationHub = ({ onSecretUnlock }: { onSecretUnlock?: () => void }) => {
     const [activeGame, setActiveGame] = useState<"pint" | "memory" | "glide" | null>(null);
     const [discountWon, setDiscountWon] = useState<number | null>(null);
     const [coupon, setCoupon] = useState<string | null>(null);
@@ -487,6 +523,40 @@ export const GamificationHub = () => {
                     <p className="text-gray-400 text-sm max-w-md mx-auto">Elite skills get <span className="text-amber-400 font-bold">5% OFF</span>. Casuals get 1%. Are you good enough?</p>
                 </div>
 
+                {/* Group Goal / Community Achievement */}
+                {!activeGame && (
+                    <div className="mb-12 p-6 rounded-[2rem] bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-white/5 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <Trophy className="w-24 h-24 text-white" />
+                        </div>
+                        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                            <div className="max-w-xs">
+                                <h3 className="text-sm font-black text-white uppercase tracking-widest mb-1 flex items-center gap-2">
+                                    <Sparkles className="w-4 h-4 text-amber-400" />
+                                    Community Goal
+                                </h3>
+                                <p className="text-[10px] text-gray-400 uppercase font-bold leading-relaxed">
+                                    When 500 people win today, everyone gets a <span className="text-white">Secret Dessert unlock</span>!
+                                </p>
+                            </div>
+                            <div className="flex-1 w-full max-w-md">
+                                <div className="flex justify-between text-[10px] font-mono mb-2">
+                                    <span className="text-blue-400">Progress: 412/500</span>
+                                    <span className="text-gray-500">82% Achieved</span>
+                                </div>
+                                <div className="h-3 w-full bg-black/40 rounded-full border border-white/5 p-0.5 overflow-hidden">
+                                    <motion.div
+                                        initial={{ width: 0 }}
+                                        animate={{ width: "82%" }}
+                                        transition={{ duration: 2, ease: "easeOut" }}
+                                        className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full shadow-[0_0_15px_rgba(59,130,246,0.5)]"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {!activeGame ? (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {[
@@ -517,10 +587,13 @@ export const GamificationHub = () => {
                         <div className="p-2">
                             {activeGame === "pint" && <PerfectPintGame onWin={handleWin} />}
                             {activeGame === "memory" && <CocktailMemoryGame onWin={handleWin} />}
-                            {activeGame === "glide" && <GlassGlideGame onWin={handleWin} />}
+                            {activeGame === "glide" && <GlassGlideGame onWin={handleWin} onPerfect={onSecretUnlock} />}
                         </div>
                     </motion.div>
                 )}
+
+                {/* Daily High-Score Leaderboard */}
+                {!activeGame && <Leaderboard />}
             </div>
         </section>
     );

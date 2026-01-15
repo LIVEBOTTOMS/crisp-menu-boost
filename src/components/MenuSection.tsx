@@ -7,9 +7,10 @@ interface MenuSectionProps {
   section: MenuSectionType;
   variant?: "cyan" | "magenta" | "gold";
   sectionKey: string;
+  showNutritional?: boolean;
 }
 
-export const MenuSection = ({ section, sectionKey }: MenuSectionProps) => {
+export const MenuSection = ({ section, sectionKey, showNutritional }: MenuSectionProps) => {
   const { t } = useLanguage();
 
   return (
@@ -57,6 +58,7 @@ export const MenuSection = ({ section, sectionKey }: MenuSectionProps) => {
                 category={category}
                 index={index}
                 sectionKey={sectionKey}
+                showNutritional={showNutritional}
               />
             ))}
           </div>

@@ -13,6 +13,10 @@ import { Badge } from "@/components/ui/badge";
 import { ImageUpload } from "@/components/ImageUpload";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { type SpiceLevel, type DietaryType, spiceLevels, dietaryTypes, badges, calculateDiscount, formatCaloriesDisplay } from "@/types/menuItem";
+import { motion, AnimatePresence } from "framer-motion";
+import { useSound } from "@/hooks/useSound";
+import { useHaptics } from "@/hooks/useHaptics";
+import { Info } from "lucide-react";
 
 interface EditableMenuItemProps {
   item: MenuItemType;
@@ -21,6 +25,7 @@ interface EditableMenuItemProps {
   sectionKey: string;
   categoryIndex: number;
   itemIndex: number;
+  showNutritional?: boolean;
 }
 
 export const EditableMenuItem = ({
@@ -29,13 +34,17 @@ export const EditableMenuItem = ({
   accentColor,
   sectionKey,
   categoryIndex,
-  itemIndex
+  itemIndex,
+  showNutritional
 }: EditableMenuItemProps) => {
   const { isEditMode, updateMenuItem, deleteMenuItem, venueData } = useMenu();
   const { t } = useLanguage();
   const [isEditing, setIsEditing] = useState(false);
   const [editedItem, setEditedItem] = useState(item);
   const [imageError, setImageError] = useState(false);
+  const [showIngredients, setShowIngredients] = useState(false);
+  const { playClick, playShimmer } = useSound();
+  const haptics = useHaptics();
 
   const hasMultiplePrices = item.halfPrice && item.fullPrice;
   const hasSizes = item.sizes && item.sizes.length > 0;
@@ -265,17 +274,43 @@ export const EditableMenuItem = ({
   }
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      whileHover={{ scale: 1.01 }}
+      onHoverStart={() => {
+        haptics.light();
+      }}
       className={cn(
         "group relative p-4 rounded-xl transition-all duration-500 overflow-hidden",
         "border border-transparent hover:border-white/5",
-        "hover:bg-card/40 hover:shadow-[0_0_15px_-5px_hsl(var(--primary)/0.1)]",
+        "hover:bg-card/40 hover:shadow-[0_0_20px_-5px_hsl(var(--primary)/0.2)]",
         "backdrop-blur-sm",
         index % 2 === 0 ? "bg-transparent" : "bg-white/[0.02]",
         isEditMode && "cursor-pointer ring-1 ring-transparent hover:ring-primary/40"
       )}
-      onClick={() => isEditMode && setIsEditing(true)}
+      onClick={() => {
+        if (isEditMode) {
+          setIsEditing(true);
+        } else {
+          setShowIngredients(!showIngredients);
+          playClick();
+          haptics.light();
+        }
+      }}
     >
+      {/* Scanline Animation for Nutritional Mode */}
+      <AnimatePresence>
+        {showNutritional && (
+          <motion.div
+            initial={{ top: "-100%" }}
+            animate={{ top: "100%" }}
+            transition={{ repeat: Infinity, duration: 2.5, ease: "linear" }}
+            className="absolute left-0 right-0 h-[2px] bg-cyan-500/30 blur-[2px] z-30 pointer-events-none"
+          />
+        )}
+      </AnimatePresence>
       {/* Subtle Tech Background Pattern on Hover */}
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
         <div className={`absolute top-0 left-0 w-8 h-8 border-l border-t ${accentColor === 'cyan' ? 'border-primary/20' : 'border-secondary/20'}`} />
@@ -326,6 +361,23 @@ export const EditableMenuItem = ({
                 {item.name}
               </span>
 
+              {/* Popularity Heatmap */}
+              {!isEditMode && (
+                <div className="flex items-center gap-1 ml-auto md:ml-0 overflow-hidden" title="Social Pulse: Popularity">
+                  <div className="flex gap-[1px]">
+                    {[1, 2, 3, 4, 5].map(i => (
+                      <div
+                        key={i}
+                        className={cn(
+                          "w-1 h-3 rounded-full transition-all duration-700 delay-150",
+                          i <= (index % 5 + 1) ? "bg-cyan-500/60 shadow-[0_0_5px_rgba(6,182,212,0.5)]" : "bg-white/5"
+                        )}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Badges */}
               <div className="flex flex-wrap gap-1.5 mt-1">
                 {item.isChefSpecial && (
@@ -358,6 +410,12 @@ export const EditableMenuItem = ({
                     {item.discount_percent}% OFF
                   </span>
                 )}
+                {item.isBestSeller && (
+                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-400 tracking-[0.2em] uppercase border border-orange-500/30 flex items-center gap-1">
+                    <Flame className="w-2.5 h-2.5 animate-pulse" />
+                    TRENDING
+                  </span>
+                )}
               </div>
               {/* Description & New Indicators */}
               <div className="mt-1.5 space-y-1">
@@ -385,6 +443,13 @@ export const EditableMenuItem = ({
                     {item.calories && (
                       <div className="flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider text-muted-foreground/70">
                         <span>{formatCaloriesDisplay(item.calories)}</span>
+                        {showNutritional && (
+                          <div className="flex gap-2 ml-2 text-[8px] animate-in fade-in slide-in-from-left-1">
+                            <span className="text-orange-400/80">P: 12g</span>
+                            <span className="text-blue-400/80">C: 34g</span>
+                            <span className="text-emerald-400/80">F: 8g</span>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -451,6 +516,39 @@ export const EditableMenuItem = ({
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Ingredient Peek Overlay */}
+      <AnimatePresence>
+        {showIngredients && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="mt-4 pt-4 border-t border-white/5 relative z-20"
+          >
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2 text-primary">
+                <Info className="w-4 h-4" />
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Flavor Profile & Origins</span>
+              </div>
+              <p className="text-xs text-muted-foreground/90 italic font-montserrat pr-8">
+                {item.description ? `Crafted with ${item.description.split(' ').slice(0, 3).join(', ')} and other artisanal elements across a meticulous process.` : "A harmonious blend of premium ingredients selected for their quality and specific flavor profile."}
+              </p>
+
+              <div className="flex gap-4 mt-2">
+                <div className="flex flex-col">
+                  <span className="text-[8px] text-gray-500 uppercase tracking-tighter">Preparation</span>
+                  <span className="text-[10px] text-white font-medium">12-15 Minutes</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[8px] text-gray-500 uppercase tracking-tighter">Freshness</span>
+                  <span className="text-[10px] text-green-400 font-medium">Made to order</span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 };
