@@ -326,7 +326,7 @@ const HomePage = () => {
                                 <span className="text-white animate-fade-in-up">Beautiful Menus</span>
                                 <br />
                                 <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-amber-400 bg-clip-text text-transparent animate-gradient-x">
-                                    That Convert
+                                    That Converse
                                 </span>
                             </h1>
 
