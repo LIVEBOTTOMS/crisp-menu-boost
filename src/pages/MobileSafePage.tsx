@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Menu, Globe, Star } from "lucide-react";
 import { LoyaltyProgram } from "@/components/LoyaltyProgram";
@@ -5,6 +6,11 @@ import { GamificationHub } from "@/components/GamificationHub";
 
 export const MobileSafePage = () => {
     const navigate = useNavigate();
+
+    // Scroll to top on mount
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     return (
         <div className="min-h-screen bg-[#09090b] text-white">
