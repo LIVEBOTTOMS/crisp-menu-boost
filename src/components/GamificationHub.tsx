@@ -302,9 +302,198 @@ const CocktailMemoryGame = ({ onWin }: { onWin: () => void }) => {
     );
 };
 
+// EXTREMELY HARD Glass Glide Game
+const GlassGlideGame = ({ onWin }: { onWin: () => void }) => {
+    const [gameState, setGameState] = useState<"select" | "playing" | "won" | "lost">("select");
+    const [drink, setDrink] = useState<"beer" | "martini" | "whiskey">("beer");
+    const [position, setPosition] = useState({ x: 10, y: 50 }); // Percentage
+    const [isDragging, setIsDragging] = useState(false);
+    const [obstacles, setObstacles] = useState<{ x: number, y: number, type: "ice" | "lemon", size: number, vy: number }[]>([]);
+    const gameRef = useRef<HTMLDivElement>(null);
+    const requestRef = useRef<number>();
+
+    const initGame = (selectedDrink: "beer" | "martini" | "whiskey") => {
+        setDrink(selectedDrink);
+        setGameState("playing");
+        setPosition({ x: 5, y: 50 });
+
+        // Create random difficult obstacles
+        const newObstacles = Array.from({ length: 8 }).map((_, i) => ({
+            x: 20 + i * 10,
+            y: Math.random() * 80 + 10,
+            type: Math.random() > 0.5 ? "ice" : "lemon" as const,
+            size: 15 + Math.random() * 10,
+            vy: (Math.random() - 0.5) * 2 // Moving obstacles make it 20% win rate hard
+        }));
+        setObstacles(newObstacles);
+    };
+
+    const update = () => {
+        if (gameState !== "playing") return;
+
+        setObstacles(prev => prev.map(obs => {
+            let newY = obs.y + obs.vy;
+            let newVy = obs.vy;
+            if (newY < 5 || newY > 95) newVy *= -1;
+            return { ...obs, y: newY, vy: newVy };
+        }));
+
+        requestRef.current = requestAnimationFrame(update);
+    };
+
+    useEffect(() => {
+        if (gameState === "playing") {
+            requestRef.current = requestAnimationFrame(update);
+        }
+        return () => {
+            if (requestRef.current) cancelAnimationFrame(requestRef.current);
+        };
+    }, [gameState]);
+
+    const handlePointerMove = (e: React.PointerEvent) => {
+        if (!isDragging || gameState !== "playing" || !gameRef.current) return;
+
+        const rect = gameRef.current.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+        // Bounds check
+        const newX = Math.max(0, Math.min(100, x));
+        const newY = Math.max(0, Math.min(100, y));
+
+        // Collision Detection
+        for (const obs of obstacles) {
+            const dx = newX - obs.x;
+            const dy = newY - obs.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < (obs.size / 2 + 5)) { // 5 is roughly drink radius
+                setGameState("lost");
+                setIsDragging(false);
+                toast.error("💥 SPILL!", { description: "You hit an obstacle!" });
+                return;
+            }
+        }
+
+        setPosition({ x: newX, y: newY });
+
+        if (newX > 90) {
+            setGameState("won");
+            setIsDragging(false);
+            onWin();
+            toast.success("🥂 SMOOTH!", { description: "Delivery successful!" });
+        }
+    };
+
+    if (gameState === "select") {
+        return (
+            <div className="p-6 text-center">
+                <h3 className="font-bold mb-4">Select Your Vessel</h3>
+                <div className="grid grid-cols-3 gap-3">
+                    {[
+                        { id: "beer" as const, icon: Beer, label: "Pint" },
+                        { id: "martini" as const, icon: Martini, label: "Cocktail" },
+                        { id: "whiskey" as const, icon: Gift, label: "On Rocks" },
+                    ].map((v) => (
+                        <button
+                            key={v.id}
+                            onClick={() => initGame(v.id)}
+                            className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-amber-500/50 transition-all flex flex-col items-center gap-2"
+                        >
+                            <v.icon className="w-8 h-8 text-amber-400" />
+                            <span className="text-[10px] uppercase font-bold">{v.label}</span>
+                        </button>
+                    ))}
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="p-4 select-none">
+            <div className="flex justify-between items-center mb-4 text-[10px] uppercase font-bold text-gray-500">
+                <span>Start</span>
+                <span className="text-amber-500 text-center px-2">Glide the drink to the end without hitting ice or lemons</span>
+                <span>Goal</span>
+            </div>
+
+            <div
+                ref={gameRef}
+                className="relative h-64 bg-black/40 rounded-xl border border-white/10 overflow-hidden cursor-crosshair touch-none"
+                onPointerMove={handlePointerMove}
+                onPointerUp={() => setIsDragging(false)}
+            >
+                {/* Track Grid */}
+                <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+
+                {/* Start & End Zones */}
+                <div className="absolute inset-y-0 left-0 w-[10%] bg-green-500/10 border-r border-green-500/20 flex items-center justify-center">
+                    <div className="[writing-mode:vertical-lr] text-[8px] text-green-500/50 font-black">START</div>
+                </div>
+                <div className="absolute inset-y-0 right-0 w-[10%] bg-amber-500/10 border-l border-amber-500/20 flex items-center justify-center">
+                    <div className="[writing-mode:vertical-lr] text-[8px] text-amber-500/50 font-black">FINISH</div>
+                </div>
+
+                {/* Obstacles */}
+                {obstacles.map((obs, i) => (
+                    <motion.div
+                        key={i}
+                        className="absolute flex items-center justify-center pointer-events-none"
+                        style={{
+                            left: `${obs.x}%`,
+                            top: `${obs.y}%`,
+                            width: obs.size,
+                            height: obs.size,
+                            marginLeft: -obs.size / 2,
+                            marginTop: -obs.size / 2
+                        }}
+                    >
+                        {obs.type === "ice" ? (
+                            <div className="w-full h-full bg-blue-200/40 rounded-sm border border-blue-100/50 backdrop-blur-sm rotate-12 shadow-[0_0_10px_rgba(191,219,254,0.3)]" />
+                        ) : (
+                            <div className="w-full h-full bg-yellow-400/60 rounded-full border border-yellow-200/50 shadow-[0_0_10px_rgba(250,204,21,0.3)] flex items-center justify-center text-[10px]">🍋</div>
+                        )}
+                    </motion.div>
+                ))}
+
+                {/* The Drink */}
+                <motion.div
+                    className="absolute z-20 cursor-grab active:cursor-grabbing"
+                    style={{
+                        left: `${position.x}%`,
+                        top: `${position.y}%`,
+                        marginLeft: -20,
+                        marginTop: -20
+                    }}
+                    onPointerDown={() => setIsDragging(true)}
+                >
+                    <div className={`p-2 rounded-full shadow-2xl transition-transform ${isDragging ? 'scale-125' : 'scale-100'}`}>
+                        {drink === "beer" && <Beer className="w-8 h-8 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]" />}
+                        {drink === "martini" && <Martini className="w-8 h-8 text-pink-400 drop-shadow-[0_0_8px_rgba(244,114,182,0.6)]" />}
+                        {drink === "whiskey" && <Gift className="w-8 h-8 text-orange-400 drop-shadow-[0_0_8px_rgba(251,146,60,0.6)]" />}
+                    </div>
+                </motion.div>
+
+                {/* Overlay for Game Over */}
+                {gameState === "lost" && (
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center p-4">
+                        <h4 className="text-red-500 font-bold mb-2">TRY AGAIN?</h4>
+                        <Button onClick={() => setGameState("select")} size="sm" variant="outline" className="gap-2">
+                            <RotateCcw className="w-4 h-4" /> Restart
+                        </Button>
+                    </div>
+                )}
+            </div>
+
+            <p className="text-[10px] text-gray-500 text-center mt-4 uppercase tracking-widest">
+                Drag the drink from left to right. Don't touch the ice or lemons!
+            </p>
+        </div>
+    );
+};
+
 // Main Gamification Hub
 export const GamificationHub = () => {
-    const [activeGame, setActiveGame] = useState<"pint" | "memory" | null>(null);
+    const [activeGame, setActiveGame] = useState<"pint" | "memory" | "glide" | null>(null);
     const [hasWon, setHasWon] = useState(false);
     const [coupon, setCoupon] = useState<string | null>(null);
     const [claimData, setClaimData] = useState<{ phone: string; email: string } | null>(null);
@@ -373,9 +562,9 @@ export const GamificationHub = () => {
                         🎮 WIN 5% OFF
                     </h2>
                     <p className="text-gray-400 text-sm">
-                        Beat the challenge. Claim your discount!
+                        Beat the extreme challenge to claim your discount!
                     </p>
-                    <p className="text-red-400 text-[10px] mt-1">⚠️ EXTREME DIFFICULTY</p>
+                    <p className="text-red-400 text-[10px] mt-1 uppercase tracking-tighter">⚠️ Maximum difficulty: Only 20% win chance</p>
                 </div>
 
                 <AnimatePresence mode="wait">
@@ -384,7 +573,7 @@ export const GamificationHub = () => {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="grid grid-cols-2 gap-3"
+                            className="grid grid-cols-3 gap-3"
                         >
                             <motion.div
                                 whileHover={{ scale: 1.02 }}
@@ -392,9 +581,9 @@ export const GamificationHub = () => {
                                 onClick={() => setActiveGame("pint")}
                                 className="cursor-pointer p-4 rounded-2xl bg-gradient-to-br from-amber-500/10 to-amber-600/10 border border-amber-500/20 hover:border-amber-500/40 transition-colors"
                             >
-                                <Beer className="w-8 h-8 text-amber-400 mb-2" />
-                                <h3 className="font-bold text-sm mb-1">Perfect Pint</h3>
-                                <p className="text-gray-400 text-[10px]">Pour to exact %</p>
+                                <Beer className="w-8 h-8 text-amber-400 mb-2 mx-auto" />
+                                <h3 className="font-bold text-[10px] mb-1 uppercase">Pint Pour</h3>
+                                <p className="text-gray-400 text-[8px]">Precision pour</p>
                             </motion.div>
 
                             <motion.div
@@ -403,9 +592,23 @@ export const GamificationHub = () => {
                                 onClick={() => setActiveGame("memory")}
                                 className="cursor-pointer p-4 rounded-2xl bg-gradient-to-br from-pink-500/10 to-fuchsia-500/10 border border-pink-500/20 hover:border-pink-500/40 transition-colors"
                             >
-                                <Martini className="w-8 h-8 text-pink-400 mb-2" />
-                                <h3 className="font-bold text-sm mb-1">Cocktail Recall</h3>
-                                <p className="text-gray-400 text-[10px]">Memory challenge</p>
+                                <Martini className="w-8 h-8 text-pink-400 mb-2 mx-auto" />
+                                <h3 className="font-bold text-[10px] mb-1 uppercase">Mix Recall</h3>
+                                <p className="text-gray-400 text-[8px]">Memory test</p>
+                            </motion.div>
+
+                            <motion.div
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                onClick={() => setActiveGame("glide")}
+                                className="cursor-pointer p-4 rounded-2xl bg-gradient-to-br from-cyan-500/10 to-blue-600/10 border border-cyan-500/20 hover:border-cyan-500/40 transition-colors border-dashed"
+                            >
+                                <div className="relative mb-2 w-8 h-8 mx-auto">
+                                    <Beer className="w-8 h-8 text-cyan-400" />
+                                    <div className="absolute -right-2 -top-2 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center text-[7px] font-black text-white">NEW</div>
+                                </div>
+                                <h3 className="font-bold text-[10px] mb-1 uppercase">Glass Glide</h3>
+                                <p className="text-gray-400 text-[8px]">Dodge ice cubes</p>
                             </motion.div>
                         </motion.div>
                     ) : (
@@ -425,6 +628,7 @@ export const GamificationHub = () => {
                             </div>
                             {activeGame === "pint" && <PerfectPintGame onWin={handleWin} />}
                             {activeGame === "memory" && <CocktailMemoryGame onWin={handleWin} />}
+                            {activeGame === "glide" && <GlassGlideGame onWin={handleWin} />}
                         </motion.div>
                     )}
                 </AnimatePresence>
