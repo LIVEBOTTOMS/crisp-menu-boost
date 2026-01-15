@@ -17,6 +17,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { hexToHsl } from "@/lib/utils";
 import { LoyaltyProgram } from "@/components/LoyaltyProgram";
 import { GamificationHub } from "@/components/GamificationHub";
+import { ParticleField } from "@/components/ui/ParticleField";
+import { useDynamicTheme } from "@/hooks/useDynamicTheme";
+import { AnimatedButton } from "@/components/ui/AnimatedButton";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface VenueData {
   id: string;
@@ -56,6 +60,7 @@ const Index = () => {
       setShowGate(true);
     }
   }, [user]);
+  const { currentTheme, getThemeGradient } = useDynamicTheme();
   const [venueData, setVenueData] = useState<VenueData | null>(null);
   const [isLoadingVenue, setIsLoadingVenue] = useState(false);
 
@@ -135,26 +140,35 @@ const Index = () => {
       {/* Lead Capture Gate */}
       {showGate && <LeadCaptureDialog onAccessGranted={() => setShowGate(false)} />}
 
-      {/* Dynamic Background Effects - Only for Cyberpunk */}
-      {themeConfig.id === 'cyberpunk-tech' && <BackgroundEffects />}
+      {/* Stage 2 Background Effects */}
+      <ParticleField count={60} interactive={true} />
 
-      {/* Background patterns for other themes */}
-      {themeConfig.id === 'elegant-classic' && (
-        <div className="fixed inset-0 pointer-events-none opacity-[0.03]"
-          style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/handmade-paper.png")' }} />
-      )}
+      {/* Dynamic Time-based Layer */}
+      <div
+        className="fixed inset-0 pointer-events-none opacity-20 z-0"
+        style={{ background: getThemeGradient(0.1) }}
+      />
+
+      {/* Dynamic Background Effects - Only for Cyberpunk */}
+      {(themeConfig.id as string) === 'cyberpunk-tech' && <BackgroundEffects />}
 
       {/* Home Button */}
-      <Link
-        to="/"
-        className="fixed top-4 left-4 z-50 p-2 rounded-lg bg-background/80 backdrop-blur-sm border border-neon-cyan/30 hover:border-neon-cyan hover:bg-neon-cyan/10 transition-all duration-300 flex items-center gap-2"
-        title="Go to Home"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-neon-cyan">
-          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-          <polyline points="9 22 9 12 15 12 15 22" />
-        </svg>
-      </Link>
+      <div className="fixed top-4 left-4 z-50">
+        <Link to="/">
+          <AnimatedButton
+            variant="glass"
+            className="px-4 py-2 text-xs"
+            leftIcon={
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+              </svg>
+            }
+          >
+            HOME
+          </AnimatedButton>
+        </Link>
+      </div>
 
       {/* Top Right Tools */}
       <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
@@ -218,7 +232,7 @@ const Index = () => {
 
         {/* Day of Week Selector for Daily Specials */}
         <div className="max-w-6xl mx-auto px-4 mb-6">
-          <DayOfWeekSelector venueId={currentVenue.id} />
+          <DayOfWeekSelector />
         </div>
 
         {/* Premium Navigation Tabs */}
@@ -339,7 +353,7 @@ const Index = () => {
           </p>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

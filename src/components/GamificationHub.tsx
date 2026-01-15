@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Beer, Martini, Trophy, X, RotateCcw, Gift, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AnimatedButton } from "@/components/ui/AnimatedButton";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
@@ -76,20 +77,13 @@ const PrizeClaimForm = ({ percentage, onClaim }: { percentage: number, onClaim: 
                     className="bg-black/30 border-white/10 text-center text-sm"
                     required
                 />
-                <Button
+                <AnimatedButton
                     type="submit"
-                    disabled={isSubmitting}
+                    loading={isSubmitting}
                     className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 font-bold py-6 text-lg"
                 >
-                    {isSubmitting ? (
-                        <>
-                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                            Verifying...
-                        </>
-                    ) : (
-                        "CLAIM REWARD"
-                    )}
-                </Button>
+                    CLAIM REWARD
+                </AnimatedButton>
             </form>
         </motion.div>
     );
@@ -175,13 +169,13 @@ const PerfectPintGame = ({ onWin }: { onWin: (percentage: number) => void }) => 
             <p className="mt-4 text-3xl font-mono font-black text-white">{fillLevel.toFixed(1)}%</p>
 
             {!gameOver ? (
-                <Button
+                <AnimatedButton
                     onPointerDown={startFilling}
                     onPointerUp={stopFilling}
                     className="mt-4 w-full h-16 text-lg font-black bg-amber-500 hover:bg-amber-600 shadow-[0_4px_0_rgb(180,83,9)] active:translate-y-1 active:shadow-none transition-all"
                 >
                     {filling ? "POURING..." : "HOLD TO FILL"}
-                </Button>
+                </AnimatedButton>
             ) : (
                 <div className="mt-4">
                     {won ? (
@@ -292,9 +286,9 @@ const CocktailMemoryGame = ({ onWin }: { onWin: (percentage: number) => void }) 
             </div>
 
             {sequence.length === 0 && (
-                <Button onClick={nextLevel} className="mt-8 bg-pink-600 hover:bg-pink-700 w-full py-6 font-black">
+                <AnimatedButton onClick={nextLevel} className="mt-8 bg-pink-600 hover:bg-pink-700 w-full py-6 font-black">
                     START MEMORY TEST
-                </Button>
+                </AnimatedButton>
             )}
         </div>
     );
@@ -422,12 +416,12 @@ const GlassGlideGame = ({ onWin }: { onWin: (percentage: number) => void }) => {
                 ) : (
                     <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
                         <p className="text-xs text-gray-500 mb-4 uppercase">Win rates: Finsh 100%=5% • 70%=3% • 20%=1%</p>
-                        <Button
+                        <AnimatedButton
                             onClick={() => { initObstacles(); setGameState("playing"); setPosition({ x: 5, y: 50 }); setTrackProgress(0); }}
-                            className="bg-blue-600 hover:bg-blue-700 font-black px-10 py-6"
+                            className="bg-blue-600 hover:bg-blue-700 font-black px-10 py-6 text-xl shadow-[0_0_30px_rgba(37,99,235,0.4)]"
                         >
                             DRAG THE DRINK
-                        </Button>
+                        </AnimatedButton>
                     </div>
                 )}
             </div>
@@ -504,14 +498,14 @@ export const GamificationHub = () => {
                                 key={g.id}
                                 whileHover={{ scale: 1.05, translateY: -10 }}
                                 onClick={() => setActiveGame(g.id as any)}
-                                className={`p-8 rounded-[2rem] bg-white/5 border border-white/10 text-center group relative overflow-hidden`}
+                                className={`p-8 rounded-[2rem] bg-white/5 border border-white/10 text-center group relative overflow-hidden glass-advanced`}
                             >
-                                <div className={`w-16 h-16 rounded-[1.5rem] bg-${g.color}-500/20 flex items-center justify-center mx-auto mb-6 transition-all group-hover:scale-110`}>
+                                <div className={`w-16 h-16 rounded-[1.5rem] bg-${g.color}-500/10 flex items-center justify-center mx-auto mb-6 transition-all group-hover:scale-110`}>
                                     <g.icon className={`w-8 h-8 text-${g.color}-400`} />
                                 </div>
-                                <h3 className="text-xl font-black text-white mb-1">{g.name}</h3>
-                                <p className="text-[10px] uppercase font-bold text-gray-500 mb-4 tracking-tighter">Difficulty: {g.diff}</p>
-                                <div className="text-[9px] font-black text-white/40 uppercase group-hover:text-white transition-colors">Start Challenge →</div>
+                                <h3 className="text-xl font-black text-white mb-1 tracking-tighter">{g.name}</h3>
+                                <p className="text-[10px] uppercase font-bold text-gray-500 mb-4 tracking-tighter">Level: {g.diff}</p>
+                                <div className={`text-[9px] font-black text-${g.color}-400 uppercase opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0`}>Play Now →</div>
                             </motion.button>
                         ))}
                     </div>

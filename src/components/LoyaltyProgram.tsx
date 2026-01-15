@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Gift, Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AnimatedButton } from "@/components/ui/AnimatedButton";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
@@ -37,7 +38,7 @@ export const LoyaltyProgram = () => {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-violet-600/20 via-fuchsia-600/20 to-amber-600/20 border border-white/10 p-8 sm:p-12 text-center"
+                        className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-violet-600/20 via-fuchsia-600/20 to-amber-600/20 border border-white/10 p-8 sm:p-12 text-center glass-advanced"
                     >
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(168,85,247,0.15),transparent_50%)]" />
 
@@ -54,12 +55,12 @@ export const LoyaltyProgram = () => {
                                 Get exclusive discounts, early access to new features, and special offers.
                             </p>
 
-                            <Button
+                            <AnimatedButton
                                 onClick={() => setIsOpen(true)}
-                                className="px-8 py-6 text-lg font-bold bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700"
+                                className="px-12 py-8 text-xl font-bold"
                             >
                                 Get Your Free Pass
-                            </Button>
+                            </AnimatedButton>
                         </div>
                     </motion.div>
                 </div>

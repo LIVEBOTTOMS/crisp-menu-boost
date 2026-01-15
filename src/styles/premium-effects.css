@@ -107,6 +107,90 @@
     }
 }
 
+/* Advanced Glassmorphism & Animated Borders */
+.glass-advanced {
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(var(--blur-amount, 12px));
+    -webkit-backdrop-filter: blur(var(--blur-amount, 12px));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow:
+        0 8px 32px 0 rgba(0, 0, 0, 0.3),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.glass-advanced::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    /* Border thickness */
+    background: linear-gradient(var(--angle, 135deg),
+            rgba(255, 255, 255, 0.2),
+            rgba(255, 255, 255, 0.05),
+            rgba(255, 255, 255, 0.1),
+            rgba(255, 255, 255, 0.05));
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+@property --angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
+.animate-border-rotate {
+    animation: rotate-gradient 6s linear infinite;
+}
+
+@keyframes rotate-gradient {
+    to {
+        --angle: 360deg;
+    }
+}
+
+/* Floating Depth Layers */
+.depth-layer-1 {
+    transform: translateZ(20px);
+}
+
+.depth-layer-2 {
+    transform: translateZ(40px);
+}
+
+.depth-layer-3 {
+    transform: translateZ(60px);
+}
+
+/* Animation utilities for Stage 2 */
+.rotate-bg {
+    background-size: 200% 200%;
+    animation: rotate-bg-anim 10s ease infinite;
+}
+
+@keyframes rotate-bg-anim {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
 /* Hide default cursor only on devices with fine pointer (mouse) */
 @media (pointer: fine) {
     body.custom-cursor-active {
