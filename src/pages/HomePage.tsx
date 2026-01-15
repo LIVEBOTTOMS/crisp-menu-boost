@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { LoyaltyProgram } from "@/components/LoyaltyProgram";
+import { GamificationHub } from "@/components/GamificationHub";
 
 const HomePage = () => {
     const navigate = useNavigate();
@@ -531,6 +532,9 @@ const HomePage = () => {
 
             {/* Loyalty Program Section */}
             <LoyaltyProgram />
+
+            {/* Gamification Section */}
+            <GamificationHub />
 
             {/* Testimonials Section - Swipeable on mobile */}
             <section className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6">
