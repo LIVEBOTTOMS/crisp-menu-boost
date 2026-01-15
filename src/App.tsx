@@ -36,7 +36,7 @@ const PageLoader = () => (
 
 // Core pages (loaded immediately or with high priority)
 const HomePage = lazy(() => import("./pages/HomePage"));
-const MobileSafePage = lazy(() => import("./pages/MobileSafePage").then(m => ({ default: m.MobileSafePage })));
+const MobileSafePage = lazy(() => import("./pages/MobileSafePage"));
 const Index = lazy(() => import("./pages/Index"));
 
 // Auth pages (loaded on demand)
