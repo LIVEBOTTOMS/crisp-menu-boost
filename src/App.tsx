@@ -1,4 +1,4 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useState, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -36,6 +36,7 @@ const PageLoader = () => (
 
 // Core pages (loaded immediately or with high priority)
 const HomePage = lazy(() => import("./pages/HomePage"));
+const MobileSafePage = lazy(() => import("./pages/MobileSafePage").then(m => ({ default: m.MobileSafePage })));
 const Index = lazy(() => import("./pages/Index"));
 
 // Auth pages (loaded on demand)
@@ -78,6 +79,17 @@ const App = () => {
   // Register service worker
   useServiceWorker();
 
+  // Setup Offline Sync
+  const useOfflineSyncHook = () => { }; // Placeholder
+  useOfflineSyncHook();
+
+  // Detect mobile on mount
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, []);
+
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
@@ -101,7 +113,11 @@ const App = () => {
                       <Suspense fallback={<PageLoader />}>
                         <Routes>
                           {/* Multi-Menu System Routes */}
-                          <Route path="/" element={<PageTransition><HomePage /></PageTransition>} />
+                          <Route path="/" element={
+                            <PageTransition>
+                              <MobileSafePage />
+                            </PageTransition>
+                          } />
                           <Route path="/menus" element={<PageTransition><MenusListPage /></PageTransition>} />
                           <Route path="/create-menu" element={<CreateMenuPage />} />
 
