@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAnalytics } from "@/hooks/useAnalytics";
 import { Beer, Martini, Trophy, X, RotateCcw, Gift, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatedButton } from "@/components/ui/AnimatedButton";
@@ -471,11 +472,13 @@ const Leaderboard = () => {
 
 export const GamificationHub = ({ onSecretUnlock }: { onSecretUnlock?: () => void }) => {
     const [activeGame, setActiveGame] = useState<"pint" | "memory" | "glide" | null>(null);
+    const { logEvent } = useAnalytics();
     const [discountWon, setDiscountWon] = useState<number | null>(null);
     const [coupon, setCoupon] = useState<string | null>(null);
 
     const handleWin = (discount: number) => {
         setDiscountWon(discount);
+        logEvent('game_win', { game: activeGame, percentage: discount });
     };
 
     const handleClaim = (data: { phone: string; email: string, discount: number }) => {
@@ -567,7 +570,10 @@ export const GamificationHub = ({ onSecretUnlock }: { onSecretUnlock?: () => voi
                             <motion.button
                                 key={g.id}
                                 whileHover={{ scale: 1.05, translateY: -10 }}
-                                onClick={() => setActiveGame(g.id as any)}
+                                onClick={() => {
+                                    setActiveGame(g.id as any);
+                                    logEvent('game_start', { game: g.id });
+                                }}
                                 className={`p-8 rounded-[2rem] bg-white/5 border border-white/10 text-center group relative overflow-hidden glass-advanced`}
                             >
                                 <div className={`w-16 h-16 rounded-[1.5rem] bg-${g.color}-500/10 flex items-center justify-center mx-auto mb-6 transition-all group-hover:scale-110`}>

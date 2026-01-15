@@ -23,6 +23,8 @@ import { ThemeCustomizer } from '@/components/ThemeCustomizer';
 import { DailyOffersEditor } from '@/components/DailyOffersEditor';
 import { VoteSystemSettings } from '@/components/VoteSystemSettings';
 import { UpgradePrompt } from '@/components/UpgradePrompt';
+import { PremiumFeatureManager } from '@/components/PremiumFeatureManager';
+import { StaffPanel } from '@/components/StaffPanel';
 import { supabase } from '@/integrations/supabase/client';
 import { getVenueConfig } from '@/config/venueConfig';
 import { MenuTheme, menuThemes } from '@/config/menuThemes';
@@ -37,6 +39,7 @@ interface VenueData {
   logo_subtext: string | null;
   logo_image_url: string | null;
   theme?: string;
+  settings?: any;
 }
 
 const AdminDashboard = () => {
@@ -548,26 +551,35 @@ const AdminDashboard = () => {
           </CardContent>
         </Card>
 
-        {/* Visual Branding & Theme Selector */}
-        <Card className="bg-black/40 backdrop-blur-xl border-white/10 md:col-span-2">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2 font-cinzel">
-              <div className="w-8 h-8 rounded-lg bg-neon-cyan/20 flex items-center justify-center">
-                <Settings className="h-5 w-5 text-neon-cyan" />
-              </div>
-              Menu Branding & Themes
-            </CardTitle>
-            <CardDescription className="text-slate-300">
-              Personalize the look and feel of your menu. Changes reflect instantly on your public menu and print exports.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ThemeSelector
-              currentTheme={(venueData?.theme as MenuTheme) || 'cyberpunk-tech'}
-              onThemeSelect={handleThemeUpdate}
-            />
-          </CardContent>
-        </Card>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+          {/* Live Operations Feed */}
+          <div className="lg:col-span-1">
+            <StaffPanel />
+          </div>
+
+          {/* Visual Branding & Theme Selector */}
+          <div className="lg:col-span-2">
+            <Card className="bg-black/40 backdrop-blur-xl border-white/10 h-full">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center gap-2 font-cinzel text-lg">
+                  <div className="w-8 h-8 rounded-lg bg-neon-cyan/20 flex items-center justify-center">
+                    <Settings className="h-5 w-5 text-neon-cyan" />
+                  </div>
+                  Menu Branding & Themes
+                </CardTitle>
+                <CardDescription className="text-slate-300">
+                  Personalize the look and feel of your menu. Changes reflect instantly on your public menu and print exports.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ThemeSelector
+                  currentTheme={(venueData?.theme as MenuTheme) || 'cyberpunk-tech'}
+                  onThemeSelect={handleThemeUpdate}
+                />
+              </CardContent>
+            </Card>
+          </div>
+        </div>
 
         {/* Advanced Theme Customization */}
         <div className="md:col-span-2">
@@ -587,6 +599,13 @@ const AdminDashboard = () => {
             </Card>
           ) : currentVenue?.id ? (
             <div className="space-y-8">
+              {/* Stage 3 Feature Toggles */}
+              <PremiumFeatureManager
+                venueId={currentVenue.id}
+                settings={currentVenue.settings}
+                onUpdate={refreshMenu}
+              />
+
               <DailyOffersEditor venueId={currentVenue.id} />
               <VoteSystemSettings venueId={currentVenue.id} />
             </div>

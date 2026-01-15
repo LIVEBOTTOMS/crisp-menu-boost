@@ -16,7 +16,9 @@ import { type SpiceLevel, type DietaryType, spiceLevels, dietaryTypes, badges, c
 import { motion, AnimatePresence } from "framer-motion";
 import { useSound } from "@/hooks/useSound";
 import { useHaptics } from "@/hooks/useHaptics";
-import { Info } from "lucide-react";
+import { useAnalytics } from "@/hooks/useAnalytics";
+import { Info, Sparkles, Loader2 } from "lucide-react";
+import { enhanceDescription } from "@/lib/AIEnhancer";
 
 interface EditableMenuItemProps {
   item: MenuItemType;
@@ -43,8 +45,10 @@ export const EditableMenuItem = ({
   const [editedItem, setEditedItem] = useState(item);
   const [imageError, setImageError] = useState(false);
   const [showIngredients, setShowIngredients] = useState(false);
+  const [isEnhancing, setIsEnhancing] = useState(false);
   const { playClick, playShimmer } = useSound();
   const haptics = useHaptics();
+  const { logEvent } = useAnalytics();
 
   const hasMultiplePrices = item.halfPrice && item.fullPrice;
   const hasSizes = item.sizes && item.sizes.length > 0;
@@ -80,12 +84,29 @@ export const EditableMenuItem = ({
             placeholder="Item name"
             className="h-9 text-sm font-medium bg-background/50 border-border/40 text-white"
           />
-          <Input
-            value={editedItem.description || ""}
-            onChange={(e) => setEditedItem({ ...editedItem, description: e.target.value })}
-            placeholder="Description (e.g., Artisan preparation with house-made spices)"
-            className="h-9 text-sm bg-background/50 border-border/40 text-white"
-          />
+          <div className="relative group/ai">
+            <Input
+              value={editedItem.description || ""}
+              onChange={(e) => setEditedItem({ ...editedItem, description: e.target.value })}
+              placeholder="Description (e.g., Artisan preparation with house-made spices)"
+              className="h-9 text-sm bg-background/50 border-border/40 text-white pr-10"
+            />
+            <button
+              onClick={async () => {
+                setIsEnhancing(true);
+                const enhanced = await enhanceDescription(editedItem.name, editedItem.description);
+                setEditedItem({ ...editedItem, description: enhanced });
+                setIsEnhancing(false);
+                toast.success("AI Enhancement applied!");
+                playShimmer();
+              }}
+              disabled={isEnhancing}
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-cyan-400 hover:text-cyan-300 transition-colors disabled:opacity-50"
+              title="AI Enhance Description"
+            >
+              {isEnhancing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+            </button>
+          </div>
           <div className="flex items-center gap-2">
             <ImageUpload
               currentImage={editedItem.image}
@@ -297,6 +318,7 @@ export const EditableMenuItem = ({
           setShowIngredients(!showIngredients);
           playClick();
           haptics.light();
+          logEvent('view_item', { name: item.name, category: categoryIndex });
         }
       }}
     >

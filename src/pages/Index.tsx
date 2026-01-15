@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Settings } from "lucide-react";
 import { MenuHeader } from "@/components/MenuHeader";
+import { cn } from "@/lib/utils";
+import { Flame, Settings, Bell } from "lucide-react";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { ShareMenu } from "@/components/ShareMenu";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -29,6 +30,7 @@ import { Volume2, VolumeX } from "lucide-react";
 import { DietaryFilters } from "@/components/DietaryFilters";
 import { DietaryType } from "@/types/menuItem";
 import { SocialPulse } from "@/components/SocialPulse";
+import { useAnalytics } from "@/hooks/useAnalytics";
 
 interface VenueData {
   id: string;
@@ -41,6 +43,7 @@ interface VenueData {
   city?: string | null;
   logo_image_url?: string | null;
   theme?: string;
+  settings?: any;
 }
 
 const getSectionIntro = (title: string): string => {
@@ -72,12 +75,13 @@ const Index = () => {
   const { currentTheme, getThemeGradient } = useDynamicTheme();
   const { isMuted, toggleMute, playClick, startAmbient, stopAmbient } = useSound();
   const haptics = useHaptics();
+  const [venueData, setVenueData] = useState<VenueData | null>(null);
+  const [isLoadingVenue, setIsLoadingVenue] = useState(false);
+  const { logEvent } = useAnalytics(venueData?.id);
   const [activeDietaryFilter, setActiveDietaryFilter] = useState<DietaryType | 'all'>('all');
   const [isSecretUnlocked, setIsSecretUnlocked] = useState(false);
   const [showNutritional, setShowNutritional] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
-  const [venueData, setVenueData] = useState<VenueData | null>(null);
-  const [isLoadingVenue, setIsLoadingVenue] = useState(false);
 
   // For default LIVE menu (no slug in URL)
   const defaultVenue = getVenueConfig();
@@ -128,23 +132,30 @@ const Index = () => {
 
   // Interaction trigger to start ambient sound
   useEffect(() => {
-    if (hasInteracted && !isMuted) {
+    if (hasInteracted && !isMuted && currentVenue.settings?.enableAmbientSound) {
       const freq = themeConfig.id === 'cyberpunk-tech' ? 110 : 164.81; // Lower for tech, higher for others
       startAmbient(freq);
     } else {
       stopAmbient();
     }
-  }, [hasInteracted, isMuted, themeConfig.id, startAmbient, stopAmbient]);
+  }, [hasInteracted, isMuted, themeConfig.id, startAmbient, stopAmbient, currentVenue.settings]);
 
   const sections = [
     { key: "snacks", data: menuData.snacksAndStarters, variant: "cyan" as const, title: "SNACKS & STARTERS" },
     { key: "food", data: menuData.foodMenu, variant: "magenta" as const, title: "FOOD MENU" },
     { key: "beverages", data: menuData.beveragesMenu, variant: "cyan" as const, title: "BEVERAGES & SPIRITS" },
     { key: "sides", data: menuData.sideItems, variant: "gold" as const, title: "SIDE ITEMS" },
-    ...(isSecretUnlocked ? [{ key: "secret", data: secretMenu, variant: "magenta" as const, title: "CLASSIFIED SELECTIONS" }] : [])
+    ...(isSecretUnlocked && currentVenue.settings?.enableSecretMenu ? [{ key: "secret", data: secretMenu, variant: "magenta" as const, title: "CLASSIFIED SELECTIONS" }] : [])
   ];
 
   const activeData = sections.find(s => s.key === activeSection);
+
+  // Analytics: Track Section View
+  useEffect(() => {
+    if (activeSection) {
+      logEvent('tab_switch', { section: activeSection });
+    }
+  }, [activeSection, logEvent]);
 
   return (
     <div
@@ -169,7 +180,7 @@ const Index = () => {
       {showGate && <LeadCaptureDialog onAccessGranted={() => setShowGate(false)} />}
 
       {/* Stage 3 Social Pulse */}
-      <SocialPulse />
+      {currentVenue.settings?.enableSocialPulse && <SocialPulse />}
 
       {/* Stage 2 Background Effects */}
       <ParticleField count={60} interactive={true} />
@@ -203,22 +214,24 @@ const Index = () => {
 
       {/* Top Right Tools */}
       <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
-        <button
-          onClick={() => {
-            setShowNutritional(!showNutritional);
-            haptics.light();
-            playClick();
-          }}
-          className={cn(
-            "p-2 rounded-lg backdrop-blur-sm border transition-all duration-300",
-            showNutritional
-              ? "bg-amber-500/20 border-amber-500 text-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.3)]"
-              : "bg-background/80 border-neon-cyan/30 text-gray-400"
-          )}
-          title="Nutritional Mode"
-        >
-          <Flame className={cn("w-5 h-5", showNutritional && "animate-pulse")} />
-        </button>
+        {currentVenue.settings?.enableNutritionalMode && (
+          <button
+            onClick={() => {
+              setShowNutritional(!showNutritional);
+              haptics.light();
+              playClick();
+            }}
+            className={cn(
+              "p-2 rounded-lg backdrop-blur-sm border transition-all duration-300",
+              showNutritional
+                ? "bg-amber-500/20 border-amber-500 text-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.3)]"
+                : "bg-background/80 border-neon-cyan/30 text-gray-400"
+            )}
+            title="Nutritional Mode"
+          >
+            <Flame className={cn("w-5 h-5", showNutritional && "animate-pulse")} />
+          </button>
+        )}
 
         <button
           onClick={() => {
@@ -229,6 +242,20 @@ const Index = () => {
           title={isMuted ? "Unmute" : "Mute"}
         >
           {isMuted ? <VolumeX className="w-5 h-5 text-gray-400" /> : <Volume2 className="w-5 h-5 text-neon-cyan" />}
+        </button>
+
+        {/* SaaS: Call Waiter Button */}
+        <button
+          onClick={() => {
+            logEvent('call_waiter');
+            toast.success("Service requested! Staff notified.");
+            haptics.medium();
+            playClick();
+          }}
+          className="p-2 rounded-lg bg-background/80 backdrop-blur-sm border border-orange-500/30 text-orange-400 hover:bg-orange-500/10 transition-all"
+          title="Call Waiter"
+        >
+          <Bell className="w-5 h-5" />
         </button>
         <LanguageToggle />
 
@@ -401,13 +428,15 @@ const Index = () => {
         {/* Customer Engagement Section */}
         <div className="relative z-10 py-8">
           {/* Gamification - Win 5% Discount */}
-          <GamificationHub
-            onSecretUnlock={() => {
-              setIsSecretUnlocked(true);
-              setActiveSection("secret");
-              haptics.success();
-            }}
-          />
+          {currentVenue.settings?.enableGamification && (
+            <GamificationHub
+              onSecretUnlock={() => {
+                setIsSecretUnlocked(true);
+                setActiveSection("secret");
+                haptics.success();
+              }}
+            />
+          )}
 
           {/* Loyalty Program */}
           <LoyaltyProgram />
