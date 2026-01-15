@@ -19,6 +19,7 @@ import {
     ChevronDown
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { LoyaltyProgram } from "@/components/LoyaltyProgram";
 
 const HomePage = () => {
     const navigate = useNavigate();
@@ -527,6 +528,9 @@ const HomePage = () => {
                     </div>
                 </div>
             </section>
+
+            {/* Loyalty Program Section */}
+            <LoyaltyProgram />
 
             {/* Testimonials Section - Swipeable on mobile */}
             <section className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6">
