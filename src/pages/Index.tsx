@@ -15,6 +15,8 @@ import { getVenueConfig } from "@/config/venueConfig";
 import { getThemeForVenue, MenuTheme } from "@/config/menuThemes";
 import { supabase } from "@/integrations/supabase/client";
 import { hexToHsl } from "@/lib/utils";
+import { LoyaltyProgram } from "@/components/LoyaltyProgram";
+import { GamificationHub } from "@/components/GamificationHub";
 
 interface VenueData {
   id: string;
@@ -292,6 +294,15 @@ const Index = () => {
             </PremiumBorderFrame>
           )}
         </main>
+
+        {/* Customer Engagement Section */}
+        <div className="relative z-10 py-8">
+          {/* Gamification - Win 5% Discount */}
+          <GamificationHub />
+
+          {/* Loyalty Program */}
+          <LoyaltyProgram />
+        </div>
 
         {/* Premium Footer */}
         <footer className="py-4 px-12 relative z-10 border-t border-gray-800/30">
