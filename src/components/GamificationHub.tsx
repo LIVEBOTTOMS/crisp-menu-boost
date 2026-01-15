@@ -1,14 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Beer, Martini, Trophy, X, RotateCcw, Gift, Loader2 } from "lucide-react";
+import { Beer, Martini, Trophy, X, RotateCcw, Gift, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
 // Prize Claim Form - Requires phone and email
-const PrizeClaimForm = ({ onClaim }: { onClaim: (data: { phone: string; email: string }) => void }) => {
+const PrizeClaimForm = ({ percentage, onClaim }: { percentage: number, onClaim: (data: { phone: string; email: string, discount: number }) => void }) => {
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -25,7 +26,7 @@ const PrizeClaimForm = ({ onClaim }: { onClaim: (data: { phone: string; email: s
 
         setIsSubmitting(true);
         await new Promise(r => setTimeout(r, 1000));
-        onClaim({ phone, email });
+        onClaim({ phone, email, discount: percentage });
         setIsSubmitting(false);
     };
 
@@ -35,19 +36,36 @@ const PrizeClaimForm = ({ onClaim }: { onClaim: (data: { phone: string; email: s
             animate={{ opacity: 1, scale: 1 }}
             className="bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/30 rounded-2xl p-6 text-center"
         >
-            <Gift className="w-12 h-12 text-amber-400 mx-auto mb-4" />
-            <h3 className="text-xl font-bold mb-2">🎉 Congratulations!</h3>
-            <p className="text-gray-400 text-sm mb-6">
-                Enter your details to claim your <span className="text-amber-400 font-bold">5% discount</span>
+            <div className="relative inline-block mb-4">
+                <Gift className="w-12 h-12 text-amber-400 mx-auto" />
+                <motion.div
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ repeat: Infinity, duration: 2 }}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-black px-2 py-1 rounded-full border-2 border-white"
+                >
+                    {percentage}%
+                </motion.div>
+            </div>
+
+            <h3 className="text-xl font-bold mb-1">🎉 You Unlocked {percentage}% OFF!</h3>
+            <p className="text-gray-400 text-[10px] mb-6 uppercase tracking-wider">
+                Claim your unique reward code
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-3">
+                <Input
+                    placeholder="Full Name *"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="bg-black/30 border-white/10 text-center text-sm"
+                    required
+                />
                 <Input
                     type="tel"
                     placeholder="Mobile Number *"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="bg-black/30 border-amber-500/30 text-center"
+                    className="bg-black/30 border-white/10 text-center text-sm"
                     required
                 />
                 <Input
@@ -55,21 +73,21 @@ const PrizeClaimForm = ({ onClaim }: { onClaim: (data: { phone: string; email: s
                     placeholder="Email Address *"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="bg-black/30 border-amber-500/30 text-center"
+                    className="bg-black/30 border-white/10 text-center text-sm"
                     required
                 />
                 <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600"
+                    className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 font-bold py-6 text-lg"
                 >
                     {isSubmitting ? (
                         <>
                             <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                            Claiming...
+                            Verifying...
                         </>
                     ) : (
-                        "Claim My Prize"
+                        "CLAIM REWARD"
                     )}
                 </Button>
             </form>
@@ -77,27 +95,29 @@ const PrizeClaimForm = ({ onClaim }: { onClaim: (data: { phone: string; email: s
     );
 };
 
-// HARD Perfect Pint Game - Requires precision within 2%
-const PerfectPintGame = ({ onWin }: { onWin: () => void }) => {
+// EXTREME Perfect Pint Game
+const PerfectPintGame = ({ onWin }: { onWin: (percentage: number) => void }) => {
     const [filling, setFilling] = useState(false);
     const [fillLevel, setFillLevel] = useState(0);
-    const [target] = useState(Math.floor(Math.random() * 20) + 70); // 70-90%
-    const [speed] = useState(3 + Math.random() * 2); // Variable speed makes it harder
+    const [target] = useState(parseFloat((Math.random() * 20 + 75).toFixed(1))); // 75.0-95.0%
+    const [speed] = useState(4 + Math.random() * 2);
     const [gameOver, setGameOver] = useState(false);
     const [won, setWon] = useState(false);
-    const [attempts, setAttempts] = useState(0);
+    const [discountWon, setDiscountWon] = useState(0);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
     const startFilling = () => {
         if (gameOver) return;
         setFilling(true);
         intervalRef.current = setInterval(() => {
+            // Adds "jitter" to the pour to make it harder
+            const jitter = (Math.random() - 0.5) * 0.5;
             setFillLevel(prev => {
                 if (prev >= 100) {
                     stopFilling();
                     return 100;
                 }
-                return prev + speed;
+                return Math.max(0, prev + speed + jitter);
             });
         }, 50);
     };
@@ -106,78 +126,72 @@ const PerfectPintGame = ({ onWin }: { onWin: () => void }) => {
         setFilling(false);
         if (intervalRef.current) clearInterval(intervalRef.current);
         setGameOver(true);
-        setAttempts(a => a + 1);
 
         const diff = Math.abs(fillLevel - target);
-        if (diff <= 2) { // Must be within 2% - Very hard!
-            setWon(true);
-            onWin();
-            toast.success("🍺 PERFECT POUR!", { description: "Incredible precision!" });
-        } else {
-            toast.error(`Missed by ${diff.toFixed(1)}%`, { description: `Target was ${target}%` });
-        }
-    };
+        let discount = 0;
 
-    const reset = () => {
-        setFillLevel(0);
-        setGameOver(false);
-        setWon(false);
+        if (diff <= 0.3) discount = 5;
+        else if (diff <= 0.8) discount = 3;
+        else if (diff <= 1.5) discount = 2;
+        else if (diff <= 3.0) discount = 1;
+
+        if (discount > 0) {
+            setWon(true);
+            setDiscountWon(discount);
+            setTimeout(() => onWin(discount), 1500);
+            toast.success(`${discount}% DISCOUNT!`, { description: `Precision: ${diff.toFixed(2)}% difference` });
+        } else {
+            toast.error(`Missed!`, { description: `Target: ${target}%, You reached: ${fillLevel.toFixed(1)}%` });
+        }
     };
 
     return (
         <div className="text-center p-6">
-            <div className="flex items-center justify-center gap-2 mb-2">
-                <Beer className="w-6 h-6 text-amber-400" />
-                <h3 className="text-lg font-bold">The Perfect Pint</h3>
-            </div>
-            <p className="text-gray-400 text-xs mb-1">Fill to EXACTLY {target}%</p>
-            <p className="text-red-400 text-[10px] mb-4">⚠️ Must be within 2% to win!</p>
+            <h3 className="text-lg font-bold mb-1 uppercase tracking-tighter">Perfect Pour Challenge</h3>
+            <p className="text-gray-400 text-[10px] mb-4">STOP AT EXACTLY <span className="text-amber-400 font-bold">{target}%</span></p>
 
-            <div className="relative w-16 h-40 mx-auto bg-gray-800 rounded-b-xl border-4 border-gray-600 overflow-hidden">
-                {/* Target line */}
+            <div className="flex justify-between text-[8px] text-gray-500 mb-2 uppercase font-bold">
+                <span>Error 1.5% = 2% OFF</span>
+                <span>Error 0.3% = 5% OFF</span>
+            </div>
+
+            <div className="relative w-20 h-48 mx-auto bg-gray-900/80 rounded-b-2xl border-x-4 border-b-4 border-gray-700 overflow-hidden shadow-2xl">
                 <div
-                    className="absolute w-full border-t-2 border-dashed border-green-400 z-10"
+                    className="absolute w-full border-t-2 border-dashed border-cyan-400 z-10 opacity-50"
                     style={{ bottom: `${target}%` }}
-                >
-                    <span className="absolute -right-8 -top-2 text-[8px] text-green-400">{target}%</span>
-                </div>
-                {/* Fill */}
-                <motion.div
-                    className="absolute bottom-0 w-full bg-gradient-to-t from-amber-600 to-amber-300"
-                    animate={{ height: `${fillLevel}%` }}
-                    transition={{ duration: 0.05 }}
                 />
-                {/* Foam effect */}
-                {fillLevel > 5 && (
-                    <div
-                        className="absolute w-full h-3 bg-white/80 rounded-t-full"
-                        style={{ bottom: `${Math.min(fillLevel, 97)}%` }}
-                    />
+
+                <motion.div
+                    className="absolute bottom-0 w-full bg-gradient-to-t from-amber-600 via-amber-400 to-white/20"
+                    animate={{ height: `${fillLevel}%` }}
+                    transition={{ duration: 0.1 }}
+                />
+
+                {fillLevel > 0 && (
+                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none" />
                 )}
             </div>
 
-            <p className="mt-3 text-xl font-mono font-bold">{fillLevel.toFixed(1)}%</p>
-            <p className="text-xs text-gray-500">Attempts: {attempts}</p>
+            <p className="mt-4 text-3xl font-mono font-black text-white">{fillLevel.toFixed(1)}%</p>
 
             {!gameOver ? (
                 <Button
-                    onMouseDown={startFilling}
-                    onMouseUp={stopFilling}
-                    onMouseLeave={() => filling && stopFilling()}
-                    onTouchStart={startFilling}
-                    onTouchEnd={stopFilling}
-                    className="mt-4 w-full bg-amber-500 hover:bg-amber-600 active:scale-95"
+                    onPointerDown={startFilling}
+                    onPointerUp={stopFilling}
+                    className="mt-4 w-full h-16 text-lg font-black bg-amber-500 hover:bg-amber-600 shadow-[0_4px_0_rgb(180,83,9)] active:translate-y-1 active:shadow-none transition-all"
                 >
-                    {filling ? "🍺 POURING..." : "HOLD TO POUR"}
+                    {filling ? "POURING..." : "HOLD TO FILL"}
                 </Button>
             ) : (
-                <div className="mt-4 space-y-2">
-                    <p className={`text-sm font-bold ${won ? "text-green-400" : "text-red-400"}`}>
-                        {won ? "🎉 PERFECT!" : `❌ Off by ${Math.abs(fillLevel - target).toFixed(1)}%`}
-                    </p>
-                    {!won && (
-                        <Button onClick={reset} variant="outline" size="sm" className="gap-2">
-                            <RotateCcw className="w-4 h-4" /> Try Again
+                <div className="mt-4">
+                    {won ? (
+                        <div className="animate-bounce">
+                            <Trophy className="w-8 h-8 text-amber-400 mx-auto" />
+                            <p className="text-amber-400 font-black">WINNER {discountWon}%</p>
+                        </div>
+                    ) : (
+                        <Button onClick={() => { setGameOver(false); setFillLevel(0); }} variant="outline" className="w-full">
+                            TRY AGAIN
                         </Button>
                     )}
                 </div>
@@ -186,452 +200,333 @@ const PerfectPintGame = ({ onWin }: { onWin: () => void }) => {
     );
 };
 
-// HARD Cocktail Memory Game - Must reach level 7
-const CocktailMemoryGame = ({ onWin }: { onWin: () => void }) => {
+// EXTREME Cocktail Memory Game
+const CocktailMemoryGame = ({ onWin }: { onWin: (percentage: number) => void }) => {
     const colors = ["#ef4444", "#22c55e", "#3b82f6", "#eab308", "#a855f7", "#ec4899"];
     const [sequence, setSequence] = useState<number[]>([]);
     const [playerSequence, setPlayerSequence] = useState<number[]>([]);
     const [isPlaying, setIsPlaying] = useState(false);
-    const [level, setLevel] = useState(1);
+    const [level, setLevel] = useState(0);
     const [activeColor, setActiveColor] = useState<number | null>(null);
-    const [showSpeed, setShowSpeed] = useState(500);
-    const winLevel = 7; // Must reach level 7 to win
-
-    const startGame = () => {
-        const newSeq = [Math.floor(Math.random() * 6)];
-        setSequence(newSeq);
-        setPlayerSequence([]);
-        setLevel(1);
-        setShowSpeed(500);
-        playSequence(newSeq);
-    };
 
     const playSequence = async (seq: number[]) => {
         setIsPlaying(true);
-        await new Promise(r => setTimeout(r, 500));
+        const speed = Math.max(150, 450 - seq.length * 30);
 
         for (const idx of seq) {
+            await new Promise(r => setTimeout(r, 100));
             setActiveColor(idx);
-            await new Promise(r => setTimeout(r, showSpeed));
+            await new Promise(r => setTimeout(r, speed));
             setActiveColor(null);
-            await new Promise(r => setTimeout(r, 150));
         }
         setIsPlaying(false);
     };
 
+    const nextLevel = () => {
+        const next = Math.floor(Math.random() * 6);
+        const newSeq = [...sequence, next];
+        setSequence(newSeq);
+        setPlayerSequence([]);
+        setLevel(newSeq.length);
+        playSequence(newSeq);
+    };
+
     const handleClick = (idx: number) => {
-        if (isPlaying) return;
+        if (isPlaying || sequence.length === 0) return;
 
         setActiveColor(idx);
         setTimeout(() => setActiveColor(null), 150);
 
-        const newPlayerSeq = [...playerSequence, idx];
-        setPlayerSequence(newPlayerSeq);
-
-        // Check if wrong
-        if (newPlayerSeq[newPlayerSeq.length - 1] !== sequence[newPlayerSeq.length - 1]) {
-            toast.error("Wrong sequence!", { description: `You reached level ${level}` });
-            setSequence([]);
-            setPlayerSequence([]);
+        const expected = sequence[playerSequence.length];
+        if (idx !== expected) {
+            handleGameOver();
             return;
         }
 
-        // Check if completed current level
-        if (newPlayerSeq.length === sequence.length) {
-            if (level >= winLevel) {
-                onWin();
-                toast.success("🎉 MASTER MIXOLOGIST!", { description: "You won!" });
-                return;
-            }
+        const newPlayerSeq = [...playerSequence, idx];
+        setPlayerSequence(newPlayerSeq);
 
-            // Next level - faster and longer
-            const newSeq = [...sequence, Math.floor(Math.random() * 6)];
-            setSequence(newSeq);
-            setPlayerSequence([]);
-            setLevel(l => l + 1);
-            setShowSpeed(s => Math.max(200, s - 30)); // Gets faster each level
-            setTimeout(() => playSequence(newSeq), 800);
+        if (newPlayerSeq.length === sequence.length) {
+            setTimeout(nextLevel, 500);
+        }
+    };
+
+    const handleGameOver = () => {
+        let discount = 0;
+        if (level >= 12) discount = 5;
+        else if (level >= 8) discount = 3;
+        else if (level >= 5) discount = 2;
+        else if (level >= 3) discount = 1;
+
+        if (discount > 0) {
+            toast.success(`GAME OVER! You won ${discount}% OFF!`);
+            onWin(discount);
+        } else {
+            toast.error(`Fail! Reach at least level 3 to win.`);
+            setSequence([]);
+            setLevel(0);
         }
     };
 
     return (
-        <div className="text-center p-6">
-            <div className="flex items-center justify-center gap-2 mb-2">
-                <Martini className="w-6 h-6 text-pink-400" />
-                <h3 className="text-lg font-bold">Cocktail Recall</h3>
-            </div>
-            <p className="text-gray-400 text-xs mb-1">Reach level {winLevel} to win!</p>
-            <p className="text-violet-400 font-bold text-sm mb-4">Level: {level}/{winLevel}</p>
+        <div className="text-center p-6 bg-black/20">
+            <h3 className="font-bold mb-1 uppercase text-pink-400">Sequence Challenge</h3>
+            <p className="text-[10px] text-gray-500 mb-4 tracking-widest uppercase">Level 12 = 5% • Level 8 = 3% • Level 3 = 1%</p>
 
-            {/* Progress bar */}
-            <div className="w-full h-2 bg-gray-700 rounded-full mb-4 overflow-hidden">
-                <motion.div
-                    className="h-full bg-gradient-to-r from-pink-500 to-violet-500"
-                    animate={{ width: `${(level / winLevel) * 100}%` }}
-                />
-            </div>
+            <div className="text-4xl font-black mb-6 text-white">{level}</div>
 
-            <div className="grid grid-cols-3 gap-2 max-w-40 mx-auto mb-4">
+            <div className="grid grid-cols-3 gap-3 max-w-[240px] mx-auto">
                 {colors.map((color, idx) => (
                     <motion.button
                         key={idx}
                         onClick={() => handleClick(idx)}
-                        disabled={isPlaying || sequence.length === 0}
-                        whileTap={{ scale: 0.9 }}
-                        className="w-12 h-12 rounded-lg transition-all duration-100 disabled:cursor-not-allowed"
+                        whileTap={{ scale: 0.95 }}
+                        className="aspect-square rounded-2xl transition-all border-4 border-white/5 shadow-lg"
                         style={{
                             backgroundColor: color,
-                            opacity: activeColor === idx ? 1 : 0.4,
-                            boxShadow: activeColor === idx ? `0 0 20px ${color}` : 'none',
-                            transform: activeColor === idx ? 'scale(1.1)' : 'scale(1)',
+                            opacity: activeColor === idx ? 1 : 0.3,
+                            filter: activeColor === idx ? `brightness(1.5) drop-shadow(0 0 15px ${color}80)` : 'none',
                         }}
                     />
                 ))}
             </div>
 
             {sequence.length === 0 && (
-                <Button onClick={startGame} className="bg-pink-500 hover:bg-pink-600">
-                    Start Challenge
+                <Button onClick={nextLevel} className="mt-8 bg-pink-600 hover:bg-pink-700 w-full py-6 font-black">
+                    START MEMORY TEST
                 </Button>
-            )}
-
-            {isPlaying && (
-                <p className="text-xs text-gray-400 animate-pulse">Watch carefully...</p>
             )}
         </div>
     );
 };
 
-// EXTREMELY HARD Glass Glide Game
-const GlassGlideGame = ({ onWin }: { onWin: () => void }) => {
-    const [gameState, setGameState] = useState<"select" | "playing" | "won" | "lost">("select");
-    const [drink, setDrink] = useState<"beer" | "martini" | "whiskey">("beer");
-    const [position, setPosition] = useState({ x: 10, y: 50 }); // Percentage
+// PRO Glass Glide Game
+const GlassGlideGame = ({ onWin }: { onWin: (percentage: number) => void }) => {
+    const [gameState, setGameState] = useState<"select" | "playing" | "result">("select");
+    const [position, setPosition] = useState({ x: 5, y: 50 });
     const [isDragging, setIsDragging] = useState(false);
-    const [obstacles, setObstacles] = useState<{ x: number, y: number, type: "ice" | "lemon", size: number, vy: number }[]>([]);
+    const [obstacles, setObstacles] = useState<{ x: number, y: number, r: number, vx: number, vy: number }[]>([]);
+    const [trackProgress, setTrackProgress] = useState(0);
     const gameRef = useRef<HTMLDivElement>(null);
     const requestRef = useRef<number>();
 
-    const initGame = (selectedDrink: "beer" | "martini" | "whiskey") => {
-        setDrink(selectedDrink);
-        setGameState("playing");
-        setPosition({ x: 5, y: 50 });
-
-        // Create random difficult obstacles
-        const newObstacles = Array.from({ length: 8 }).map((_, i) => ({
-            x: 20 + i * 10,
-            y: Math.random() * 80 + 10,
-            type: Math.random() > 0.5 ? "ice" : "lemon" as const,
-            size: 15 + Math.random() * 10,
-            vy: (Math.random() - 0.5) * 2 // Moving obstacles make it 20% win rate hard
-        }));
-        setObstacles(newObstacles);
+    const initObstacles = () => {
+        const obs = [];
+        for (let i = 0; i < 12; i++) {
+            obs.push({
+                x: 20 + Math.random() * 60,
+                y: 10 + Math.random() * 80,
+                r: 15 + Math.random() * 15,
+                vx: (Math.random() - 0.5) * 4, // Fast moving!
+                vy: (Math.random() - 0.5) * 4
+            });
+        }
+        setObstacles(obs);
     };
 
     const update = () => {
         if (gameState !== "playing") return;
-
-        setObstacles(prev => prev.map(obs => {
-            let newY = obs.y + obs.vy;
-            let newVy = obs.vy;
-            if (newY < 5 || newY > 95) newVy *= -1;
-            return { ...obs, y: newY, vy: newVy };
+        setObstacles(prev => prev.map(o => {
+            let nx = o.x + o.vx;
+            let ny = o.y + o.vy;
+            let nvx = o.vx;
+            let nvy = o.vy;
+            if (nx < 15 || nx > 85) nvx *= -1;
+            if (ny < 5 || ny > 95) nvy *= -1;
+            return { ...o, x: nx, y: ny, vx: nvx, vy: nvy };
         }));
-
         requestRef.current = requestAnimationFrame(update);
     };
 
     useEffect(() => {
-        if (gameState === "playing") {
-            requestRef.current = requestAnimationFrame(update);
-        }
-        return () => {
-            if (requestRef.current) cancelAnimationFrame(requestRef.current);
-        };
+        if (gameState === "playing") requestRef.current = requestAnimationFrame(update);
+        return () => { if (requestRef.current) cancelAnimationFrame(requestRef.current); };
     }, [gameState]);
 
     const handlePointerMove = (e: React.PointerEvent) => {
         if (!isDragging || gameState !== "playing" || !gameRef.current) return;
-
         const rect = gameRef.current.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        const nx = ((e.clientX - rect.left) / rect.width) * 100;
+        const ny = ((e.clientY - rect.top) / rect.height) * 100;
 
-        // Bounds check
-        const newX = Math.max(0, Math.min(100, x));
-        const newY = Math.max(0, Math.min(100, y));
+        // Slippery physics - slight delay/drift
+        setPosition(p => ({
+            x: nx,
+            y: ny
+        }));
 
-        // Collision Detection
-        for (const obs of obstacles) {
-            const dx = newX - obs.x;
-            const dy = newY - obs.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < (obs.size / 2 + 5)) { // 5 is roughly drink radius
-                setGameState("lost");
-                setIsDragging(false);
-                toast.error("💥 SPILL!", { description: "You hit an obstacle!" });
+        setTrackProgress(p => Math.max(p, nx));
+
+        // Check collision
+        for (const o of obstacles) {
+            const dx = nx - o.x;
+            const dy = ny - o.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < (o.r / 2 + 3)) {
+                handleGameOver(nx);
                 return;
             }
         }
 
-        setPosition({ x: newX, y: newY });
+        if (nx >= 92) handleGameOver(100);
+    };
 
-        if (newX > 90) {
-            setGameState("won");
-            setIsDragging(false);
-            onWin();
-            toast.success("🥂 SMOOTH!", { description: "Delivery successful!" });
+    const handleGameOver = (finalX: number) => {
+        setIsDragging(false);
+        setGameState("result");
+        let discount = 0;
+        if (finalX >= 95) discount = 5;
+        else if (finalX >= 70) discount = 3;
+        else if (finalX >= 40) discount = 2;
+        else if (finalX >= 20) discount = 1;
+
+        if (discount > 0) {
+            toast.success(`You reached ${finalX.toFixed(0)}%! Discount: ${discount}%`);
+            setTimeout(() => onWin(discount), 1000);
+        } else {
+            toast.error("Smashed! Try again.");
         }
     };
 
-    if (gameState === "select") {
-        return (
-            <div className="p-6 text-center">
-                <h3 className="font-bold mb-4">Select Your Vessel</h3>
-                <div className="grid grid-cols-3 gap-3">
-                    {[
-                        { id: "beer" as const, icon: Beer, label: "Pint" },
-                        { id: "martini" as const, icon: Martini, label: "Cocktail" },
-                        { id: "whiskey" as const, icon: Gift, label: "On Rocks" },
-                    ].map((v) => (
-                        <button
-                            key={v.id}
-                            onClick={() => initGame(v.id)}
-                            className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-amber-500/50 transition-all flex flex-col items-center gap-2"
-                        >
-                            <v.icon className="w-8 h-8 text-amber-400" />
-                            <span className="text-[10px] uppercase font-bold">{v.label}</span>
-                        </button>
-                    ))}
-                </div>
-            </div>
-        );
-    }
-
     return (
-        <div className="p-4 select-none">
-            <div className="flex justify-between items-center mb-4 text-[10px] uppercase font-bold text-gray-500">
-                <span>Start</span>
-                <span className="text-amber-500 text-center px-2">Glide the drink to the end without hitting ice or lemons</span>
-                <span>Goal</span>
-            </div>
+        <div className="p-4">
+            <h3 className="text-center font-black uppercase text-blue-400 mb-4 tracking-tighter">Obstacle Glide</h3>
 
             <div
                 ref={gameRef}
-                className="relative h-64 bg-black/40 rounded-xl border border-white/10 overflow-hidden cursor-crosshair touch-none"
+                className="relative h-64 bg-gray-900 rounded-3xl border-4 border-gray-800 overflow-hidden touch-none"
                 onPointerMove={handlePointerMove}
                 onPointerUp={() => setIsDragging(false)}
             >
-                {/* Track Grid */}
-                <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
-
-                {/* Start & End Zones */}
-                <div className="absolute inset-y-0 left-0 w-[10%] bg-green-500/10 border-r border-green-500/20 flex items-center justify-center">
-                    <div className="[writing-mode:vertical-lr] text-[8px] text-green-500/50 font-black">START</div>
-                </div>
-                <div className="absolute inset-y-0 right-0 w-[10%] bg-amber-500/10 border-l border-amber-500/20 flex items-center justify-center">
-                    <div className="[writing-mode:vertical-lr] text-[8px] text-amber-500/50 font-black">FINISH</div>
-                </div>
-
-                {/* Obstacles */}
-                {obstacles.map((obs, i) => (
-                    <motion.div
-                        key={i}
-                        className="absolute flex items-center justify-center pointer-events-none"
-                        style={{
-                            left: `${obs.x}%`,
-                            top: `${obs.y}%`,
-                            width: obs.size,
-                            height: obs.size,
-                            marginLeft: -obs.size / 2,
-                            marginTop: -obs.size / 2
-                        }}
-                    >
-                        {obs.type === "ice" ? (
-                            <div className="w-full h-full bg-blue-200/40 rounded-sm border border-blue-100/50 backdrop-blur-sm rotate-12 shadow-[0_0_10px_rgba(191,219,254,0.3)]" />
-                        ) : (
-                            <div className="w-full h-full bg-yellow-400/60 rounded-full border border-yellow-200/50 shadow-[0_0_10px_rgba(250,204,21,0.3)] flex items-center justify-center text-[10px]">🍋</div>
-                        )}
-                    </motion.div>
-                ))}
-
-                {/* The Drink */}
-                <motion.div
-                    className="absolute z-20 cursor-grab active:cursor-grabbing"
-                    style={{
-                        left: `${position.x}%`,
-                        top: `${position.y}%`,
-                        marginLeft: -20,
-                        marginTop: -20
-                    }}
-                    onPointerDown={() => setIsDragging(true)}
-                >
-                    <div className={`p-2 rounded-full shadow-2xl transition-transform ${isDragging ? 'scale-125' : 'scale-100'}`}>
-                        {drink === "beer" && <Beer className="w-8 h-8 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]" />}
-                        {drink === "martini" && <Martini className="w-8 h-8 text-pink-400 drop-shadow-[0_0_8px_rgba(244,114,182,0.6)]" />}
-                        {drink === "whiskey" && <Gift className="w-8 h-8 text-orange-400 drop-shadow-[0_0_8px_rgba(251,146,60,0.6)]" />}
-                    </div>
-                </motion.div>
-
-                {/* Overlay for Game Over */}
-                {gameState === "lost" && (
-                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center p-4">
-                        <h4 className="text-red-500 font-bold mb-2">TRY AGAIN?</h4>
-                        <Button onClick={() => setGameState("select")} size="sm" variant="outline" className="gap-2">
-                            <RotateCcw className="w-4 h-4" /> Restart
+                {gameState === "playing" ? (
+                    <>
+                        {obstacles.map((o, i) => (
+                            <div
+                                key={i}
+                                className="absolute bg-white/10 border border-white/20 rounded-full backdrop-blur-sm"
+                                style={{
+                                    left: `${o.x}%`, top: `${o.y}%`, width: o.r, height: o.r,
+                                    transform: 'translate(-50%, -50%)'
+                                }}
+                            />
+                        ))}
+                        <motion.div
+                            className="absolute pointer-events-none"
+                            style={{ left: `${position.x}%`, top: `${position.y}%`, transform: 'translate(-50%, -50%)' }}
+                        >
+                            <div className="w-8 h-8 bg-blue-500 rounded-full shadow-[0_0_20px_#3b82f6] flex items-center justify-center">
+                                <Martini className="w-5 h-5 text-white" />
+                            </div>
+                        </motion.div>
+                    </>
+                ) : (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                        <p className="text-xs text-gray-500 mb-4 uppercase">Win rates: Finsh 100%=5% • 70%=3% • 20%=1%</p>
+                        <Button
+                            onClick={() => { initObstacles(); setGameState("playing"); setPosition({ x: 5, y: 50 }); setTrackProgress(0); }}
+                            className="bg-blue-600 hover:bg-blue-700 font-black px-10 py-6"
+                        >
+                            DRAG THE DRINK
                         </Button>
                     </div>
                 )}
             </div>
 
-            <p className="text-[10px] text-gray-500 text-center mt-4 uppercase tracking-widest">
-                Drag the drink from left to right. Don't touch the ice or lemons!
-            </p>
+            <div className="mt-4 w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                <motion.div className="h-full bg-blue-500" animate={{ width: `${trackProgress}%` }} />
+            </div>
         </div>
     );
 };
 
-// Main Gamification Hub
 export const GamificationHub = () => {
     const [activeGame, setActiveGame] = useState<"pint" | "memory" | "glide" | null>(null);
-    const [hasWon, setHasWon] = useState(false);
+    const [discountWon, setDiscountWon] = useState<number | null>(null);
     const [coupon, setCoupon] = useState<string | null>(null);
-    const [claimData, setClaimData] = useState<{ phone: string; email: string } | null>(null);
 
-    const handleWin = () => {
-        setHasWon(true);
+    const handleWin = (discount: number) => {
+        setDiscountWon(discount);
     };
 
-    const handleClaim = (data: { phone: string; email: string }) => {
-        const code = `WIN5-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+    const handleClaim = (data: { phone: string; email: string, discount: number }) => {
+        const code = `REWARD-${data.discount}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
         setCoupon(code);
-        setClaimData(data);
-        sessionStorage.setItem("gameCoupon", code);
-        sessionStorage.setItem("gameClaimData", JSON.stringify(data));
-        toast.success("Prize claimed!", { description: `Code: ${code}` });
+        sessionStorage.setItem("active_coupon", code);
+        toast.success(`Coupon Generated: ${code}`);
     };
 
     useEffect(() => {
-        const savedCoupon = sessionStorage.getItem("gameCoupon");
-        const savedData = sessionStorage.getItem("gameClaimData");
-        if (savedCoupon && savedData) {
-            setCoupon(savedCoupon);
-            setClaimData(JSON.parse(savedData));
-        }
+        const saved = sessionStorage.getItem("active_coupon");
+        if (saved) setCoupon(saved);
     }, []);
 
-    // Already claimed
-    if (coupon && claimData) {
+    if (coupon) {
         return (
-            <section className="py-8 px-4">
-                <div className="max-w-sm mx-auto">
-                    <motion.div
-                        initial={{ scale: 0.9 }}
-                        animate={{ scale: 1 }}
-                        className="bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/30 rounded-2xl p-6 text-center"
-                    >
-                        <Trophy className="w-12 h-12 text-amber-400 mx-auto mb-3" />
-                        <h3 className="text-xl font-bold mb-1">🎉 You Won!</h3>
-                        <p className="text-gray-400 text-sm mb-4">Show this code at checkout</p>
-                        <div className="bg-black/50 rounded-xl p-4">
-                            <p className="text-2xl font-mono font-bold text-amber-400">{coupon}</p>
-                            <p className="text-xs text-gray-400 mt-1">5% OFF your bill</p>
-                        </div>
-                    </motion.div>
+            <div className="p-8 text-center bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-3xl border border-green-500/20 max-w-sm mx-auto my-8">
+                <Trophy className="w-16 h-16 text-green-400 mx-auto mb-4" />
+                <h3 className="text-2xl font-black text-white">REWARD CLAIMED</h3>
+                <p className="text-sm text-gray-400 mb-6">Show this to your server</p>
+                <div className="bg-black/50 p-6 rounded-2xl border-2 border-dashed border-green-500/50">
+                    <span className="text-3xl font-mono font-black text-green-400">{coupon}</span>
                 </div>
-            </section>
+            </div>
         );
     }
 
-    // Won but need to claim
-    if (hasWon && !coupon) {
+    if (discountWon) {
         return (
-            <section className="py-8 px-4">
-                <div className="max-w-sm mx-auto">
-                    <PrizeClaimForm onClaim={handleClaim} />
-                </div>
-            </section>
+            <div className="max-w-sm mx-auto my-8 px-4">
+                <PrizeClaimForm percentage={discountWon} onClaim={handleClaim} />
+            </div>
         );
     }
 
     return (
-        <section className="py-8 px-4">
-            <div className="max-w-2xl mx-auto">
-                <div className="text-center mb-6">
-                    <h2 className="text-2xl font-black bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 bg-clip-text text-transparent mb-2">
-                        🎮 WIN 5% OFF
-                    </h2>
-                    <p className="text-gray-400 text-sm">
-                        Beat the extreme challenge to claim your discount!
-                    </p>
-                    <p className="text-red-400 text-[10px] mt-1 uppercase tracking-tighter">⚠️ Maximum difficulty: Only 20% win chance</p>
+        <section className="py-12 px-4 relative overflow-hidden">
+            <div className="max-w-4xl mx-auto relative z-10">
+                <div className="text-center mb-10">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 mb-4">
+                        <Sparkles className="w-3 h-3 text-red-400" />
+                        <span className="text-[10px] font-black text-red-400 uppercase tracking-widest">Skill Based Incentives</span>
+                    </div>
+                    <h2 className="text-4xl md:text-5xl font-black text-white mb-2 italic">WIN YOUR TAB</h2>
+                    <p className="text-gray-400 text-sm max-w-md mx-auto">Elite skills get <span className="text-amber-400 font-bold">5% OFF</span>. Casuals get 1%. Are you good enough?</p>
                 </div>
 
-                <AnimatePresence mode="wait">
-                    {!activeGame ? (
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="grid grid-cols-3 gap-3"
-                        >
-                            <motion.div
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                onClick={() => setActiveGame("pint")}
-                                className="cursor-pointer p-4 rounded-2xl bg-gradient-to-br from-amber-500/10 to-amber-600/10 border border-amber-500/20 hover:border-amber-500/40 transition-colors"
+                {!activeGame ? (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {[
+                            { id: "pint", icon: Beer, name: "PINT POUR", diff: "Normal", color: "amber" },
+                            { id: "memory", icon: Martini, name: "MIX RECALL", diff: "Hard", color: "pink" },
+                            { id: "glide", icon: Trophy, name: "GLASS GLIDE", diff: "Extreme", color: "blue" }
+                        ].map((g) => (
+                            <motion.button
+                                key={g.id}
+                                whileHover={{ scale: 1.05, translateY: -10 }}
+                                onClick={() => setActiveGame(g.id as any)}
+                                className={`p-8 rounded-[2rem] bg-white/5 border border-white/10 text-center group relative overflow-hidden`}
                             >
-                                <Beer className="w-8 h-8 text-amber-400 mb-2 mx-auto" />
-                                <h3 className="font-bold text-[10px] mb-1 uppercase">Pint Pour</h3>
-                                <p className="text-gray-400 text-[8px]">Precision pour</p>
-                            </motion.div>
-
-                            <motion.div
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                onClick={() => setActiveGame("memory")}
-                                className="cursor-pointer p-4 rounded-2xl bg-gradient-to-br from-pink-500/10 to-fuchsia-500/10 border border-pink-500/20 hover:border-pink-500/40 transition-colors"
-                            >
-                                <Martini className="w-8 h-8 text-pink-400 mb-2 mx-auto" />
-                                <h3 className="font-bold text-[10px] mb-1 uppercase">Mix Recall</h3>
-                                <p className="text-gray-400 text-[8px]">Memory test</p>
-                            </motion.div>
-
-                            <motion.div
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                onClick={() => setActiveGame("glide")}
-                                className="cursor-pointer p-4 rounded-2xl bg-gradient-to-br from-cyan-500/10 to-blue-600/10 border border-cyan-500/20 hover:border-cyan-500/40 transition-colors border-dashed"
-                            >
-                                <div className="relative mb-2 w-8 h-8 mx-auto">
-                                    <Beer className="w-8 h-8 text-cyan-400" />
-                                    <div className="absolute -right-2 -top-2 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center text-[7px] font-black text-white">NEW</div>
+                                <div className={`w-16 h-16 rounded-[1.5rem] bg-${g.color}-500/20 flex items-center justify-center mx-auto mb-6 transition-all group-hover:scale-110`}>
+                                    <g.icon className={`w-8 h-8 text-${g.color}-400`} />
                                 </div>
-                                <h3 className="font-bold text-[10px] mb-1 uppercase">Glass Glide</h3>
-                                <p className="text-gray-400 text-[8px]">Dodge ice cubes</p>
-                            </motion.div>
-                        </motion.div>
-                    ) : (
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            className="bg-card/50 backdrop-blur border border-white/10 rounded-2xl overflow-hidden"
-                        >
-                            <div className="flex justify-end p-3 border-b border-white/5">
-                                <button
-                                    onClick={() => setActiveGame(null)}
-                                    className="text-gray-400 hover:text-white p-1"
-                                >
-                                    <X className="w-5 h-5" />
-                                </button>
-                            </div>
+                                <h3 className="text-xl font-black text-white mb-1">{g.name}</h3>
+                                <p className="text-[10px] uppercase font-bold text-gray-500 mb-4 tracking-tighter">Difficulty: {g.diff}</p>
+                                <div className="text-[9px] font-black text-white/40 uppercase group-hover:text-white transition-colors">Start Challenge →</div>
+                            </motion.button>
+                        ))}
+                    </div>
+                ) : (
+                    <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="max-w-md mx-auto bg-gray-900/50 backdrop-blur-xl rounded-[2.5rem] border border-white/10 shadow-3xl relative">
+                        <button onClick={() => setActiveGame(null)} className="absolute -top-3 -right-3 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center backdrop-blur-xl border border-white/20 z-50">
+                            <X className="w-5 h-5 text-white" />
+                        </button>
+                        <div className="p-2">
                             {activeGame === "pint" && <PerfectPintGame onWin={handleWin} />}
                             {activeGame === "memory" && <CocktailMemoryGame onWin={handleWin} />}
                             {activeGame === "glide" && <GlassGlideGame onWin={handleWin} />}
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                        </div>
+                    </motion.div>
+                )}
             </div>
         </section>
     );
