@@ -115,7 +115,7 @@ const App = () => {
                           {/* Multi-Menu System Routes */}
                           <Route path="/" element={
                             <PageTransition>
-                              <MobileSafePage />
+                              {isMobile ? <MobileSafePage /> : <HomePage />}
                             </PageTransition>
                           } />
                           <Route path="/menus" element={<PageTransition><MenusListPage /></PageTransition>} />
