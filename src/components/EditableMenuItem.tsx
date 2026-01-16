@@ -304,10 +304,18 @@ export const EditableMenuItem = ({
         haptics.light();
       }}
       className={cn(
-        "group relative p-4 rounded-xl transition-all duration-500 overflow-hidden",
-        "border border-transparent hover:border-white/5",
-        "hover:bg-card/40 hover:shadow-[0_0_20px_-5px_hsl(var(--primary)/0.2)]",
-        "backdrop-blur-sm",
+        "group relative transition-all duration-500 overflow-hidden",
+        // Mobile-first padding and touch targets
+        "p-5 sm:p-4 rounded-xl",
+        // Enhanced glassmorphism for mobile
+        "border backdrop-blur-xl bg-gradient-to-br from-white/[0.08] to-white/[0.02]",
+        "shadow-[0_8px_32px_rgba(0,0,0,0.3)]",
+        // Mobile-optimized hover (active states for touch)
+        "active:scale-[0.98] sm:hover:scale-[1.02] sm:hover:-translate-y-1",
+        "active:shadow-[0_4px_16px_rgba(0,240,255,0.2)] sm:hover:shadow-[0_12px_48px_rgba(0,240,255,0.15),0_0_80px_rgba(0,240,255,0.05)]",
+        accentColor === "cyan"
+          ? "border-cyan-500/10 active:border-cyan-500/40 sm:hover:border-cyan-500/30 active:shadow-cyan-500/30 sm:hover:shadow-cyan-500/20"
+          : "border-purple-500/10 active:border-purple-500/40 sm:hover:border-purple-500/30 active:shadow-purple-500/30 sm:hover:shadow-purple-500/20",
         index % 2 === 0 ? "bg-transparent" : "bg-white/[0.02]",
         isEditMode && "cursor-pointer ring-1 ring-transparent hover:ring-primary/40"
       )}
@@ -379,7 +387,7 @@ export const EditableMenuItem = ({
                   ? "bg-primary shadow-primary/20 text-primary"
                   : "bg-secondary shadow-secondary/20 text-secondary"
               )} />
-              <span className="font-orbitron text-base font-medium tracking-wide text-foreground group-hover:text-white transition-colors">
+              <span className="font-orbitron text-lg sm:text-base font-bold sm:font-medium tracking-wide text-foreground group-hover:text-white transition-colors">
                 {item.name}
               </span>
 
@@ -442,11 +450,10 @@ export const EditableMenuItem = ({
               {/* Description & New Indicators */}
               <div className="mt-1.5 space-y-1">
                 {item.description && (
-                  <p className="text-sm text-muted-foreground/80 font-montserrat leading-relaxed tracking-wide group-hover:text-muted-foreground transition-colors">
+                  <p className="text-sm sm:text-xs text-muted-foreground/90 sm:text-muted-foreground/80 leading-relaxed line-clamp-2 group-hover:text-muted-foreground transition-colors pr-2 font-medium sm:font-normal">
                     {item.description}
                   </p>
                 )}
-
                 {/* Meta Row: Dietary, Spice, Calories */}
                 {(item.dietary || item.spice_level !== 'none' || item.calories) && (
                   <div className="flex items-center gap-3 pt-1">
@@ -529,7 +536,7 @@ export const EditableMenuItem = ({
                     </span>
                   </div>
                 ) : (
-                  <span className="font-orbitron text-lg font-bold text-accent tracking-wide whitespace-nowrap drop-shadow-[0_0_8px_rgba(255,215,0,0.3)] group-hover:scale-105 transition-transform inline-block">
+                  <span className="font-orbitron text-xl sm:text-lg font-black sm:font-bold text-accent tracking-wide whitespace-nowrap drop-shadow-[0_0_12px_rgba(255,215,0,0.4)] group-hover:scale-105 transition-transform inline-block">
                     {item.price}
                   </span>
                 )

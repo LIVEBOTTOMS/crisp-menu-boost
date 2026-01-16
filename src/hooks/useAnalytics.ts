@@ -11,7 +11,7 @@ export const useAnalytics = (venueId?: string) => {
     const activeVenueSlug = slug || 'live';
 
     const logEvent = useCallback(async (
-        eventType: 'view_item' | 'view_section' | 'game_start' | 'game_win' | 'tab_switch',
+        eventType: 'view_item' | 'view_section' | 'game_start' | 'game_win' | 'tab_switch' | 'call_waiter',
         eventData: any = {}
     ) => {
         // In a real SaaS, we'd send this to an analytics_events table

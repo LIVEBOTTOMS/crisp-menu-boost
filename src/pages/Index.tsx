@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { MenuHeader } from "@/components/MenuHeader";
 import { cn } from "@/lib/utils";
-import { Flame, Settings, Bell } from "lucide-react";
+import { Flame, Settings, Bell, X } from "lucide-react";
+import { toast } from "sonner";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { ShareMenu } from "@/components/ShareMenu";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -320,38 +321,57 @@ const Index = () => {
           <DayOfWeekSelector />
         </div>
 
-        {/* Premium Navigation Tabs */}
-        <div className="max-w-6xl mx-auto px-4 mb-2">
-          <div className="flex justify-center gap-2 flex-wrap">
-            {sections.map((section) => (
-              <button
-                key={section.key}
-                onClick={() => {
-                  setActiveSection(section.key);
-                  playClick();
-                  haptics.light();
-                }}
-                className={`px-6 py-3 rounded-lg text-sm tracking-wider uppercase transition-all duration-300 border backdrop-blur-sm`}
-                style={{
-                  fontFamily: themeConfig.fonts.heading,
-                  backgroundColor: activeSection === section.key
-                    ? `${themeConfig.colors.primary}20`
-                    : `${themeConfig.colors.background}60`,
-                  borderColor: activeSection === section.key
-                    ? themeConfig.colors.primary
-                    : `${themeConfig.colors.border}`,
-                  color: activeSection === section.key
-                    ? (themeConfig.id === 'cyberpunk-tech' ? '#fff' : themeConfig.colors.primary)
-                    : themeConfig.colors.text,
-                  boxShadow: activeSection === section.key && themeConfig.id === 'cyberpunk-tech'
-                    ? `0 0 20px ${themeConfig.colors.primary}40`
-                    : 'none',
-                  opacity: activeSection === section.key ? 1 : 0.7
-                }}
-              >
-                {t(`category.${section.key}`) || section.title}
-              </button>
-            ))}
+        {/* Premium Navigation Tabs - STICKY (Mobile-Optimized) */}
+        <div className="sticky top-0 z-40 backdrop-blur-2xl bg-black/40 border-b border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.4)] mb-2">
+          <div className="max-w-6xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
+            {/* Mobile: Horizontal scroll, Desktop: Flex wrap */}
+            <div className="flex sm:justify-center gap-2 overflow-x-auto scrollbar-hide snap-x snap-mandatory">
+              {sections.map((section) => (
+                <button
+                  key={section.key}
+                  onClick={() => {
+                    setActiveSection(section.key);
+                    playClick();
+                    haptics.light();
+                    // Smooth scroll to section
+                    const element = document.getElementById(`section-${section.key}`);
+                    if (element) {
+                      const yOffset = -100; // Mobile-optimized offset
+                      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                      window.scrollTo({ top: y, behavior: 'smooth' });
+                    }
+                  }}
+                  className={`flex-shrink-0 snap-start px-5 sm:px-6 py-4 sm:py-3 rounded-lg text-xs sm:text-sm font-black tracking-[0.15em] uppercase transition-all duration-300 border backdrop-blur-sm relative overflow-hidden group min-w-[110px] sm:min-w-0`}
+                  style={{
+                    fontFamily: themeConfig.fonts.heading,
+                    backgroundColor: activeSection === section.key
+                      ? `${themeConfig.colors.primary}20`
+                      : `${themeConfig.colors.background}60`,
+                    borderColor: activeSection === section.key
+                      ? themeConfig.colors.primary
+                      : `${themeConfig.colors.border}`,
+                    color: activeSection === section.key
+                      ? (themeConfig.id === 'cyberpunk-tech' ? '#fff' : themeConfig.colors.primary)
+                      : themeConfig.colors.text,
+                    boxShadow: activeSection === section.key && themeConfig.id === 'cyberpunk-tech'
+                      ? `0 0 20px ${themeConfig.colors.primary}40, 0 0 40px ${themeConfig.colors.primary}20`
+                      : 'none',
+                    opacity: activeSection === section.key ? 1 : 0.7
+                  }}
+                >
+                  {/* Animated underline */}
+                  {activeSection === section.key && (
+                    <motion.div
+                      layoutId="activeTab"
+                      className="absolute bottom-0 left-0 right-0 h-1 sm:h-0.5"
+                      style={{ backgroundColor: themeConfig.colors.primary }}
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    />
+                  )}
+                  {t(`category.${section.key}`) || section.title}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -378,7 +398,7 @@ const Index = () => {
                     subtitle={getSectionIntro(activeData.title)}
                     accentColor={accentColor}
                   />
-                  <div className="px-12 pb-6">
+                  <div id={`section-${activeSection}`} className="px-12 pb-6">
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={activeSection + activeDietaryFilter}
