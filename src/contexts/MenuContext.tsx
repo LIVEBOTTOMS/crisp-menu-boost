@@ -56,11 +56,59 @@ const adjustItemPrices = (item: MenuItem, multiplier: number): MenuItem => {
   return newItem;
 };
 
+const tagItemsWithDietary = (section: MenuSection): MenuSection => {
+  const newSection = deepClone(section);
+  newSection.categories.forEach(category => {
+    const title = category.title.toUpperCase();
+    let defaultDietary: MenuItem['dietary'] = undefined;
+
+    // Improved detection logic
+    if (title.includes('VEG') && !title.includes('NON')) {
+      defaultDietary = 'veg';
+    } else if (
+      title.includes('NON-VEG') ||
+      title.includes('NON VEG') ||
+      title.includes('CHICKEN') ||
+      title.includes('MUTTON') ||
+      title.includes('FISH') ||
+      title.includes('EGG') ||
+      title.includes('MEAT') ||
+      title.includes('POULTRY')
+    ) {
+      defaultDietary = 'non-veg';
+    } else if (
+      title.includes('BEVERAGE') ||
+      title.includes('DRINK') ||
+      title.includes('BEER') ||
+      title.includes('VODKA') ||
+      title.includes('WHISKY') ||
+      title.includes('WHISKEY') ||
+      title.includes('WINE') ||
+      title.includes('RUM') ||
+      title.includes('GIN') ||
+      title.includes('COCKTAIL') ||
+      title.includes('MOCKTAIL') ||
+      title.includes('WATER') ||
+      title.includes('SODA')
+    ) {
+      defaultDietary = 'veg';
+    }
+
+    category.items.forEach(item => {
+      // Fix: Check for undefined, null, OR empty string
+      if ((!item.dietary || item.dietary === '') && defaultDietary) {
+        item.dietary = defaultDietary;
+      }
+    });
+  });
+  return newSection;
+};
+
 const getDefaultMenuData = (): MenuData => ({
-  snacksAndStarters: deepClone(snacksAndStarters),
-  foodMenu: deepClone(foodMenu),
-  beveragesMenu: deepClone(beveragesMenu),
-  sideItems: deepClone(sideItems),
+  snacksAndStarters: tagItemsWithDietary(deepClone(snacksAndStarters)),
+  foodMenu: tagItemsWithDietary(deepClone(foodMenu)),
+  beveragesMenu: tagItemsWithDietary(deepClone(beveragesMenu)),
+  sideItems: tagItemsWithDietary(deepClone(sideItems)),
 });
 
 export const MenuProvider = ({ children }: { children: ReactNode }) => {
@@ -85,8 +133,14 @@ export const MenuProvider = ({ children }: { children: ReactNode }) => {
     console.log("🔄 [REFRESH] Fetching menu from database for venue:", activeVenueSlug);
     const data = await fetchMenuData(activeVenueSlug || undefined);
     if (data) {
-      console.log("🔄 [REFRESH] Setting new menu data");
-      setMenuData(data);
+      console.log("🔄 [REFRESH] Setting new menu data with auto-tagging");
+      const taggedData: MenuData = {
+        snacksAndStarters: tagItemsWithDietary(data.snacksAndStarters),
+        foodMenu: tagItemsWithDietary(data.foodMenu),
+        beveragesMenu: tagItemsWithDietary(data.beveragesMenu),
+        sideItems: tagItemsWithDietary(data.sideItems),
+      };
+      setMenuData(taggedData);
     } else {
       console.log("⚠️ [REFRESH] No data returned from fetchMenuData");
     }

@@ -349,7 +349,7 @@ const Index = () => {
                   opacity: activeSection === section.key ? 1 : 0.7
                 }}
               >
-                {t(`menu.${section.key}`) || section.title}
+                {t(`category.${section.key}`) || section.title}
               </button>
             ))}
           </div>
@@ -387,20 +387,40 @@ const Index = () => {
                         exit={{ opacity: 0, x: -20 }}
                         transition={{ duration: 0.3 }}
                       >
-                        <MenuSection
-                          section={{
-                            ...activeData.data,
-                            categories: activeData.data.categories.map(cat => ({
-                              ...cat,
-                              items: cat.items.filter(item =>
-                                activeDietaryFilter === 'all' || item.dietary === activeDietaryFilter
-                              )
-                            })).filter(cat => cat.items.length > 0)
-                          }}
-                          variant={activeData.variant}
-                          sectionKey={activeData.key}
-                          showNutritional={showNutritional}
-                        />
+                        {activeData.data.categories.some(cat =>
+                          cat.items.some(item => activeDietaryFilter === 'all' || item.dietary === activeDietaryFilter)
+                        ) ? (
+                          <MenuSection
+                            section={{
+                              ...activeData.data,
+                              categories: activeData.data.categories.map(cat => ({
+                                ...cat,
+                                items: cat.items.filter(item =>
+                                  activeDietaryFilter === 'all' || item.dietary === activeDietaryFilter
+                                )
+                              })).filter(cat => cat.items.length > 0)
+                            }}
+                            variant={activeData.variant}
+                            sectionKey={activeData.key}
+                            showNutritional={showNutritional}
+                          />
+                        ) : (
+                          <div className="flex flex-col items-center justify-center py-20 text-center animate-in fade-in zoom-in duration-500">
+                            <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4 border border-white/10 shadow-[0_0_20px_rgba(255,255,255,0.05)]">
+                              <X className="w-8 h-8 text-gray-500" />
+                            </div>
+                            <h3 className="font-orbitron text-xl font-bold tracking-widest text-gray-400 mb-2 uppercase">No Matched Items</h3>
+                            <p className="text-gray-500 text-sm max-w-xs mx-auto mb-6">
+                              We couldn't find any {activeDietaryFilter.replace(/-/g, ' ')} options in this section.
+                            </p>
+                            <button
+                              onClick={() => setActiveDietaryFilter('all')}
+                              className="px-6 py-2 rounded-full border border-neon-cyan/50 text-neon-cyan text-xs font-bold tracking-[0.2em] uppercase hover:bg-neon-cyan/10 transition-all active:scale-95"
+                            >
+                              Show All Items
+                            </button>
+                          </div>
+                        )}
                       </motion.div>
                     </AnimatePresence>
                   </div>

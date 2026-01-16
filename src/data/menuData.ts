@@ -45,11 +45,11 @@ export const snacksAndStarters: MenuSection = {
     {
       title: "VEG",
       items: [
-        { name: "Fried Peanuts", price: "₹120", description: "Crispy salted peanuts roasted to golden perfection" },
-        { name: "Fried Papad", price: "₹59", description: "Traditional crispy lentil wafers, lightly spiced" },
-        { name: "Masala Papad", price: "₹79", description: "Topped with fresh onions, tomatoes & tangy chaat masala" },
-        { name: "Veg Pakoda", price: "₹139", description: "Assorted vegetables in chickpea batter, golden fried" },
-        { name: "Veg Crispie", price: "₹180", description: "Crunchy vegetable fritters with house-made green chutney" },
+        { name: "Fried Peanuts", price: "₹120", description: "Crispy salted peanuts roasted to golden perfection", dietary: 'veg' },
+        { name: "Fried Papad", price: "₹59", description: "Traditional crispy lentil wafers, lightly spiced", dietary: 'veg' },
+        { name: "Masala Papad", price: "₹79", description: "Topped with fresh onions, tomatoes & tangy chaat masala", dietary: 'veg' },
+        { name: "Veg Pakoda", price: "₹139", description: "Assorted vegetables in chickpea batter, golden fried", dietary: 'veg' },
+        { name: "Veg Crispie", price: "₹180", description: "Crunchy vegetable fritters with house-made green chutney", dietary: 'veg' },
         { name: "Paneer Pakoda", price: "₹189", description: "Cottage cheese cubes in spiced gram flour coating", isBestSeller: true },
         { name: "Veg Cutlet", price: "₹160", description: "Hand-pressed mixed vegetable patties, herb-crusted" },
         { name: "Cheese Pakoda", price: "₹189", description: "Melting cheese encased in crispy golden batter", isBestSeller: true },
@@ -70,8 +70,8 @@ export const snacksAndStarters: MenuSection = {
     {
       title: "NON-VEG",
       items: [
-        { name: "Fried Chicken", price: "₹220", description: "Succulent pieces marinated overnight, deep-fried crispy" },
-        { name: "Chicken Lollypop", price: "₹250", description: "Frenched drumettes in spicy Indo-Chinese glaze", isBestSeller: true },
+        { name: "Fried Chicken", price: "₹220", description: "Succulent pieces marinated overnight, deep-fried crispy", dietary: 'non-veg' },
+        { name: "Chicken Lollypop", price: "₹250", description: "Frenched drumettes in spicy Indo-Chinese glaze", isBestSeller: true, dietary: 'non-veg' },
         { name: "Chicken Cutlet", price: "₹250", description: "Minced chicken patties with caramelized onions" },
         { name: "Tandoori Chicken (Full)", price: "₹350", description: "Whole bird marinated in yogurt & 24 spices, clay-oven roasted" },
         { name: "Tandoori Chicken (Half)", price: "₹200", description: "Half portion of our signature clay-oven specialty", isBestSeller: true },
@@ -101,7 +101,7 @@ export const foodMenu: MenuSection = {
       title: "Non-Vegetarian Handi & Firepot",
       icon: "🍲",
       items: [
-        { name: "Chicken Kolhapuri Firepot", price: "₹399", description: "Intensely spiced with dried red chilies & coconut" },
+        { name: "Chicken Kolhapuri Firepot", price: "₹399", description: "Intensely spiced with dried red chilies & coconut", dietary: 'non-veg' },
         {
           name: "Solapuri Chicken Handi",
           halfPrice: "₹499",
@@ -141,7 +141,7 @@ export const foodMenu: MenuSection = {
       title: "Vegetarian Chef's Mains",
       icon: "🥗",
       items: [
-        { name: "Paneer Patiyala Royal", price: "₹399", description: "Creamy cottage cheese in rich cashew-tomato gravy" },
+        { name: "Paneer Patiyala Royal", price: "₹399", description: "Creamy cottage cheese in rich cashew-tomato gravy", dietary: 'veg' },
         { name: "Paneer Handi Signature", price: "₹399", description: "Slow-cooked in earthen pot with whole spices" },
         { name: "Paneer Tikka Masala / Lajawab Masala", price: "₹399", description: "Charred paneer cubes in smoky tomato sauce", isChefSpecial: true },
         { name: "Classic Paneer Butter Masala", price: "₹399", description: "Silky makhani gravy with farm-fresh paneer", isBestSeller: true },
@@ -453,9 +453,9 @@ export const secretMenu: MenuSection = {
       title: "Winner's Circle",
       icon: "🏆",
       items: [
-        { name: "The Alchemist's Brew", price: "₹899", description: "A shifting cocktail that changes color and flavor as you drink. Made with rare botanicals and edible gold.", isPremium: true, isTopShelf: true },
-        { name: "Liquid Nitrogen Sorbet", price: "₹399", description: "Flash-frozen at your table. Intense mango and habanero fusion.", isChefSpecial: true },
-        { name: "Billionaire's Wings", price: "₹1,299", description: "Double-truffle glazed chicken wings dusted with copper flakes.", isPremium: true }
+        { name: "The Alchemist's Brew", price: "₹899", description: "A shifting cocktail that changes color and flavor as you drink. Made with rare botanicals and edible gold.", isPremium: true, isTopShelf: true, dietary: 'veg' },
+        { name: "Liquid Nitrogen Sorbet", price: "₹399", description: "Flash-frozen at your table. Intense mango and habanero fusion.", isChefSpecial: true, dietary: 'veg' },
+        { name: "Billionaire's Wings", price: "₹1,299", description: "Double-truffle glazed chicken wings dusted with copper flakes.", isPremium: true, dietary: 'non-veg' }
       ]
     }
   ]

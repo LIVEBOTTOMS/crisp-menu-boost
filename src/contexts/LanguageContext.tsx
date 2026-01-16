@@ -45,6 +45,7 @@ const translations: Record<Language, Record<string, string>> = {
         'common.close': 'Close',
         'common.share': 'Share',
         'common.download': 'Download',
+        'common.all': 'All Items',
 
         // Food categories
         'category.starters': 'Starters',
@@ -66,6 +67,7 @@ const translations: Record<Language, Record<string, string>> = {
         'category.beer': 'Beer',
         'category.sides': 'Sides',
         'category.food': 'Food',
+        'category.secret': 'Classified',
 
         // Dietary
         'dietary.veg': 'Vegetarian',
@@ -135,6 +137,7 @@ const translations: Record<Language, Record<string, string>> = {
         'common.close': 'बंद करें',
         'common.share': 'शेयर करें',
         'common.download': 'डाउनलोड करें',
+        'common.all': 'सभी आइटम',
 
         // Food categories
         'category.starters': 'स्टार्टर्स',
@@ -156,6 +159,7 @@ const translations: Record<Language, Record<string, string>> = {
         'category.beer': 'बीयर',
         'category.sides': 'साइड्स',
         'category.food': 'भोजन',
+        'category.secret': 'गुप्त',
 
         // Dietary
         'dietary.veg': 'शाकाहारी',
